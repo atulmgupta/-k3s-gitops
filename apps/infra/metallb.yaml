@@ -1,0 +1,41 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://metallb.github.io/metallb
+    chart: metallb
+    targetRevision: "*"
+    helm:
+      valuesObject:
+        prometheus:
+          serviceMonitor:
+            enabled: true
+            speaker: { tlsConfig: { insecureSkipVerify: true } }
+            controller: { tlsConfig: { insecureSkipVerify: true } }
+        controller:
+          enabled: true
+          logLevel: info
+          strategy: { type: RollingUpdate }
+          securityContext: { runAsNonRoot: true, runAsUser: 65534, fsGroup: 65534 }
+          tlsMinVersion: "VersionTLS12"
+        speaker:
+          enabled: true
+          logLevel: info
+          tolerateMaster: true
+          memberlist: { enabled: true, mlBindPort: 7946 }
+          excludeInterfaces: { enabled: true }
+          updateStrategy: { type: RollingUpdate }
+          frr: { enabled: true, image: { tag: 9.1.0 }, metricsPort: 7473 }
+        crds: { enabled: true, validationFailurePolicy: Fail }
+        rbac: { create: true }
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]

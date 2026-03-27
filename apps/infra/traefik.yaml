@@ -1,0 +1,54 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://traefik.github.io/charts
+    chart: traefik
+    targetRevision: "*"
+    helm:
+      valuesObject:
+        logs:
+          general: { format: json, level: DEBUG }
+          access: { enabled: true, format: json }
+        ports:
+          traefik: { port: 9000, expose: { default: true }, exposedPort: 9000 }
+          web: { port: 8000, expose: { default: false }, exposedPort: 80, redirectTo: { port: websecure } }
+          websecure: { port: 8443, expose: { default: true }, exposedPort: 443, http3: { enabled: false } }
+          metrics: { port: 9100, expose: { default: true }, exposedPort: 9100 }
+        globalArguments:
+          - "--global.checknewversion=false"
+          - "--global.sendanonymoususage=false"
+        additionalArguments:
+          - "--serversTransport.insecureSkipVerify=true"
+          - "--api"
+          - "--api.dashboard=true"
+          - "--api.insecure=true"
+        providers:
+          kubernetesCRD:
+            enabled: true
+            allowCrossNamespace: true
+            allowExternalNameServices: true
+            ingressClass: traefik-external
+          kubernetesIngress:
+            enabled: true
+            allowExternalNameServices: true
+            publishedService: { enabled: true }
+        service: { type: NodePort, enabled: true }
+        ingressClass: { enabled: true, isDefaultClass: true }
+        deployment: { kind: Deployment, replicas: 1, terminationGracePeriodSeconds: 60 }
+        updateStrategy: { type: RollingUpdate, rollingUpdate: { maxUnavailable: 0, maxSurge: 1 } }
+        readinessProbe: { failureThreshold: 1, initialDelaySeconds: 2, periodSeconds: 10 }
+        livenessProbe: { failureThreshold: 3, initialDelaySeconds: 2, periodSeconds: 10 }
+        metrics: { prometheus: { entryPoint: metrics } }
+        rbac: { enabled: true, namespaced: false }
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]

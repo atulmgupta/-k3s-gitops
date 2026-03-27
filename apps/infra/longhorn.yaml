@@ -1,0 +1,50 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.longhorn.io
+    chart: longhorn
+    targetRevision: "*"
+    helm:
+      valuesObject:
+        defaultSettings:
+          backupTarget: azblob://cyphers-longhorn-backups@core.windows.net/
+          backupTargetCredentialSecret: azure-secret
+          disableRevisionCounter: "true"
+          priorityClass: longhorn-critical
+        persistence:
+          defaultClass: true
+          defaultClassReplicaCount: 2
+          defaultFsType: ext4
+          reclaimPolicy: Delete
+          disableRevisionCounter: "true"
+        longhornManager:
+          log: { format: json }
+          priorityClass: longhorn-critical
+          tolerations:
+            - { effect: NoSchedule, key: node-role.kubernetes.io/master, operator: Exists }
+        longhornUI:
+          replicas: 2
+          priorityClass: longhorn-critical
+        longhornDriver:
+          priorityClass: longhorn-critical
+          tolerations:
+            - { effect: NoSchedule, key: node-role.kubernetes.io/master, operator: Exists }
+        metrics:
+          serviceMonitor: { enabled: true, interval: 30s, scrapeTimeout: 30s }
+        service:
+          ui: { type: LoadBalancer }
+        preUpgradeChecker:
+          jobEnabled: true
+          upgradeVersionCheck: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
