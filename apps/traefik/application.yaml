@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: traefik
   namespace: argocd
+  labels:
+    tier: infra
 spec:
   project: default
   source:

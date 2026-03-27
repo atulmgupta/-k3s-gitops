@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: longhorn
   namespace: argocd
+  labels:
+    tier: infra
 spec:
   project: default
   source:

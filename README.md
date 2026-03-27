@@ -10,14 +10,18 @@ Push to `main` → ArgoCD syncs → cluster updated automatically.
 k3s-gitops/
 ├── apps/
 │   ├── root.yaml              # App-of-Apps — the only thing you kubectl apply
-│   ├── infra/                  # traefik, cert-manager, longhorn, metallb
-│   ├── database/               # postgres, redis, influxdb, clickhouse
-│   ├── auth/                   # authentik, authelia
-│   ├── networking/             # wireguard, cloudflare-tunnel
-│   ├── monitoring/             # prometheus, grafana, loki, jaeger
-│   ├── iot/                    # mqtt, teslasync, vitasync
-│   ├── apps/                   # nextcloud, ghost, plex, echostats
-│   └── tools/                  # headlamp, k8s-dashboard
+│   ├── traefik/
+│   │   └── application.yaml
+│   ├── cert-manager/
+│   │   └── application.yaml
+│   ├── longhorn/
+│   │   └── application.yaml
+│   ├── metallb/
+│   │   └── application.yaml
+│   ├── postgres/              # (example: app with secrets)
+│   │   ├── application.yaml
+│   │   └── secrets.yaml       # SOPS-encrypted
+│   └── ...
 ├── manifests/                  # Standalone K8s manifests (ingresses, PVCs)
 ├── .sops.yaml                  # SOPS age encryption config
 └── .gitignore
@@ -62,7 +66,7 @@ That's it. ArgoCD discovers and deploys everything.
 
 ## Adding a New Service
 
-Create one file: `apps/<tier>/<service>.yaml`
+Create one directory: `apps/<service>/application.yaml`
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
