@@ -1,0 +1,49 @@
+# Redis — ArgoCD Application
+# The password lives in secret.yaml (SOPS-encrypted, safe to commit).
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd
+  labels:
+    tier: database
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: redis
+    targetRevision: "*"
+    helm:
+      valuesObject:
+        architecture: replication
+        auth:
+          enabled: true
+          # Don't set password here — it's in the K8s Secret "redis-credentials"
+          existingSecret: redis-credentials
+          existingSecretPasswordKey: redis-password
+        global:
+          defaultStorageClass: longhorn
+          storageClass: longhorn
+        master:
+          persistence:
+            enabled: true
+            size: 8Gi
+          service:
+            type: NodePort
+        replica:
+          replicaCount: 3
+          persistence:
+            enabled: true
+            size: 8Gi
+        commonConfiguration: |-
+          appendonly yes
+          save ""
+        metrics:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: redis
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]

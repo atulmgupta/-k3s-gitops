@@ -2,10 +2,12 @@
 # SOPS — age encryption for secrets
 # =============================================================================
 creation_rules:
-  - path_regex: .*secrets?\.yaml$
+  # K8s Secret manifests — only encrypt data/stringData (metadata stays readable)
+  - path_regex: .*secret.*\.yaml$
     age: >-
       age19ksrgufl4h5h2ep6wlujkt40cvyay7jrryrv64t8w0pel6yvjaqqeyctxe
-  - encrypted_regex: "^(data|stringData)$"
-    path_regex: .*secret.*\.yaml$
+    encrypted_regex: "^(data|stringData)$"
+  # General secrets files
+  - path_regex: .*secrets?\.yaml$
     age: >-
       age19ksrgufl4h5h2ep6wlujkt40cvyay7jrryrv64t8w0pel6yvjaqqeyctxe
