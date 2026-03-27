@@ -49,7 +49,7 @@ gh repo create k3s-gitops --private --source=. --push
 
 ```bash
 # If your repo is private, add credentials:
-argocd repo add https://github.com/atulmgupta/k3s-gitops.git \
+argocd repo add https://github.com/atulmgupta/-k3s-gitops.git \
   --username atulmgupta \
   --password <github-pat>
 

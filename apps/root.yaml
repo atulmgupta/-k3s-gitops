@@ -18,7 +18,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/atulmgupta/k3s-gitops.git
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
     targetRevision: main
     path: apps
     directory:
