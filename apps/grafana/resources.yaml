@@ -12,6 +12,7 @@ spec:
     repoURL: https://github.com/atulmgupta/-k3s-gitops.git
     targetRevision: main
     path: apps/grafana/resources
+    kustomize: {}
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana
