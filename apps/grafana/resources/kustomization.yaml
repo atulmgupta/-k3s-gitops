@@ -1,0 +1,36 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: grafana
+
+resources:
+  - ingressroute.yaml
+  - dashboards/teslasync/battery-health.yaml
+  - dashboards/teslasync/charging-sessions.yaml
+  - dashboards/teslasync/charging-stats.yaml
+  - dashboards/teslasync/charging.yaml
+  - dashboards/teslasync/climate-hvac.yaml
+  - dashboards/teslasync/comfort-media.yaml
+  - dashboards/teslasync/cost-analysis.yaml
+  - dashboards/teslasync/drive-detail.yaml
+  - dashboards/teslasync/drives.yaml
+  - dashboards/teslasync/drivetrain-thermal.yaml
+  - dashboards/teslasync/efficiency.yaml
+  - dashboards/teslasync/energy-flow.yaml
+  - dashboards/teslasync/fleet-overview.yaml
+  - dashboards/teslasync/locations.yaml
+  - dashboards/teslasync/mileage.yaml
+  - dashboards/teslasync/motor-performance.yaml
+  - dashboards/teslasync/projected-range.yaml
+  - dashboards/teslasync/security-access.yaml
+  - dashboards/teslasync/software-updates.yaml
+  - dashboards/teslasync/statistics.yaml
+  - dashboards/teslasync/timeline.yaml
+  - dashboards/teslasync/tire-pressure.yaml
+  - dashboards/teslasync/trips.yaml
+  - dashboards/teslasync/vampire-drain.yaml
+  - dashboards/teslasync/vehicle-intelligence.yaml
+  - dashboards/teslasync/vehicle-overview.yaml
+
+generators:
+  - ksops-generator.yaml
