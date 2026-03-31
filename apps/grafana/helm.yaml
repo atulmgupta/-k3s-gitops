@@ -126,6 +126,10 @@ spec:
               gnetId: 14127
               revision: 1
               datasource: Prometheus
+            authentik:
+              gnetId: 14837
+              revision: 2
+              datasource: Prometheus
           kubernetes:
             k8s-cluster:
               gnetId: 7249
