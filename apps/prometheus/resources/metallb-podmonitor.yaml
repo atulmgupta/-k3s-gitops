@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: metallb
+  namespace: prometheus
+  labels:
+    app: metallb
+spec:
+  namespaceSelector:
+    matchNames:
+      - metallb
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: metallb
+  podMetricsEndpoints:
+    - port: monitoring
+      path: /metrics
+      interval: 30s
