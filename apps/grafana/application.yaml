@@ -1,0 +1,122 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: grafana
+    targetRevision: "12.*"
+    helm:
+      valuesObject:
+        image:
+          registry: docker.io
+          repository: bitnami/grafana
+        admin:
+          existingSecret: grafana-admin-secret
+          existingSecretPasswordKey: password
+          user: admin
+        grafana:
+          replicaCount: 1
+          containerPorts:
+            grafana: 3000
+          extraEnvVars:
+            - name: GF_SERVER_ROOT_URL
+              value: https://grafana.cyphers.app
+            - name: GF_AUTH_GENERIC_OAUTH_TOKEN_URL
+              value: http://authentik-server.authentik.svc.cluster.local/application/o/token/
+            - name: GF_AUTH_GENERIC_OAUTH_API_URL
+              value: http://authentik-server.authentik.svc.cluster.local/application/o/userinfo/
+          extraVolumeMounts:
+            - mountPath: /opt/bitnami/grafana/conf/smtp
+              name: grafana-smtp-secret
+              readOnly: true
+            - mountPath: /opt/bitnami/grafana/conf/admin
+              name: grafana-admin-secret
+              readOnly: true
+          extraVolumes:
+            - name: grafana-smtp-secret
+              secret:
+                secretName: grafana-smtp-secret
+            - name: grafana-admin-secret
+              secret:
+                secretName: grafana-admin-secret
+          livenessProbe:
+            enabled: true
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          readinessProbe:
+            enabled: true
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+            path: /api/health
+            scheme: HTTP
+          resourcesPreset: 2xlarge
+          podSecurityContext:
+            enabled: true
+            fsGroup: 1001
+            fsGroupChangePolicy: Always
+          containerSecurityContext:
+            enabled: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          pdb:
+            create: true
+          updateStrategy:
+            type: RollingUpdate
+        persistence:
+          enabled: true
+          existingClaim: grafana-pvc
+          size: 10Gi
+          storageClass: longhorn
+          accessMode: ReadWriteOnce
+        smtp:
+          enabled: true
+          host: smtp.sendgrid.net
+          fromAddress: grafana@cyphers.app
+          fromName: Cyphers Grafana
+          skipVerify: "false"
+          user: /opt/bitnami/grafana/conf/smtp/user
+          password: /opt/bitnami/grafana/conf/smtp/password
+        service:
+          type: ClusterIP
+          ports:
+            grafana: 3000
+        metrics:
+          enabled: true
+          service:
+            annotations:
+              prometheus.io/path: /metrics
+              prometheus.io/port: "3000"
+              prometheus.io/scrape: "true"
+        networkPolicy:
+          enabled: true
+          allowExternal: true
+          allowExternalEgress: true
+          addExternalClientAccess: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: grafana
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
