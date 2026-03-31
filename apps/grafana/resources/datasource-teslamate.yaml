@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: grafana-datasource-teslamate
+    namespace: grafana
+    labels:
+        grafana_datasource: "1"
+type: Opaque
+stringData:
+    teslamate-postgresql.yaml: ENC[AES256_GCM,data:qqk44vzwPg30cJnGWnuYslTJxvqLbYmxmbszdYJZ5KVBCnAnuiihh4s8oXYrDpfKPa/DaPur7B3W6AkWn5SukpelzDOjOzDRY8oEtrUxQl5Oro6d8m/zdl2EMVQgKdItAWj9aFADKkQ7v12Dt2WncDLfq3VnsfKGu2gyI8ZVTd54kRLWpBgArQtHAR2CyPOlGbrr00T7jzxXyLpLz+mJ72IXC86KJsXi5Maie07pNL+B3OS8OTh0pNRaM55Qv96gTgm3+2P52xubj6QCH3ZcZaewsVBiFlJbEEL12whYSOXjkk6jC9wOyjqiV9dXYMjyy6F9fVuTotI8dstR4MTcQq6xMf5yO5FY/bnAL6Wz6ag9FhvQ8WxoiI9T0KKrcL0MfNAj9MxPjMZEG/B5Q82ebUBi/7MahJTM0QYFpg/O5LpP4n/KgyaIcUlTC4mufz5vytcws48ENYTQIZaP2g1hTLD7vK8Ga5P2uN+QuGxm0AgOJxOHijDIvN04kLOonCwxY8YMCthiC+71IjfDPj9KAW1fewhCNt0hzo5XURsXsrPDwbJtOtyieqQ3/qBL50Zvee73FBu2Bi9Yco797TuhF6Qg9YtLW4AuAaG3siubIsj0Xk658ezy9309GYbjMCwY6qU8NhZGu23BcloW6cCmO44QrhAsyMrC,iv:N7sMdlwTXTeIyrUgg8M9WYosAKyRvLBEnE9yhnhHsUs=,tag:ED5zT/fGW0EMkxJHMWUKzA==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1nqt7rptevevv0se64ryupta6zpdr4zzh9rhg4aec9xfqhsyw23cquqzrj0
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB6T1VzNmp3SzNUaENMNkFR
+            djgwVlhDcTh1Tk02LzAxNFFpcGJvVHRqTUhnClpsTDkxZUwyU0w3eXNpWkZZeFVT
+            R2lFdCtORWxHckY1ZUdEQ1I2ZU5BaHcKLS0tIC9LY0dXcStsZmtBYmV2NFVxVWdj
+            b2ZWOStrTDRwSC9wSjBaWWZwK0F5VkkKr837Tl3BaLFUhkVWNT0nMN/o4+ITbOhO
+            O62VFZkQgBQMDcI2gVKa1RJ1ezz++6oAHoXdb4k9DEhEbnSimv2xMg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-03-31T23:13:37Z"
+    mac: ENC[AES256_GCM,data:Hbx/QbYjvqFDohHmAQ3WeebzD0Rxfb0hNvpO6H8ggzshBFs9Ro/aHiZ3Xqu423Fqvd3nHxbO7HsY+AaO3/SFEzys1EtSVX+l2Som/FMrY3J+QcYitTGZAjpQS7b7dEk+9/9TMNFlV0b8oNH4OQywTPOGlMCHdGFV9hb/zBRUwx8=,iv:TgP9WwWWEIXWFmgtkRMDKH8pktS1aWrabF8XcntibOI=,tag:zRE40ODk/kqx/0i4ZDkaRA==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.3

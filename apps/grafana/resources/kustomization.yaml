@@ -32,6 +32,32 @@ resources:
   - dashboards/teslasync/vampire-drain.yaml
   - dashboards/teslasync/vehicle-intelligence.yaml
   - dashboards/teslasync/vehicle-overview.yaml
+  # TeslaMate dashboards
+  - dashboards/teslamate/battery-health.yaml
+  - dashboards/teslamate/charge-level.yaml
+  - dashboards/teslamate/charges.yaml
+  - dashboards/teslamate/charging-stats.yaml
+  - dashboards/teslamate/database-info.yaml
+  - dashboards/teslamate/drive-stats.yaml
+  - dashboards/teslamate/drives.yaml
+  - dashboards/teslamate/efficiency.yaml
+  - dashboards/teslamate/locations.yaml
+  - dashboards/teslamate/mileage.yaml
+  - dashboards/teslamate/overview.yaml
+  - dashboards/teslamate/projected-range.yaml
+  - dashboards/teslamate/states.yaml
+  - dashboards/teslamate/statistics.yaml
+  - dashboards/teslamate/timeline.yaml
+  - dashboards/teslamate/trip.yaml
+  - dashboards/teslamate/updates.yaml
+  - dashboards/teslamate/vampire-drain.yaml
+  - dashboards/teslamate/visited.yaml
+  # TeslaMate internal
+  - dashboards/teslamate/internal/charge-details.yaml
+  - dashboards/teslamate/internal/drive-details.yaml
+  - dashboards/teslamate/internal/home.yaml
+  # TeslaMate reports
+  - dashboards/teslamate/reports/dutch-tax.yaml
 
 generators:
   - ksops-generator.yaml
