@@ -5,6 +5,7 @@ namespace: grafana
 
 resources:
   - ingressroute.yaml
+  - datasource-prometheus.yaml
   - dashboards/teslasync/battery-health.yaml
   - dashboards/teslasync/charging-sessions.yaml
   - dashboards/teslasync/charging-stats.yaml
