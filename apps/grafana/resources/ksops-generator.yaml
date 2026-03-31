@@ -3,6 +3,10 @@ apiVersion: viaduct.ai/v1
 kind: ksops
 metadata:
   name: grafana-secrets
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        path: ksops
 files:
   - admin-secret.yaml
   - secret.yaml
