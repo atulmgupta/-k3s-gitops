@@ -1,0 +1,332 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: teslasync-fleet-overview
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: TeslaSync
+data:
+  fleet-overview.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [
+        {
+          "asDropdown": true,
+          "icon": "external link",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [
+            "teslasync"
+          ],
+          "targetBlank": false,
+          "title": "🔀 Navigate to...",
+          "type": "dashboards"
+        }
+      ],
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 1,
+          "options": {
+            "showHeader": true,
+            "footer": {
+              "show": false
+            },
+            "cellHeight": "sm",
+            "sortBy": [
+              {
+                "displayName": "Date",
+                "desc": true
+              }
+            ]
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  v.display_name AS \"🚗 Vehicle\",\n  v.model AS \"🚗 Model\",\n  v.state AS \"📊 State\",\n  (SELECT ROUND(convert_distance(p.odometer)::numeric, 1) FROM positions p WHERE p.vehicle_id = v.id ORDER BY p.created_at DESC LIMIT 1) AS \"📏 Odometer\",\n  (SELECT p.battery_level FROM positions p WHERE p.vehicle_id = v.id ORDER BY p.created_at DESC LIMIT 1) AS \"🔋 Battery %\",\n  (SELECT COUNT(*) FROM drives d WHERE d.vehicle_id = v.id) AS \"🛣️ Total Drives\",\n  (SELECT ROUND(convert_distance(SUM(d2.distance))::numeric, 1) FROM drives d2 WHERE d2.vehicle_id = v.id) AS \"📏 Total Dist\",\n  (SELECT COUNT(*) FROM charging_sessions cs WHERE cs.vehicle_id = v.id) AS \"⚡ Charges\",\n  (SELECT ROUND(SUM(cs2.charge_energy_added)::numeric, 1) FROM charging_sessions cs2 WHERE cs2.vehicle_id = v.id) AS \"⚡ Total kWh\",\n  (SELECT su.version FROM software_updates su WHERE su.vehicle_id = v.id AND su.status = 'installed' ORDER BY su.installed_at DESC LIMIT 1) AS \"📦 Version\"\nFROM vehicles v\nORDER BY v.display_name",
+              "refId": "A"
+            }
+          ],
+          "title": "Fleet Summary",
+          "type": "table",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 8
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT v.display_name AS \"🚗 Vehicle\", ROUND(convert_distance(SUM(d.distance))::numeric, 1) AS \"📏 Distance\"\nFROM drives d JOIN vehicles v ON d.vehicle_id = v.id\nGROUP BY v.display_name ORDER BY 2 DESC",
+              "refId": "A"
+            }
+          ],
+          "title": "Total Distance by Vehicle",
+          "type": "barchart",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "kwatth"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 8
+          },
+          "id": 3,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT v.display_name AS \"🚗 Vehicle\", ROUND(SUM(cs.charge_energy_added)::numeric, 1) AS \"⚡ Energy\"\nFROM charging_sessions cs JOIN vehicles v ON cs.vehicle_id = v.id\nGROUP BY v.display_name ORDER BY 2 DESC",
+              "refId": "A"
+            }
+          ],
+          "title": "Total Energy Charged by Vehicle",
+          "type": "barchart",
+          "transparent": false
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": [
+        "teslasync"
+      ],
+      "templating": {
+        "list": [
+          {
+            "current": {
+              "selected": true,
+              "text": "1",
+              "value": "1"
+            },
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "DS_TESLASYNC_POSTGRESQL"
+            },
+            "definition": "SELECT id AS __value, display_name AS __text FROM vehicles ORDER BY display_name",
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "vehicle_id",
+            "options": [],
+            "query": "SELECT id AS __value, display_name AS __text FROM vehicles ORDER BY display_name",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "type": "query"
+          },
+          {
+            "current": {
+              "text": "mi",
+              "value": "mi",
+              "selected": true
+            },
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "unit_length",
+            "label": "Distance",
+            "options": [
+              {
+                "text": "km",
+                "value": "km",
+                "selected": false
+              },
+              {
+                "text": "mi",
+                "value": "mi",
+                "selected": true
+              }
+            ],
+            "query": "km,mi",
+            "type": "custom"
+          },
+          {
+            "current": {
+              "text": "C",
+              "value": "C",
+              "selected": true
+            },
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "unit_temp",
+            "label": "Temperature",
+            "options": [
+              {
+                "text": "C",
+                "value": "C",
+                "selected": true
+              },
+              {
+                "text": "F",
+                "value": "F",
+                "selected": false
+              }
+            ],
+            "query": "C,F",
+            "type": "custom"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-30d",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "TeslaSync 🚗 Fleet Overview",
+      "uid": "teslasync-fleet-overview",
+      "version": 1,
+      "weekStart": ""
+    }
+    

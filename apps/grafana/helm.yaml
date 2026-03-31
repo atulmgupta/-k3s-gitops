@@ -45,6 +45,21 @@ spec:
           limits:
             cpu: 1000m
             memory: 1Gi
+        sidecar:
+          dashboards:
+            enabled: true
+            label: grafana_dashboard
+            labelValue: "1"
+            folder: /tmp/dashboards
+            folderAnnotation: grafana_folder
+            searchNamespace: ALL
+            provider:
+              foldersFromFilesStructure: false
+          datasources:
+            enabled: true
+            label: grafana_datasource
+            labelValue: "1"
+            searchNamespace: ALL
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana

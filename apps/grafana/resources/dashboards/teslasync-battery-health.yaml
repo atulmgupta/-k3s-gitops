@@ -1,0 +1,821 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: teslasync-battery-health
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: TeslaSync
+data:
+  battery-health.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [
+        {
+          "asDropdown": true,
+          "icon": "external link",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [
+            "teslasync"
+          ],
+          "targetBlank": false,
+          "title": "🔀 Navigate to...",
+          "type": "dashboards"
+        }
+      ],
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "min": 0,
+              "max": 100,
+              "unit": "percent",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 70
+                  },
+                  {
+                    "color": "green",
+                    "value": 85
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 0,
+            "y": 0
+          },
+          "id": 1,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT health_score AS \"Health %\" FROM battery_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "title": "Battery Health Score",
+          "type": "gauge",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "red",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "decimals": 2
+            }
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 4,
+            "y": 0
+          },
+          "id": 2,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT ROUND(degradation_pct::numeric, 2) AS \"%\" FROM battery_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "title": "Degradation",
+          "type": "stat",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "kwatth"
+            }
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 8,
+            "y": 0
+          },
+          "id": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT ROUND(capacity_kwh::numeric, 1) AS \"⚡ kWh\" FROM battery_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "title": "Capacity",
+          "type": "stat",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "purple",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 12,
+            "y": 0
+          },
+          "id": 4,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT cycle_count AS \"Cycles\" FROM battery_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "title": "Cycle Count",
+          "type": "stat",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "green",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "none"
+            }
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 16,
+            "y": 0
+          },
+          "id": 5,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT ROUND(est_range_km::numeric, 1) AS \"km\" FROM battery_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "title": "Est. Range",
+          "type": "stat",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "orange",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "none"
+            }
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 4,
+            "x": 20,
+            "y": 0
+          },
+          "id": 6,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT ROUND(avg_cell_temp_c::numeric, 1) AS \"Temp\" FROM battery_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "refId": "A"
+            }
+          ],
+          "title": "Avg Cell Temp",
+          "type": "stat",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "kwatth"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 6
+          },
+          "id": 7,
+          "options": {
+            "legend": {
+              "calcs": [
+                "mean",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT created_at AS time, capacity_kwh AS \"Capacity kWh\"\nFROM battery_snapshots\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at)\nORDER BY created_at",
+              "refId": "A"
+            }
+          ],
+          "title": "Battery Capacity Over Time",
+          "type": "timeseries",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 6
+          },
+          "id": 8,
+          "options": {
+            "legend": {
+              "calcs": [
+                "mean",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT created_at AS time, degradation_pct AS \"Degradation %\"\nFROM battery_snapshots\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at)\nORDER BY created_at",
+              "refId": "A"
+            }
+          ],
+          "title": "Degradation % Over Time",
+          "type": "timeseries",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "auto",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 14
+          },
+          "id": 9,
+          "options": {
+            "legend": {
+              "calcs": [
+                "mean",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT created_at AS time, health_score AS \"Health %\"\nFROM battery_snapshots\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at)\nORDER BY created_at",
+              "refId": "A"
+            }
+          ],
+          "title": "Health Score Over Time",
+          "type": "timeseries",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 14
+          },
+          "id": 10,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  CASE\n    WHEN end_battery_level < 20 THEN '0-19%'\n    WHEN end_battery_level < 40 THEN '20-39%'\n    WHEN end_battery_level < 60 THEN '40-59%'\n    WHEN end_battery_level < 80 THEN '60-79%'\n    WHEN end_battery_level < 90 THEN '80-89%'\n    ELSE '90-100%'\n  END AS \"Range\",\n  COUNT(*) AS \"🔄 Sessions\"\nFROM charging_sessions\nWHERE vehicle_id = ${vehicle_id} AND end_battery_level IS NOT NULL\nGROUP BY 1 ORDER BY 1",
+              "refId": "A"
+            }
+          ],
+          "title": "Charge Level Distribution (Histogram)",
+          "type": "barchart",
+          "transparent": false
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": [
+        "teslasync"
+      ],
+      "templating": {
+        "list": [
+          {
+            "current": {
+              "selected": true,
+              "text": "1",
+              "value": "1"
+            },
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "DS_TESLASYNC_POSTGRESQL"
+            },
+            "definition": "SELECT id AS __value, display_name AS __text FROM vehicles ORDER BY display_name",
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "vehicle_id",
+            "options": [],
+            "query": "SELECT id AS __value, display_name AS __text FROM vehicles ORDER BY display_name",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "type": "query"
+          },
+          {
+            "current": {
+              "text": "mi",
+              "value": "mi",
+              "selected": true
+            },
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "unit_length",
+            "label": "Distance",
+            "options": [
+              {
+                "text": "km",
+                "value": "km",
+                "selected": false
+              },
+              {
+                "text": "mi",
+                "value": "mi",
+                "selected": true
+              }
+            ],
+            "query": "km,mi",
+            "type": "custom"
+          },
+          {
+            "current": {
+              "text": "C",
+              "value": "C",
+              "selected": true
+            },
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "unit_temp",
+            "label": "Temperature",
+            "options": [
+              {
+                "text": "C",
+                "value": "C",
+                "selected": true
+              },
+              {
+                "text": "F",
+                "value": "F",
+                "selected": false
+              }
+            ],
+            "query": "C,F",
+            "type": "custom"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-365d",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "TeslaSync 🔋 Battery Health",
+      "uid": "teslasync-battery-health",
+      "version": 1,
+      "weekStart": ""
+    }
+    
