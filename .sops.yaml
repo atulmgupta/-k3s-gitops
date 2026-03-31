@@ -5,9 +5,9 @@ creation_rules:
   # K8s Secret manifests — only encrypt data/stringData (metadata stays readable)
   - path_regex: .*secret.*\.yaml$
     age: >-
-      age19ksrgufl4h5h2ep6wlujkt40cvyay7jrryrv64t8w0pel6yvjaqqeyctxe
+      age1nqt7rptevevv0se64ryupta6zpdr4zzh9rhg4aec9xfqhsyw23cquqzrj0
     encrypted_regex: "^(data|stringData)$"
   # General secrets files
   - path_regex: .*secrets?\.yaml$
     age: >-
-      age19ksrgufl4h5h2ep6wlujkt40cvyay7jrryrv64t8w0pel6yvjaqqeyctxe
+      age1nqt7rptevevv0se64ryupta6zpdr4zzh9rhg4aec9xfqhsyw23cquqzrj0
