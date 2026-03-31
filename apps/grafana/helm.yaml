@@ -161,8 +161,8 @@ spec:
               revision: 1
               datasource: Prometheus
             mongodb:
-              gnetId: 14997
-              revision: 2
+              gnetId: 7353
+              revision: 3
               datasource: Prometheus
           messaging:
             emqx:
