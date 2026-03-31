@@ -20,8 +20,8 @@ spec:
           passwordKey: password
         smtp:
           existingSecret: grafana-smtp-secret
-          userKey: GF_SMTP_USER
-          passwordKey: GF_SMTP_PASSWORD
+          userKey: user
+          passwordKey: password
         env:
           GF_SERVER_ROOT_URL: https://grafana.cyphers.app
           GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://authentik-server.authentik.svc.cluster.local/application/o/token/
