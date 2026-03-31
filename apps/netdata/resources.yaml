@@ -1,0 +1,20 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: netdata-resources
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/netdata/resources
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: netdata
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]

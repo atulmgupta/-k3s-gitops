@@ -23,6 +23,7 @@ spec:
     path: apps
     directory:
       recurse: true
+      exclude: '{**/resources/*,**/resources/**}'
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
