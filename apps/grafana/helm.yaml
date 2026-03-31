@@ -122,6 +122,10 @@ spec:
               gnetId: 15762
               revision: 18
               datasource: Prometheus
+            metallb:
+              gnetId: 14127
+              revision: 1
+              datasource: Prometheus
           kubernetes:
             k8s-cluster:
               gnetId: 7249
