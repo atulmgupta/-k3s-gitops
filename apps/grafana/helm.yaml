@@ -161,7 +161,7 @@ spec:
               revision: 1
               datasource: Prometheus
             mongodb:
-              gnetId: 2583
+              gnetId: 14997
               revision: 2
               datasource: Prometheus
           messaging:
