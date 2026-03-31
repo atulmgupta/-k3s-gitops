@@ -7,6 +7,11 @@ creation_rules:
     age: >-
       age1nqt7rptevevv0se64ryupta6zpdr4zzh9rhg4aec9xfqhsyw23cquqzrj0
     encrypted_regex: "^(data|stringData)$"
+  # Datasource files (contain DB credentials)
+  - path_regex: .*datasource.*\.yaml$
+    age: >-
+      age1nqt7rptevevv0se64ryupta6zpdr4zzh9rhg4aec9xfqhsyw23cquqzrj0
+    encrypted_regex: "^(data|stringData)$"
   # General secrets files
   - path_regex: .*secrets?\.yaml$
     age: >-

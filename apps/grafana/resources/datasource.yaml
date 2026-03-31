@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: grafana-datasource-teslasync
+    namespace: grafana
+    labels:
+        grafana_datasource: "1"
+type: Opaque
+stringData:
+    teslasync-postgresql.yaml: ENC[AES256_GCM,data:xusEfzPbPes0kcsKBDcL6Vw7nFN66YQw+qqPrq4CZ0cl4K2YDKEyyhkpBH5rxzmwXZyNYDL6MtcAxALaJrYgU183zORySx2qnrfqOuhBqspqMuVeKHUyfmYkMcymNzx3Fq5OwM8X0OSoaG7pc0etgn+Q5BdV76j8sxfF5cs6wVMOmvPWSeR/z6KTAuASvX4w0Gn+tXwjA5uEvAlMzgGGOTDbvKszrCHsTVh7kMznN128mgLjgHdMTxXb/0Lf4mqMayJhOMU9sjoPErd/3StCubjBeGT3YzAlR2WQj2dQUDRQnhNmMM3+b4CG88XUIxmpHYfc835hjze5RG4l6Fa1k9hcxP+QRHhH5OiMmwo2ODPDn6+a5tqMlHurXHDEiOIpCKI6XMXbO9z6wpG0owfnZU9GaQwJbQ+Cn3RXN0NkqL4zzDXzj6MNfphtmeM3LJLt8i0SwOdzN+iQMhzDLk1EkMUHbYZJDOGKMN5dIg6EQ5NcWdFsswqCTUYZ5CsBFWuUwU2QZCCKrbJpBZfTf8GYHlPy8xiDH3bVYtviSMISM2/C/8/6kHAdXZUJ6LG0gpjx16G2XzoO8lu4XkJxJrLq9N5HY7jUTsQpEptSg9P6IY/VxihLhupSmvJECAX/cg8EYQEjIFUsFxV1q7Ytpe98Yp6kVvoiptGYqxeXaO5buRQwpYJxaleA,iv:/7HN1CrIvOZBhZjqlaQN/NzHVpWFaE2KXXRVRLcgzMk=,tag:VV19M9jMzEcHy+ms5Fq6mw==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1nqt7rptevevv0se64ryupta6zpdr4zzh9rhg4aec9xfqhsyw23cquqzrj0
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBHL0t0LzNYWU5TSU9MSW5j
+            QWFLRFFnbW9VR2x6YWFnc1kwL1lwWGtUb1VjClRuTUhXRzJlb1RnOWlTbVd6Lzls
+            ZlUzem52dlZrWU5FNnpKWHY4UFZ1dmMKLS0tIGtUVFhqRXV1aXAvZHhnUmJKdXd2
+            NTFpN0dZU0FtL2ZXaGhYaVJMMzZUd0UKjgSFXLq7rTfrgIl+x4916r0N0On6ZavE
+            G1rNVeRdzd/uopEz+wJle2/rCBqBRfaThYd0C46Xu18PZ6r1Us/2hA==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-03-31T17:31:27Z"
+    mac: ENC[AES256_GCM,data:PkmFW58K8T9NKO33aGfpachDmPMtA3KWVaBq/iqcd1ZYIpp2kjYU1ykIcVU9cOi14l2qufq4VlI44OjvqUR67IodTZ8DbIcYTo603voJbcpGvOJrELpHHu2T8xu2eQqbxQi5ssADrfKRNQ40i+fjeNxyohS8DdpnH8/ZiMaJyxg=,iv:Ln/fz/tqCDarTbhQqpcb58/47L2tMI7YO4g3V5KSDL4=,tag:FLS1KYSvouUuhht6WzYvdg==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.3
