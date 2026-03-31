@@ -54,7 +54,7 @@ spec:
             folderAnnotation: grafana_folder
             searchNamespace: ALL
             provider:
-              foldersFromFilesStructure: false
+              foldersFromFilesStructure: true
           datasources:
             enabled: true
             label: grafana_datasource
