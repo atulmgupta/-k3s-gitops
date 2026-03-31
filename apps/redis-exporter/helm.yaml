@@ -1,0 +1,40 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-exporter
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: prometheus-redis-exporter
+    targetRevision: "6.*"
+    helm:
+      valuesObject:
+        redisAddress: redis://redis-master.redis.svc.cluster.local:6379
+        auth:
+          enabled: true
+          secret:
+            name: redis
+            key: redis-password
+        serviceMonitor:
+          enabled: true
+          namespace: redis
+          labels:
+            release: prometheus
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: redis
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
