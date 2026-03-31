@@ -1,29 +1,43 @@
 #!/bin/sh
-# Pre-commit hook: Ensure all secret files are SOPS-encrypted before committing
-# Checks files matching *secret*.yaml pattern for unencrypted stringData/data
+# Pre-commit hook: Auto-encrypt secret files with SOPS before committing
+# Files matching *secret*.yaml that are not yet encrypted will be encrypted automatically
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
 NC='\033[0m'
 
+ENCRYPTED=0
 FAILED=0
 
 for file in $(git diff --cached --name-only --diff-filter=ACM | grep -E 'secret.*\.yaml$|secrets?\.yaml$'); do
     if [ -f "$file" ]; then
         if ! grep -q "sops:" "$file"; then
-            echo "${RED}ERROR: $file is NOT encrypted with SOPS!${NC}"
-            echo "  Run: cd $(git rev-parse --show-toplevel) && sops --encrypt --in-place $file"
-            FAILED=1
+            echo "${YELLOW}ENCRYPTING: $file${NC}"
+            sops --encrypt --in-place "$file" 2>/dev/null
+            if [ $? -eq 0 ]; then
+                git add "$file"
+                echo "${GREEN}ENCRYPTED: $file${NC}"
+                ENCRYPTED=$((ENCRYPTED + 1))
+            else
+                echo "${RED}ERROR: Failed to encrypt $file${NC}"
+                echo "  Make sure SOPS_AGE_KEY_FILE is set and .sops.yaml exists"
+                FAILED=1
+            fi
         else
-            echo "${GREEN}OK: $file is SOPS-encrypted${NC}"
+            echo "${GREEN}OK: $file is already SOPS-encrypted${NC}"
         fi
     fi
 done
 
+if [ "$ENCRYPTED" -gt 0 ]; then
+    echo ""
+    echo "${GREEN}Auto-encrypted $ENCRYPTED file(s) with SOPS${NC}"
+fi
+
 if [ "$FAILED" -eq 1 ]; then
     echo ""
-    echo "${RED}Commit blocked: Unencrypted secrets detected.${NC}"
-    echo "Encrypt them with SOPS before committing."
+    echo "${RED}Commit blocked: Failed to encrypt some secrets.${NC}"
     exit 1
 fi
 
