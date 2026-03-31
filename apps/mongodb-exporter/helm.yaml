@@ -1,0 +1,37 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mongodb-exporter
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: prometheus-mongodb-exporter
+    targetRevision: "3.*"
+    helm:
+      valuesObject:
+        existingSecret:
+          name: mongodb-exporter-uri
+          key: mongodb-uri
+        serviceMonitor:
+          enabled: true
+          namespace: mongodb
+          additionalLabels:
+            release: prometheus
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mongodb
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
