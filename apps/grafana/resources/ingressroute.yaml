@@ -1,0 +1,24 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana
+  namespace: grafana
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`grafana.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: grafana
+          port: 3000
+  tls:
+    secretName: production-cyphers-app-tls

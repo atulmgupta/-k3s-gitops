@@ -1,0 +1,24 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prometheus
+  namespace: prometheus
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`prometheus.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: prometheus-kube-prometheus-prometheus
+          port: 9090
+  tls:
+    secretName: production-cyphers-app-tls
