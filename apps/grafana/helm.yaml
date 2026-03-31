@@ -88,6 +88,14 @@ spec:
                 editable: true
                 options:
                   path: /var/lib/grafana/dashboards/databases
+              - name: messaging
+                orgId: 1
+                folder: Messaging
+                type: file
+                disableDeletion: false
+                editable: true
+                options:
+                  path: /var/lib/grafana/dashboards/messaging
         dashboards:
           infrastructure:
             node-exporter-full:
@@ -147,6 +155,11 @@ spec:
             mongodb:
               gnetId: 2583
               revision: 2
+              datasource: Prometheus
+          messaging:
+            emqx:
+              gnetId: 17446
+              revision: 1
               datasource: Prometheus
   destination:
     server: https://kubernetes.default.svc
