@@ -115,8 +115,8 @@ spec:
               revision: 9
               datasource: Prometheus
             cert-manager:
-              gnetId: 11001
-              revision: 1
+              gnetId: 20842
+              revision: 3
               datasource: Prometheus
             coredns:
               gnetId: 15762
@@ -168,7 +168,9 @@ spec:
             emqx:
               gnetId: 17446
               revision: 1
-              datasource: Prometheus
+              datasource:
+                - name: DS_EMQX_PROMETHEUS
+                  value: Prometheus
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana
