@@ -1,0 +1,25 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: netdata
+  namespace: netdata
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`netdata.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: netdata
+          namespace: netdata
+          port: 19999
+  tls:
+    secretName: production-cyphers-app-tls
