@@ -11,3 +11,4 @@ files:
   - admin-secret.yaml
   - secret.yaml
   - datasource.yaml
+  - datasource-teslamate.yaml
