@@ -60,6 +60,94 @@ spec:
             label: grafana_datasource
             labelValue: "1"
             searchNamespace: ALL
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+              - name: infrastructure
+                orgId: 1
+                folder: Infrastructure
+                type: file
+                disableDeletion: false
+                editable: true
+                options:
+                  path: /var/lib/grafana/dashboards/infrastructure
+              - name: kubernetes
+                orgId: 1
+                folder: Kubernetes
+                type: file
+                disableDeletion: false
+                editable: true
+                options:
+                  path: /var/lib/grafana/dashboards/kubernetes
+              - name: databases
+                orgId: 1
+                folder: Databases
+                type: file
+                disableDeletion: false
+                editable: true
+                options:
+                  path: /var/lib/grafana/dashboards/databases
+        dashboards:
+          infrastructure:
+            node-exporter-full:
+              gnetId: 1860
+              revision: 37
+              datasource: Prometheus
+            node-exporter-nodes:
+              gnetId: 15172
+              revision: 2
+              datasource: Prometheus
+            traefik:
+              gnetId: 17346
+              revision: 9
+              datasource: Prometheus
+            longhorn:
+              gnetId: 16888
+              revision: 9
+              datasource: Prometheus
+            cert-manager:
+              gnetId: 11001
+              revision: 1
+              datasource: Prometheus
+            coredns:
+              gnetId: 15762
+              revision: 18
+              datasource: Prometheus
+          kubernetes:
+            k8s-cluster:
+              gnetId: 7249
+              revision: 1
+              datasource: Prometheus
+            k8s-pods:
+              gnetId: 6336
+              revision: 1
+              datasource: Prometheus
+            k8s-namespaces:
+              gnetId: 15758
+              revision: 35
+              datasource: Prometheus
+            k8s-persistent-volumes:
+              gnetId: 13646
+              revision: 2
+              datasource: Prometheus
+            k8s-api-server:
+              gnetId: 15761
+              revision: 17
+              datasource: Prometheus
+          databases:
+            postgresql:
+              gnetId: 9628
+              revision: 7
+              datasource: Prometheus
+            redis:
+              gnetId: 11835
+              revision: 1
+              datasource: Prometheus
+            mongodb:
+              gnetId: 2583
+              revision: 2
+              datasource: Prometheus
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana
