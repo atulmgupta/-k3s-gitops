@@ -16,7 +16,6 @@ spec:
       valuesObject:
         admin:
           existingSecret: grafana-admin-secret
-          userKey: admin-user
           passwordKey: password
         smtp:
           existingSecret: grafana-smtp-secret
