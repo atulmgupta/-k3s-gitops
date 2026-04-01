@@ -7,7 +7,7 @@ metadata:
   labels:
     grafana_dashboard: "1"
   annotations:
-    grafana_folder: "TeslaMate/reports"
+    grafana_folder: "TeslaMate - Reports"
 data:
   reports-dutch-tax.json: |
     {
@@ -463,5 +463,6 @@ data:
       "weekStart": ""
     }
     
+
 
 

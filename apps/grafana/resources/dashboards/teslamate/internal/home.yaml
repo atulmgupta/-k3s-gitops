@@ -7,7 +7,7 @@ metadata:
   labels:
     grafana_dashboard: "1"
   annotations:
-    grafana_folder: "TeslaMate/internal"
+    grafana_folder: "TeslaMate - Internal"
 data:
   internal-home.json: |
     {
@@ -126,5 +126,6 @@ data:
       "weekStart": ""
     }
     
+
 
 
