@@ -9,9 +9,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/nexus-devs-lab/nexus-terminal.git
-    targetRevision: b9e7d22
-    path: helm/nexus-terminal
+    repoURL: ghcr.io/nexus-devs-lab/nexus-terminal/charts
+    chart: nexus-terminal
+    targetRevision: 2.0.2
     helm:
       valuesObject:
         namespace:
