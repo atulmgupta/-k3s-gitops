@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: ghcr.io/nexus-devs-lab/nexus-terminal/charts
     chart: nexus-terminal
-    targetRevision: 2.0.2
+    targetRevision: 2.0.4
     helm:
       valuesObject:
         namespace:
