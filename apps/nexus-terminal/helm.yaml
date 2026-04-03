@@ -1,0 +1,132 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nexus-terminal
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nexus-devs-lab/nexus-terminal.git
+    targetRevision: v2.0.2
+    path: helm/nexus-terminal
+    helm:
+      valuesObject:
+        namespace:
+          create: true
+
+        config:
+          existingSecret: nexus-terminal-secrets
+          logLevel: info
+
+        # ── PostgreSQL (external — credentials in existingSecret) ──
+        postgresql:
+          enabled: false
+          sqlite:
+            persistence:
+              enabled: false
+          external:
+            host: postgres-v17-postgresql.postgres-v17.svc.cluster.local
+            port: 5432
+            username: nexus
+            password: ""  # provided via existingSecret
+            database: nexus
+            sslMode: disable
+
+        # ── MongoDB (external — credentials in existingSecret) ──
+        mongodb:
+          enabled: false
+          external:
+            url: ""  # provided via existingSecret
+
+        # ── Redis (external — credentials in existingSecret) ──
+        redis:
+          enabled: false
+          external:
+            host: "redis-master.redis.svc.cluster.local"
+            port: 6379
+            password: ""  # provided via existingSecret
+
+        # ── API ──
+        api:
+          replicaCount: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+        # ── Web Frontend ──
+        web:
+          enabled: true
+          replicaCount: 1
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+
+        # ── Docs ──
+        docs:
+          enabled: true
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+
+        # ── Workers ──
+        marketWorker:
+          enabled: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+        alertWorker:
+          enabled: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+        notificationWorker:
+          enabled: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+        # ── Ingress (Traefik) ──
+        ingress:
+          enabled: false
+        ingressRoute:
+          enabled: false  # will be created via resources.yaml
+
+        # ── Autoscaling ──
+        autoscaling:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nexus-terminal
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
