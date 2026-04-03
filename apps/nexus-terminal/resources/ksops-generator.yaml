@@ -3,5 +3,9 @@ apiVersion: viaduct.ai/v1
 kind: ksops
 metadata:
   name: nexus-terminal-secrets
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        path: ksops
 files:
   - ./secret.yaml
