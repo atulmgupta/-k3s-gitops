@@ -57,7 +57,7 @@ ruleSelectorNilUsesHelmValues: false
 | `mqtt` | `mqtt-emqx` | EMQX MQTT broker metrics |
 
 ## Key Configuration
-- **Retention**: 90 days
+- **Retention**: 7 days or 100GB (whichever is reached first)
 - **Grafana**: Disabled (separate Bitnami Grafana deployment in `grafana` namespace)
 - **Storage**: Longhorn-backed PVCs
 

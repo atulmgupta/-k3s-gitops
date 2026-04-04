@@ -20,7 +20,8 @@ spec:
           service:
             type: LoadBalancer
           prometheusSpec:
-            retention: 90d
+            retention: 7d
+            retentionSize: 100GB
             serviceMonitorSelectorNilUsesHelmValues: false
             podMonitorSelectorNilUsesHelmValues: false
             ruleSelectorNilUsesHelmValues: false
