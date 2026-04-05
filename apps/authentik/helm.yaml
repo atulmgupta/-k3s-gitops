@@ -170,8 +170,11 @@ spec:
     server: https://kubernetes.default.svc
     namespace: authentik
   # ⚠️  MANUAL SYNC — review diff in ArgoCD UI before syncing
-  syncPolicy: {}
-  # After successful first sync, uncomment below and remove syncPolicy: {}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  # After successful first sync, add automated sync:
   # syncPolicy:
   #   automated: { prune: true, selfHeal: true }
-  #   syncOptions: [CreateNamespace=true]
+  #   syncOptions: [CreateNamespace=true, ServerSideApply=true]
