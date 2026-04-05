@@ -1,0 +1,177 @@
+# =============================================================================
+# Authentik — Helm Application (ArgoCD)
+# =============================================================================
+# Identity Provider for all *.cyphers.app services via Traefik ForwardAuth.
+# Secrets are injected via env vars from a SOPS-encrypted K8s Secret.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authentik
+  namespace: argocd
+  labels:
+    tier: security
+spec:
+  project: default
+  source:
+    repoURL: https://charts.goauthentik.io
+    chart: authentik
+    targetRevision: "2026.2.*"
+    helm:
+      valuesObject:
+        authentik:
+          log_level: info
+          events:
+            context_processors:
+              asn: ""
+              geoip: ""
+          email:
+            from: "authentik-cyphers <auth@cyphers.app>"
+            host: smtp.gmail.com
+            port: 587
+            timeout: 30
+            use_ssl: false
+            use_tls: true
+            username: iamatulmgupta@gmail.com
+          error_reporting:
+            enabled: false
+          outposts:
+            container_image_base: "ghcr.io/goauthentik/%(type)s:%(version)s"
+          postgresql:
+            host: postgres-postgresql.postgres.svc.cluster.local
+            name: authentik
+            port: 5432
+            user: authentik
+          redis:
+            host: redis-master.redis.svc.cluster.local
+
+        global:
+          affinity:
+            podAntiAffinity: hard
+
+        postgresql:
+          enabled: false
+        redis:
+          enabled: false
+
+        server:
+          replicas: 2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          ingress:
+            enabled: false
+          metrics:
+            enabled: true
+            service:
+              type: ClusterIP
+              servicePort: 9300
+            serviceMonitor:
+              enabled: true
+              interval: 30s
+              namespace: prometheus
+              scrapeTimeout: 3s
+          env:
+            - name: AUTHENTIK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: secret-key
+            - name: AUTHENTIK_POSTGRESQL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: postgresql-password
+            - name: AUTHENTIK_REDIS__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: redis-password
+            - name: AUTHENTIK_EMAIL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: email-password
+
+        worker:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          env:
+            - name: AUTHENTIK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: secret-key
+            - name: AUTHENTIK_POSTGRESQL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: postgresql-password
+            - name: AUTHENTIK_REDIS__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: redis-password
+            - name: AUTHENTIK_EMAIL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-credentials
+                  key: email-password
+          livenessProbe:
+            exec: null
+            httpGet:
+              path: /-/health/live/
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 1
+          readinessProbe:
+            exec: null
+            httpGet:
+              path: /-/health/ready/
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 1
+          startupProbe:
+            exec: null
+            httpGet:
+              path: /-/health/live/
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 60
+            timeoutSeconds: 1
+
+        prometheus:
+          rules:
+            enabled: true
+            labels:
+              release: prometheus
+            namespace: prometheus
+
+        serviceAccount:
+          create: true
+          fullnameOverride: authentik
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: authentik
+  # ⚠️  MANUAL SYNC — review diff in ArgoCD UI before syncing
+  syncPolicy: {}
+  # After successful first sync, uncomment below and remove syncPolicy: {}
+  # syncPolicy:
+  #   automated: { prune: true, selfHeal: true }
+  #   syncOptions: [CreateNamespace=true]

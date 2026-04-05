@@ -1,0 +1,29 @@
+# =============================================================================
+# Authentik — Resources Application (ArgoCD / Kustomize)
+# =============================================================================
+# Deploys secrets (SOPS-encrypted), middleware, and other custom resources.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authentik-resources
+  namespace: argocd
+  labels:
+    tier: security
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/authentik/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: authentik
+  # ⚠️  MANUAL SYNC — review diff in ArgoCD UI before syncing
+  syncPolicy: {}
+  # After successful first sync, uncomment below and remove syncPolicy: {}
+  # syncPolicy:
+  #   automated: { prune: true, selfHeal: true }
+  #   syncOptions: [CreateNamespace=true]
