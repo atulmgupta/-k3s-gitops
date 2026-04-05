@@ -17,7 +17,7 @@ spec:
   source:
     repoURL: https://charts.goauthentik.io
     chart: authentik
-    targetRevision: "2025.12.*"
+    targetRevision: "2026.2.*"
     helm:
       valuesObject:
         authentik:
@@ -56,7 +56,7 @@ spec:
           enabled: false
 
         server:
-          replicas: 2
+          replicas: 1
           deploymentStrategy:
             type: RollingUpdate
             rollingUpdate:
