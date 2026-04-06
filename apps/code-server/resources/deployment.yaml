@@ -23,7 +23,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
       initContainers:
-        - name: permissions
+        - name: code-server-permissions
           image: busybox:latest
           command: ["sh", "-c", "chown -R 1000:1000 /home/coder"]
           volumeMounts:
