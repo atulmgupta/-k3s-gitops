@@ -58,6 +58,8 @@ resources:
   - dashboards/teslamate/internal/home.yaml
   # TeslaMate reports
   - dashboards/teslamate/reports/dutch-tax.yaml
+  # ArgoCD
+  - dashboards/argocd/argocd.yaml
 
 generators:
   - ksops-generator.yaml
