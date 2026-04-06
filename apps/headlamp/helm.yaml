@@ -32,8 +32,8 @@ spec:
   ignoreDifferences:
     - group: apps
       kind: Deployment
-      jsonPointers:
-        - /spec/template/metadata/annotations
+      jqPathExpressions:
+        - .spec.template
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
