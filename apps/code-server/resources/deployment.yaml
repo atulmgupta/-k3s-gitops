@@ -34,7 +34,7 @@ spec:
             runAsNonRoot: false
       containers:
         - name: code-server
-          image: ghcr.io/coder/code-server:4.18.0
+          image: ghcr.io/coder/code-server:4.114.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
