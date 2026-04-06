@@ -1,0 +1,27 @@
+# =============================================================================
+# Gotify — Kustomize Application (ArgoCD)
+# =============================================================================
+# Self-hosted push notification server. Accessible at gotify.cyphers.app.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gotify
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/gotify/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gotify
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotify
+  labels:
+    app.kubernetes.io/name: gotify
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gotify
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gotify
+    spec:
+      containers:
+        - name: gotify
+          image: gotify/server:latest
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+            - name: GOTIFY_DEFAULTUSER_NAME
+              value: admin
+            - name: GOTIFY_DEFAULTUSER_PASS
+              value: admin
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: gotify-data
