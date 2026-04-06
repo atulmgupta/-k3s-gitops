@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: error-pages-custom-error-pages
   labels:
-    app.kubernetes.io/name: error-pages
+    app.kubernetes.io/name: custom-error-pages
     app.kubernetes.io/instance: error-pages
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: error-pages
+      app.kubernetes.io/name: custom-error-pages
       app.kubernetes.io/instance: error-pages
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: error-pages
+        app.kubernetes.io/name: custom-error-pages
         app.kubernetes.io/instance: error-pages
     spec:
       containers:
