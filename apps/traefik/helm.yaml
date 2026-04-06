@@ -42,7 +42,11 @@ spec:
             expose:
               default: false
             port: 8000
-            redirectTo: websecure
+            http:
+              redirections:
+                entryPoint:
+                  to: websecure
+                  scheme: https
           websecure:
             expose:
               default: true
