@@ -1,19 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hass-home-assistant
-  labels:
-    app.kubernetes.io/name: home-assistant
-    app.kubernetes.io/instance: hass
+  name: home-assistant
   annotations:
     metallb.universe.tf/loadBalancerIPs: "192.168.68.217"
 spec:
   type: LoadBalancer
   ports:
-    - port: 8080
+    - port: 8123
       targetPort: http
       protocol: TCP
       name: http
   selector:
     app.kubernetes.io/name: home-assistant
-    app.kubernetes.io/instance: hass
