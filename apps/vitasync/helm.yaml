@@ -85,14 +85,7 @@ spec:
           enabled: false
 
         secrets:
-          JWT_SECRET: MANAGED_VIA_SOPS
-          ENCRYPTION_KEY: MANAGED_VIA_SOPS
-          ADMIN_API_KEY: MANAGED_VIA_SOPS
-          NEXT_PUBLIC_DEFAULT_API_KEY: MANAGED_VIA_SOPS
-          WHOOP_CLIENT_ID: MANAGED_VIA_SOPS
-          WHOOP_CLIENT_SECRET: MANAGED_VIA_SOPS
-          WITHINGS_CLIENT_ID: MANAGED_VIA_SOPS
-          WITHINGS_CLIENT_SECRET: MANAGED_VIA_SOPS
+          existingSecret: vitasync-secrets
 
         ingressRoute:
           enabled: false
