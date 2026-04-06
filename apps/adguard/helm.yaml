@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: https://homeopshub.github.io/helm-for-home
     chart: adguard-home
-    targetRevision: "0.*.*"
+    targetRevision: "0.10.0"
     helm:
       releaseName: adguard
       valuesObject:

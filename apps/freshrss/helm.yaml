@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://homeopshub.github.io/helm-for-home
     chart: freshrss
-    targetRevision: "0.*.*"
+    targetRevision: "0.2.0"
     helm:
       releaseName: freshrss
       valuesObject:

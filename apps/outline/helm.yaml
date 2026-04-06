@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://homeopshub.github.io/helm-for-home
     chart: outline
-    targetRevision: "0.*.*"
+    targetRevision: "0.19.0"
     helm:
       releaseName: outline
       valuesObject:
