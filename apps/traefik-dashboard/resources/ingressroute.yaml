@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-external-dashboard
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Traefik"
+    gethomepage.dev/group: "Infrastructure"
+    gethomepage.dev/icon: "traefik"
+    gethomepage.dev/href: "https://traefik.cyphers.app"
+    gethomepage.dev/description: "Ingress Controller"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`traefik.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - kind: TraefikService
+          name: api@internal
+  tls:
+    secretName: production-cyphers-app-tls
