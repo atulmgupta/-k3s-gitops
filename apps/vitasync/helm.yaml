@@ -21,8 +21,6 @@ spec:
         api:
           enabled: true
           replicaCount: 1
-          image:
-            tag: "1.0.0"
           resources:
             requests: { cpu: 100m, memory: 256Mi }
             limits: { cpu: 500m, memory: 512Mi }
@@ -30,8 +28,6 @@ spec:
         web:
           enabled: true
           replicaCount: 1
-          image:
-            tag: "1.0.0"
           resources:
             requests: { cpu: 50m, memory: 128Mi }
             limits: { cpu: 250m, memory: 256Mi }
@@ -40,8 +36,6 @@ spec:
           enabled: true
           replicaCount: 1
           queues: sync,analytics,webhooks
-          image:
-            tag: "1.0.0"
           resources:
             requests: { cpu: 100m, memory: 256Mi }
             limits: { cpu: 500m, memory: 512Mi }

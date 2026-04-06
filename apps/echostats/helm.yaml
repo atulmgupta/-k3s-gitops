@@ -21,10 +21,8 @@ spec:
         image:
           api:
             repository: ghcr.io/spotify-devs/echostats-api
-            tag: "0.1.0"
           web:
             repository: ghcr.io/spotify-devs/echostats-web
-            tag: "0.1.0"
 
         replicaCount:
           api: 1
