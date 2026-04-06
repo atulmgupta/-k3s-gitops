@@ -12,6 +12,11 @@ spec:
     - kind: Rule
       match: HostRegexp(`{subdomain:[a-z0-9-]+}.cyphers.app`)
       priority: 1
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
       services:
         - name: error-pages-custom-error-pages
           namespace: error-pages
