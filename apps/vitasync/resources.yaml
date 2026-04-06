@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vitasync-resources
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/vitasync/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vitasync
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
