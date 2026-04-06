@@ -4,3 +4,5 @@ namespace: prometheus
 resources:
   - ingressroute.yaml
   - metallb-podmonitor.yaml
+  - servicemonitor-argocd.yaml
+  - servicemonitor-emqx.yaml
