@@ -1,0 +1,28 @@
+# =============================================================================
+# Plex — Kustomize Application (ArgoCD)
+# =============================================================================
+# Plex Media Server with existing Longhorn PVCs.
+# Accessible at plex.cyphers.app behind authentik.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: plex
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/plex/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: plex
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
