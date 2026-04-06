@@ -1,0 +1,46 @@
+# AdGuard Home — no secrets needed
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: adguard
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://homeopshub.github.io/helm-for-home
+    chart: adguard-home
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: adguard
+      valuesObject:
+        persistence:
+          enabled: true
+          storageClass: longhorn
+          size: 4Gi
+
+        service:
+          type: LoadBalancer
+          loadBalancerIP: 192.168.68.209
+          port: 3000
+          dnsPort: 53
+          externalIPs:
+            - 192.168.68.78
+            - 192.168.68.103
+            - 192.168.68.133
+
+        ingressRoute:
+          enabled: false
+
+        ingress:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: adguard
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

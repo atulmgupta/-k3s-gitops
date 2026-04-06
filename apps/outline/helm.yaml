@@ -1,0 +1,68 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: outline
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://homeopshub.github.io/helm-for-home
+    chart: outline
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: outline
+      valuesObject:
+        configmap:
+          enabled: true
+          data:
+            PORT: "80"
+            URL: https://outline.cyphers.app
+            FORCE_HTTPS: "true"
+            DEFAULT_LANGUAGE: en_US
+            LOG_LEVEL: debug
+            FILE_STORAGE_UPLOAD_MAX_SIZE: "26214400"
+            PGSSLMODE: disable
+            OIDC_AUTH_URI: https://authentik.cyphers.app/application/o/authorize/
+            OIDC_DISPLAY_NAME: authentik
+            OIDC_LOGOUT_URI: https://authentik.cyphers.app/application/o/ouline/end-session/
+            OIDC_SCOPES: openid profile email
+            OIDC_TOKEN_URI: https://authentik.cyphers.app/application/o/token/
+            OIDC_USERINFO_URI: https://authentik.cyphers.app/application/o/userinfo/
+            OIDC_USERNAME_CLAIM: preferred_username
+            SMTP_FROM_EMAIL: outline@cyphers.app
+            SMTP_HOST: smtp.sendgrid.net
+            SMTP_PORT: "587"
+            SMTP_REPLY_EMAIL: support@cyphers.app
+            SMTP_USERNAME: apikey
+            AWS_REGION: xx-xxxx-x
+            AWS_S3_ACL: private
+            AWS_S3_FORCE_PATH_STYLE: "true"
+            AWS_S3_UPLOAD_BUCKET_NAME: wiki
+            AWS_S3_UPLOAD_BUCKET_URL: http://localhost:9000
+
+        secret:
+          enabled: false
+
+        ingressRoute:
+          enabled: false
+
+        persistentVolumeClaims:
+          enabled: true
+          claims:
+            - name: data
+              size: 10Gi
+              accessModes: [ReadWriteOnce]
+              mountPath: /data
+
+        service:
+          port: 80
+          type: ClusterIP
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: outline
+  syncPolicy:
+    syncOptions: [CreateNamespace=true, ServerSideApply=true]

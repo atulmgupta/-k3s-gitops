@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: freshrss
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "FreshRSS"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "freshrss"
+    gethomepage.dev/href: "https://rss.cyphers.app"
+    gethomepage.dev/description: "RSS Reader"
+spec:
+  entryPoints: [websecure]
+  routes:
+    - kind: Rule
+      match: Host(`rss.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: freshrss
+          namespace: freshrss
+          port: 80
+  tls:
+    secretName: production-cyphers-app-tls

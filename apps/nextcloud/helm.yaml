@@ -1,0 +1,74 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nextcloud
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://nextcloud.github.io/helm/
+    chart: nextcloud
+    targetRevision: "6.*.*"
+    helm:
+      releaseName: nextcloud
+      valuesObject:
+        nextcloud:
+          existingSecret:
+            enabled: true
+            usernameKey: nextcloud-username
+            passwordKey: nextcloud-password
+          host: nextcloud.cyphers.app
+          trustedDomains:
+            - nextcloud.cyphers.app
+            - cyphers.app
+            - traefik.cyphers.app
+            - traefik.traefik.svc.cluster.local
+          strategy:
+            type: Recreate
+
+        externalDatabase:
+          enabled: true
+          type: postgresql
+          host: postgres-postgresql.postgres.svc.cluster.local
+          database: nextcloud
+          user: nextcloud
+          existingSecret:
+            enabled: true
+            passwordKey: db-password
+
+        internalDatabase:
+          enabled: false
+        postgresql:
+          enabled: false
+        redis:
+          enabled: false
+        mariadb:
+          enabled: false
+
+        persistence:
+          enabled: false
+          nextcloudData:
+            enabled: true
+            existingClaim: nextcloud-data-pvc
+            size: 8Gi
+            storageClass: longhorn
+
+        service:
+          type: LoadBalancer
+          loadBalancerIP: 192.168.68.205
+          port: 8080
+
+        ingress:
+          enabled: false
+
+        metrics:
+          enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nextcloud
+  syncPolicy:
+    syncOptions: [CreateNamespace=true, ServerSideApply=true]

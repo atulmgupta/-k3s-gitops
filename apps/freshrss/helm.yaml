@@ -1,0 +1,49 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: freshrss
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://homeopshub.github.io/helm-for-home
+    chart: freshrss
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: freshrss
+      valuesObject:
+        externalDatabase:
+          enabled: true
+          type: PostgreSQL
+          host: postgres.postgres.svc.cluster.local:5432
+          database: freshrss
+          user: freshrss
+          existingSecret: freshrss-secret
+          passwordKey: POSTGRESQL_PASSWORD
+
+        secret:
+          enabled: false
+
+        ingressRoute:
+          enabled: false
+
+        persistentVolumeClaims:
+          enabled: true
+          claims:
+            - name: data-storage
+              size: 1Gi
+              storageClassName: longhorn
+              accessModes: [ReadWriteOnce]
+              mountPath: /var/www/FreshRSS/data
+
+        mariadb:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: freshrss
+  syncPolicy:
+    syncOptions: [CreateNamespace=true, ServerSideApply=true]
