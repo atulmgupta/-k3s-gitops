@@ -1,0 +1,156 @@
+# =============================================================================
+# Homepage — Helm Application (ArgoCD)
+# =============================================================================
+# Modern dashboard with Kubernetes service auto-discovery.
+# Replaces Homer. Accessible at home.cyphers.app behind authentik.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homepage
+  namespace: argocd
+  labels:
+    tier: tools
+spec:
+  project: default
+  source:
+    repoURL: https://jameswynn.github.io/helm-charts
+    chart: homepage
+    targetRevision: "2.*.*"
+    helm:
+      releaseName: homepage
+      valuesObject:
+        image:
+          repository: ghcr.io/gethomepage/homepage
+          tag: latest
+
+        enableRbac: true
+
+        serviceAccount:
+          create: true
+          name: homepage
+
+        config:
+          kubernetes:
+            mode: cluster
+
+          settings:
+            title: Cyphers Homelab
+            favicon: https://cyphers.app/favicon.ico
+            headerStyle: clean
+            layout:
+              - Infrastructure:
+                  style: row
+                  columns: 4
+              - Applications:
+                  style: row
+                  columns: 4
+              - Monitoring:
+                  style: row
+                  columns: 4
+
+          widgets:
+            - kubernetes:
+                cluster:
+                  show: true
+                  cpu: true
+                  memory: true
+                  showLabel: true
+                  label: "k3s"
+                nodes:
+                  show: true
+                  cpu: true
+                  memory: true
+                  showLabel: true
+            - search:
+                provider: google
+                target: _blank
+
+          services:
+            - Infrastructure:
+                - Traefik:
+                    icon: traefik
+                    href: https://traefik.cyphers.app
+                    description: Ingress Controller
+                    widget:
+                      type: traefik
+                      url: http://traefik.traefik.svc.cluster.local:9000
+                - ArgoCD:
+                    icon: argocd
+                    href: https://argocd.cyphers.app
+                    description: GitOps CD
+                - Authentik:
+                    icon: authentik
+                    href: https://auth.cyphers.app
+                    description: Identity Provider
+                - Longhorn:
+                    icon: longhorn
+                    href: https://longhorn.cyphers.app
+                    description: Storage
+
+            - Applications:
+                - TeslaSync:
+                    icon: tesla
+                    href: https://teslasync.cyphers.app
+                    description: Tesla Fleet Manager
+                - Home Assistant:
+                    icon: home-assistant
+                    href: https://hass.cyphers.app
+                    description: Home Automation
+                - Outline:
+                    icon: outline
+                    href: https://outline.cyphers.app
+                    description: Wiki & Docs
+                - IT Tools:
+                    icon: it-tools
+                    href: https://devtools.cyphers.app
+                    description: Developer Utilities
+                - Code Server:
+                    icon: vscode
+                    href: https://code.cyphers.app
+                    description: Web IDE
+                - VitaSync:
+                    icon: mdi-heart-pulse
+                    href: https://vitasync.cyphers.app
+                    description: Health Sync
+
+            - Monitoring:
+                - Grafana:
+                    icon: grafana
+                    href: https://grafana.cyphers.app
+                    description: Dashboards
+                - Prometheus:
+                    icon: prometheus
+                    href: https://prometheus.cyphers.app
+                    description: Metrics
+                - Uptime Kuma:
+                    icon: uptime-kuma
+                    href: https://kuma.cyphers.app
+                    description: Uptime Monitoring
+                - Headlamp:
+                    icon: kubernetes-dashboard
+                    href: https://k8s.cyphers.app
+                    description: Kubernetes Dashboard
+                - EMQX:
+                    icon: emqx
+                    href: https://mqtt.cyphers.app
+                    description: MQTT Broker
+                - Netdata:
+                    icon: netdata
+                    href: https://netdata.cyphers.app
+                    description: System Monitoring
+
+          bookmarks: []
+
+        ingress:
+          main:
+            enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homepage
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
