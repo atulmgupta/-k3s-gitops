@@ -18,7 +18,7 @@ spec:
         app.kubernetes.io/instance: error-pages
     spec:
       containers:
-        - name: error-pages
+        - name: custom-error-pages
           image: tarampampam/error-pages:latest
           imagePullPolicy: IfNotPresent
           ports:
