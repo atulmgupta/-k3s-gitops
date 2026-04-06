@@ -44,6 +44,9 @@ spec:
                       storage: 8Gi
         nodeExporter:
           enabled: true
+        prometheus-node-exporter:
+          tolerations:
+            - operator: Exists
         kubeStateMetrics:
           enabled: true
         prometheusOperator:
