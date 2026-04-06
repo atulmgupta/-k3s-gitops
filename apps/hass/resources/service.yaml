@@ -5,6 +5,8 @@ metadata:
   labels:
     app.kubernetes.io/name: home-assistant
     app.kubernetes.io/instance: hass
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: "192.168.68.217"
 spec:
   type: LoadBalancer
   ports:
