@@ -70,7 +70,86 @@ spec:
                 provider: google
                 target: _blank
 
-          services: []
+          services:
+            - Infrastructure:
+                - Traefik:
+                    icon: traefik
+                    href: https://traefik.cyphers.app
+                    description: Ingress Controller
+                - ArgoCD:
+                    icon: argocd
+                    href: https://argocd.cyphers.app
+                    description: GitOps CD
+                - Authentik:
+                    icon: authentik
+                    href: https://auth.cyphers.app
+                    description: Identity Provider
+                - Longhorn:
+                    icon: longhorn
+                    href: https://longhorn.cyphers.app
+                    description: Storage
+            - Applications:
+                - TeslaSync:
+                    icon: tesla
+                    href: https://teslasync.cyphers.app
+                    description: Tesla Fleet Manager
+                - Home Assistant:
+                    icon: home-assistant
+                    href: https://hass.cyphers.app
+                    description: Home Automation
+                - VitaSync:
+                    icon: mdi-heart-pulse
+                    href: https://vitasync.cyphers.app
+                    description: Health Sync
+                - EchoStats:
+                    icon: mdi-chart-bar
+                    href: https://echostats.cyphers.app
+                    description: Spotify Analytics
+                - Plex:
+                    icon: plex
+                    href: https://plex.cyphers.app
+                    description: Media Server
+                - IT Tools:
+                    icon: it-tools
+                    href: https://devtools.cyphers.app
+                    description: Developer Utilities
+                - Code Server:
+                    icon: vscode
+                    href: https://code.cyphers.app
+                    description: Web IDE
+                - Gotify:
+                    icon: gotify
+                    href: https://gotify.cyphers.app
+                    description: Push Notifications
+                - Outline:
+                    icon: outline
+                    href: https://outline.cyphers.app
+                    description: Wiki & Docs
+            - Monitoring:
+                - Grafana:
+                    icon: grafana
+                    href: https://grafana.cyphers.app
+                    description: Dashboards
+                - Prometheus:
+                    icon: prometheus
+                    href: https://prometheus.cyphers.app
+                    description: Metrics
+                - Uptime Kuma:
+                    icon: uptime-kuma
+                    href: https://kuma.cyphers.app
+                    description: Uptime Monitoring
+                - Headlamp:
+                    icon: kubernetes-dashboard
+                    href: https://k8s.cyphers.app
+                    description: Kubernetes Dashboard
+                - EMQX:
+                    icon: emqx
+                    href: https://mqtt.cyphers.app
+                    description: MQTT Broker
+                - Netdata:
+                    icon: netdata
+                    href: https://netdata.cyphers.app
+                    description: System Monitoring
 
           bookmarks: []
 
