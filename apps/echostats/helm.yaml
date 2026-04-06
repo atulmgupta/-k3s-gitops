@@ -80,35 +80,7 @@ spec:
             existingSecretKey: REDIS_URL
 
         ingressRoute:
-          enabled: true
-          namespace: echostats
-          annotations:
-            kubernetes.io/ingress.class: traefik-external
-          spec:
-            entryPoints: [websecure]
-            routes:
-              - kind: Rule
-                match: "Host(`echostats.cyphers.app`) && PathPrefix(`/api`)"
-                middlewares:
-                  - name: default-headers
-                    namespace: traefik
-                services:
-                  - name: echostats-api
-                    namespace: echostats
-                    port: 8000
-              - kind: Rule
-                match: "Host(`echostats.cyphers.app`)"
-                middlewares:
-                  - name: default-headers
-                    namespace: traefik
-                  - name: authentik-auth
-                    namespace: authentik
-                services:
-                  - name: echostats-web
-                    namespace: echostats
-                    port: 3000
-            tls:
-              secretName: production-cyphers-app-tls
+          enabled: false
 
         ingress:
           enabled: false

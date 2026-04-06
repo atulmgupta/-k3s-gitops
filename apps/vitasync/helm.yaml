@@ -57,43 +57,7 @@ spec:
           existingSecret: vitasync-credentials
 
         ingressRoute:
-          enabled: true
-          namespace: vitasync
-          annotations:
-            kubernetes.io/ingress.class: traefik-external
-          entryPoints: [websecure]
-          routes:
-            - kind: Rule
-              match: "Host(`vitasync.cyphers.app`) && PathPrefix(`/v1/`)"
-              middlewares:
-                - name: default-headers
-                  namespace: traefik
-              services:
-                - name: vitasync-api
-                  port: 3001
-            - kind: Rule
-              match: "Host(`vitasync.cyphers.app`)"
-              middlewares:
-                - name: authentik-auth
-                  namespace: authentik
-                - name: default-headers
-                  namespace: traefik
-              services:
-                - name: vitasync-web
-                  port: 3000
-            - kind: Rule
-              match: "Host(`vitasync-api.cyphers.app`)"
-              middlewares:
-                - name: authentik-auth
-                  namespace: authentik
-                - name: default-headers
-                  namespace: traefik
-              services:
-                - name: vitasync-api
-                  port: 3001
-          tls:
-            enabled: true
-            secretName: production-cyphers-app-tls
+          enabled: false
 
         migrations:
           enabled: true
