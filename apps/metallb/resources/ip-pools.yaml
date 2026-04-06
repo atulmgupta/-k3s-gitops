@@ -1,0 +1,17 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: dynamic-ip-pool
+spec:
+  addresses:
+    - 192.168.68.211-192.168.68.254
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: reserved-ip-pool
+spec:
+  addresses:
+    - 192.168.68.200-192.168.68.210
+  autoAssign: false

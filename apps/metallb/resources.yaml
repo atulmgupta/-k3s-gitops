@@ -1,0 +1,27 @@
+# =============================================================================
+# MetalLB — Resources Application (ArgoCD / Kustomize)
+# =============================================================================
+# IP address pools and L2 advertisement configuration.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb-resources
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/metallb/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

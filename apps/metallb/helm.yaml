@@ -1,0 +1,37 @@
+# =============================================================================
+# MetalLB — Helm Application (ArgoCD)
+# =============================================================================
+# Bare-metal load balancer for k3s. Assigns IPs from local pool
+# via L2 advertisement. Critical infra — manual sync only.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://metallb.github.io/metallb
+    chart: metallb
+    targetRevision: "0.14.*"
+    helm:
+      valuesObject:
+        controller:
+          logLevel: info
+        speaker:
+          logLevel: info
+          frr:
+            enabled: true
+        crds:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
