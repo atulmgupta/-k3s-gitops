@@ -89,7 +89,7 @@ spec:
             entryPoint: metrics
 
         service:
-          type: NodePort
+          type: LoadBalancer
 
         deployment:
           replicas: 1
