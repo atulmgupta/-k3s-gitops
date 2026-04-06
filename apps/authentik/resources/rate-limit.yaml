@@ -1,0 +1,11 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: rate-limit
+  namespace: authentik
+spec:
+  rateLimit:
+    average: 30
+    burst: 50
+    period: 1m
