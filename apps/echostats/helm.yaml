@@ -84,7 +84,15 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: echostats
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: echostats
+      jsonPointers:
+        - /data
+        - /stringData
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - RespectIgnoreDifferences=true
