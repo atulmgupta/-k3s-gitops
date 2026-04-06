@@ -17,15 +17,13 @@ spec:
   source:
     repoURL: https://traefik.github.io/charts
     chart: traefik
-    targetRevision: "27.*.*"
+    targetRevision: "39.*.*"
     helm:
       releaseName: traefik
       valuesObject:
-        globalArguments:
+        additionalArguments:
           - "--global.checknewversion=false"
           - "--global.sendanonymoususage=false"
-
-        additionalArguments:
           - "--serversTransport.insecureSkipVerify=true"
           - "--api"
           - "--api.dashboard=true"
@@ -44,8 +42,7 @@ spec:
             expose:
               default: false
             port: 8000
-            redirectTo:
-              port: websecure
+            redirectTo: websecure
           websecure:
             expose:
               default: true
