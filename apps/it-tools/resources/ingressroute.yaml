@@ -4,6 +4,11 @@ metadata:
   name: it-tools
   annotations:
     kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "IT Tools"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "it-tools"
+    gethomepage.dev/description: "Developer Utilities"
 spec:
   entryPoints:
     - websecure

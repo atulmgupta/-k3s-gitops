@@ -4,6 +4,11 @@ metadata:
   name: home-assistant
   annotations:
     kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Home Assistant"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "home-assistant"
+    gethomepage.dev/description: "Home Automation"
 spec:
   entryPoints:
     - websecure
