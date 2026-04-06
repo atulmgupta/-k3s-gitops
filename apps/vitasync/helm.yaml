@@ -1,0 +1,118 @@
+# =============================================================================
+# VitaSync — Helm Application (ArgoCD)
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vitasync
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/biosync-io/charts
+    chart: vitasync
+    targetRevision: "2.25.0-rc.chore-quality-improvements.a31c9f0"
+    helm:
+      releaseName: vitasync
+      valuesObject:
+        api:
+          enabled: true
+          replicaCount: 1
+          image:
+            tag: "1.0.0"
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+
+        web:
+          enabled: true
+          replicaCount: 1
+          image:
+            tag: "1.0.0"
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 250m, memory: 256Mi }
+
+        worker:
+          enabled: true
+          replicaCount: 1
+          queues: sync,analytics,webhooks
+          image:
+            tag: "1.0.0"
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+
+        notificationWorker:
+          enabled: true
+          replicaCount: 1
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 250m, memory: 256Mi }
+
+        reportWorker:
+          enabled: true
+          replicaCount: 1
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+
+        config:
+          NODE_ENV: production
+          LOG_LEVEL: info
+          HOST: 0.0.0.0
+          PORT: "3001"
+          DATABASE_POOL_MAX: "20"
+          DATABASE_POOL_MIN: "2"
+          RATE_LIMIT_MAX: "100"
+          RATE_LIMIT_WINDOW_MS: "60000"
+          ADMIN_WORKSPACE_SLUG: default
+          INTERNAL_API_URL: http://vitasync-api.vitasync.svc.cluster.local:3001
+          OAUTH_REDIRECT_BASE_URL: https://vitasync.cyphers.app
+
+        externalPostgresql:
+          host: postgres-v17-postgresql.postgres-v17.svc.cluster.local
+          port: 5432
+          database: vitasync
+          username: vitasync
+          password: MANAGED_VIA_SOPS
+
+        externalRedis:
+          host: redis-master.redis.svc.cluster.local
+          port: 6379
+          password: MANAGED_VIA_SOPS
+
+        postgresql:
+          enabled: false
+        redis:
+          enabled: false
+
+        secrets:
+          JWT_SECRET: MANAGED_VIA_SOPS
+          ENCRYPTION_KEY: MANAGED_VIA_SOPS
+          ADMIN_API_KEY: MANAGED_VIA_SOPS
+          NEXT_PUBLIC_DEFAULT_API_KEY: MANAGED_VIA_SOPS
+          WHOOP_CLIENT_ID: MANAGED_VIA_SOPS
+          WHOOP_CLIENT_SECRET: MANAGED_VIA_SOPS
+          WITHINGS_CLIENT_ID: MANAGED_VIA_SOPS
+          WITHINGS_CLIENT_SECRET: MANAGED_VIA_SOPS
+
+        ingressRoute:
+          enabled: false
+
+        migrations:
+          enabled: true
+
+        ingress:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vitasync
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

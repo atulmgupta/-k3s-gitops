@@ -1,0 +1,92 @@
+# =============================================================================
+# EchoStats — Helm Application (ArgoCD)
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: echostats
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/spotify-devs/charts
+    chart: echostats
+    targetRevision: "0.23.16"
+    helm:
+      releaseName: echostats
+      valuesObject:
+        image:
+          api:
+            repository: ghcr.io/spotify-devs/echostats-api
+            tag: "0.1.0"
+          web:
+            repository: ghcr.io/spotify-devs/echostats-web
+            tag: "0.1.0"
+
+        replicaCount:
+          api: 1
+          web: 1
+          worker: 1
+
+        api:
+          port: 8000
+          logLevel: info
+          workers: 2
+          syncIntervalMinutes: 15
+          analyticsRefreshHours: 6
+          corsOrigins: https://echostats.cyphers.app
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+
+        web:
+          port: 3000
+          apiUrl: http://echostats-api.echostats.svc.cluster.local:8000
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 250m, memory: 256Mi }
+
+        worker:
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+
+        service:
+          api: { port: 8000, type: ClusterIP }
+          web: { port: 3000, type: ClusterIP }
+
+        spotify:
+          clientId: MANAGED_VIA_SOPS
+          clientSecret: MANAGED_VIA_SOPS
+          redirectUri: https://echostats.cyphers.app/api/v1/auth/callback
+
+        security:
+          jwtSecret: MANAGED_VIA_SOPS
+          encryptionKey: MANAGED_VIA_SOPS
+
+        mongodb:
+          enabled: false
+          external:
+            uri: MANAGED_VIA_SOPS
+
+        redis:
+          enabled: false
+          external:
+            url: MANAGED_VIA_SOPS
+
+        ingressRoute:
+          enabled: false
+
+        ingress:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: echostats
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
