@@ -1,0 +1,35 @@
+# =============================================================================
+# Headlamp — Helm Application (ArgoCD)
+# =============================================================================
+# Modern Kubernetes dashboard (CNCF sandbox). Replaces deprecated k8s-dashboard.
+# Secured behind authentik ForwardAuth at k8s.cyphers.app.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: headlamp
+  namespace: argocd
+  labels:
+    tier: tools
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes-sigs.github.io/headlamp/
+    chart: headlamp
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: headlamp
+      valuesObject:
+        clusterRoleBinding:
+          create: true
+        service:
+          type: ClusterIP
+          port: 80
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: headlamp
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
