@@ -2,6 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gotify
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Gotify"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "gotify"
+    gethomepage.dev/href: "https://gotify.cyphers.app"
+    gethomepage.dev/description: "Push Notifications"
 spec:
   type: ClusterIP
   ports:

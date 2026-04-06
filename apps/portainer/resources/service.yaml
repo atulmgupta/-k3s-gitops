@@ -5,6 +5,13 @@ metadata:
   labels:
     app.kubernetes.io/name: portainer
     app.kubernetes.io/instance: portainer
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Portainer"
+    gethomepage.dev/group: "Infrastructure"
+    gethomepage.dev/icon: "portainer"
+    gethomepage.dev/href: "https://portainer.cyphers.app"
+    gethomepage.dev/description: "Container Management"
 spec:
   type: NodePort
   ports:

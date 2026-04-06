@@ -4,6 +4,12 @@ metadata:
   name: home-assistant
   annotations:
     metallb.universe.tf/loadBalancerIPs: "192.168.68.217"
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Home Assistant"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "home-assistant"
+    gethomepage.dev/href: "https://hass.cyphers.app"
+    gethomepage.dev/description: "Home Automation"
 spec:
   type: LoadBalancer
   ports:

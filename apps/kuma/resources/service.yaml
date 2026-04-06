@@ -5,6 +5,13 @@ metadata:
   labels:
     app.kubernetes.io/name: uptime-kuma
     app.kubernetes.io/instance: kuma
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Uptime Kuma"
+    gethomepage.dev/group: "Monitoring"
+    gethomepage.dev/icon: "uptime-kuma"
+    gethomepage.dev/href: "https://kuma.cyphers.app"
+    gethomepage.dev/description: "Uptime Monitoring"
 spec:
   type: ClusterIP
   ports:

@@ -5,6 +5,13 @@ metadata:
   labels:
     app.kubernetes.io/name: it-tools
     app.kubernetes.io/instance: it-tools
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "IT Tools"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "it-tools"
+    gethomepage.dev/href: "https://devtools.cyphers.app"
+    gethomepage.dev/description: "Developer Utilities"
 spec:
   type: ClusterIP
   ports:
