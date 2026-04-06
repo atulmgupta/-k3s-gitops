@@ -5,13 +5,6 @@ metadata:
   labels:
     app.kubernetes.io/name: code-server
     app.kubernetes.io/instance: code-server
-  annotations:
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: "Code Server"
-    gethomepage.dev/group: "Applications"
-    gethomepage.dev/icon: "vscode"
-    gethomepage.dev/href: "https://code.cyphers.app"
-    gethomepage.dev/description: "Web IDE"
 spec:
   type: ClusterIP
   ports:

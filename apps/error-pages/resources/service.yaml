@@ -6,13 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/name: custom-error-pages
     app.kubernetes.io/instance: error-pages
-  annotations:
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: "Error Pages"
-    gethomepage.dev/group: "Infrastructure"
-    gethomepage.dev/icon: "mdi-alert-circle"
-    gethomepage.dev/href: "#"
-    gethomepage.dev/description: "Custom Error Pages"
 spec:
   type: ClusterIP
   ports:
