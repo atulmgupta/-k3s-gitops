@@ -51,6 +51,19 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: prometheus
+  ignoreDifferences:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      jsonPointers: [/spec]
+    - group: monitoring.coreos.com
+      kind: Alertmanager
+      jsonPointers: [/spec]
+    - group: monitoring.coreos.com
+      kind: Prometheus
+      jsonPointers: [/spec]
   syncPolicy:
     automated: { prune: true, selfHeal: true }
-    syncOptions: [CreateNamespace=true]
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
