@@ -16,6 +16,15 @@ spec:
       labels:
         app.kubernetes.io/name: home-assistant
     spec:
+      initContainers:
+        - name: proxy-config
+          image: busybox:latest
+          command: ["/bin/sh", "/scripts/ensure-proxy-config.sh"]
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: init-scripts
+              mountPath: /scripts
       containers:
         - name: home-assistant
           image: ghcr.io/home-assistant/home-assistant:2026.4.0
@@ -25,8 +34,6 @@ spec:
           env:
             - name: TZ
               value: America/Los_Angeles
-            - name: TRUSTED_PROXIES
-              value: "10.42.0.0/16,10.43.0.0/16,192.168.68.0/24"
           volumeMounts:
             - name: config
               mountPath: /config
@@ -54,3 +61,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: hass-config
+        - name: init-scripts
+          configMap:
+            name: hass-init

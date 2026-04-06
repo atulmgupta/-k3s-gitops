@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hass-init
+data:
+  ensure-proxy-config.sh: |
+    #!/bin/sh
+    CFG=/config/configuration.yaml
+    if ! grep -q 'use_x_forwarded_for' "$CFG" 2>/dev/null; then
+      echo "Adding trusted proxy config to configuration.yaml"
+      cat >> "$CFG" <<'EOF'
+
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        - 10.42.0.0/16
+        - 10.43.0.0/16
+        - 192.168.68.0/24
+        - 127.0.0.0/8
+    EOF
+    fi
