@@ -60,6 +60,8 @@ resources:
   - dashboards/teslamate/reports/dutch-tax.yaml
   # ArgoCD
   - dashboards/argocd/argocd.yaml
+  # cert-manager
+  - dashboards/cert-manager/cert-manager.yaml
 
 generators:
   - ksops-generator.yaml
