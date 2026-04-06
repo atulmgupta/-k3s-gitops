@@ -1,0 +1,122 @@
+# =============================================================================
+# EchoStats — Helm Application (ArgoCD)
+# =============================================================================
+# Spotify analytics platform. Chart sourced from app's git repo.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: echostats
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/spotify-devs/echostats.git
+    targetRevision: main
+    path: helm/echostats
+    helm:
+      releaseName: echostats
+      valuesObject:
+        image:
+          api:
+            repository: ghcr.io/spotify-devs/echostats-api
+            pullPolicy: IfNotPresent
+          web:
+            repository: ghcr.io/spotify-devs/echostats-web
+            pullPolicy: IfNotPresent
+
+        replicaCount:
+          api: 1
+          web: 1
+          worker: 1
+
+        api:
+          port: 8000
+          logLevel: info
+          workers: 2
+          syncIntervalMinutes: 15
+          analyticsRefreshHours: 6
+          corsOrigins: https://echostats.cyphers.app
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+
+        web:
+          port: 3000
+          apiUrl: http://echostats-api.echostats.svc.cluster.local:8000
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 250m, memory: 256Mi }
+
+        worker:
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+
+        service:
+          api: { port: 8000, type: ClusterIP }
+          web: { port: 3000, type: ClusterIP }
+
+        spotify:
+          existingSecret: echostats-credentials
+          redirectUri: https://echostats.cyphers.app/api/v1/auth/callback
+
+        security:
+          existingSecret: echostats-credentials
+
+        mongodb:
+          enabled: false
+          external:
+            existingSecret: echostats-credentials
+            existingSecretKey: MONGODB_URI
+
+        redis:
+          enabled: false
+          external:
+            existingSecret: echostats-credentials
+            existingSecretKey: REDIS_URL
+
+        ingressRoute:
+          enabled: true
+          namespace: echostats
+          annotations:
+            kubernetes.io/ingress.class: traefik-external
+          spec:
+            entryPoints: [websecure]
+            routes:
+              - kind: Rule
+                match: "Host(`echostats.cyphers.app`) && PathPrefix(`/api`)"
+                middlewares:
+                  - name: default-headers
+                    namespace: traefik
+                services:
+                  - name: echostats-api
+                    namespace: echostats
+                    port: 8000
+              - kind: Rule
+                match: "Host(`echostats.cyphers.app`)"
+                middlewares:
+                  - name: default-headers
+                    namespace: traefik
+                  - name: authentik-auth
+                    namespace: authentik
+                services:
+                  - name: echostats-web
+                    namespace: echostats
+                    port: 3000
+            tls:
+              secretName: production-cyphers-app-tls
+
+        ingress:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: echostats
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
