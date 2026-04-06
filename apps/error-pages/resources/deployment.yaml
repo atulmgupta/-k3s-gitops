@@ -25,6 +25,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          env:
+            - name: DEFAULT_ERROR_PAGE
+              value: "404"
+            - name: DEFAULT_HTTP_CODE
+              value: "404"
           resources:
             requests:
               cpu: 5m
