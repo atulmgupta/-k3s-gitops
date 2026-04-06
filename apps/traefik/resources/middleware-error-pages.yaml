@@ -1,0 +1,13 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: global-error-pages
+spec:
+  errors:
+    service:
+      name: error-pages-custom-error-pages
+      namespace: error-pages
+      port: 8080
+    status:
+      - "404"
+      - "500-599"

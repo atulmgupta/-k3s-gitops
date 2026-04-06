@@ -1,0 +1,125 @@
+# =============================================================================
+# Traefik — Helm Application (ArgoCD)
+# =============================================================================
+# Ingress controller for all *.cyphers.app services.
+# ⚠️ CRITICAL INFRA — MANUAL SYNC ONLY, NEVER AUTO-SYNC
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://traefik.github.io/charts
+    chart: traefik
+    targetRevision: "27.*.*"
+    helm:
+      releaseName: traefik
+      valuesObject:
+        globalArguments:
+          - "--global.checknewversion=false"
+          - "--global.sendanonymoususage=false"
+
+        additionalArguments:
+          - "--serversTransport.insecureSkipVerify=true"
+          - "--api"
+          - "--api.dashboard=true"
+          - "--api.insecure=true"
+
+        logs:
+          general:
+            level: INFO
+            format: json
+          access:
+            enabled: true
+            format: json
+
+        ports:
+          web:
+            expose:
+              default: false
+            port: 8000
+            redirectTo:
+              port: websecure
+          websecure:
+            expose:
+              default: true
+            port: 8443
+          traefik:
+            expose:
+              default: true
+            port: 9000
+          metrics:
+            expose:
+              default: true
+            port: 9100
+
+        providers:
+          kubernetesCRD:
+            enabled: true
+            allowCrossNamespace: true
+            allowExternalNameServices: true
+            ingressClass: traefik-external
+          kubernetesIngress:
+            enabled: true
+            allowEmptyServices: true
+            allowExternalNameServices: true
+            publishedService:
+              enabled: true
+
+        ingressRoute:
+          dashboard:
+            enabled: true
+            entryPoints: [traefik]
+          healthcheck:
+            enabled: true
+            entryPoints: [traefik]
+
+        ingressClass:
+          enabled: true
+          isDefaultClass: true
+
+        metrics:
+          prometheus:
+            entryPoint: metrics
+
+        service:
+          type: NodePort
+
+        deployment:
+          replicas: 1
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+          readOnlyRootFilesystem: true
+
+        podSecurityContext:
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+
+        rbac:
+          enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+  # ⚠️ MANUAL SYNC ONLY — never auto-sync the ingress controller
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true

@@ -1,8 +1,11 @@
+# =============================================================================
+# Traefik — Resources (Middlewares + Dashboard IngressRoute)
+# =============================================================================
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik-dashboard
+  name: traefik-resources
   namespace: argocd
   labels:
     tier: infra
@@ -11,7 +14,7 @@ spec:
   source:
     repoURL: https://github.com/atulmgupta/-k3s-gitops.git
     targetRevision: main
-    path: apps/traefik-dashboard/resources
+    path: apps/traefik/resources
     kustomize: {}
   destination:
     server: https://kubernetes.default.svc
