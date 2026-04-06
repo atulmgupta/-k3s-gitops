@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server
+  labels:
+    app.kubernetes.io/name: code-server
+    app.kubernetes.io/instance: code-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: code-server
+      app.kubernetes.io/instance: code-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: code-server
+        app.kubernetes.io/instance: code-server
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      initContainers:
+        - name: permissions
+          image: busybox:latest
+          command: ["sh", "-c", "chown -R 1000:1000 /home/coder"]
+          volumeMounts:
+            - name: storage
+              mountPath: /home/coder
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+      containers:
+        - name: code-server
+          image: ghcr.io/coder/code-server:4.18.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: TZ
+              value: UTC
+            - name: PORT
+              value: "8080"
+            - name: CODE_SERVER_CONFIG
+              value: /etc/code-server/config.yml
+            - name: XDG_DATA_HOME
+              value: /home/coder
+          volumeMounts:
+            - name: config
+              mountPath: /etc/code-server
+            - name: storage
+              mountPath: /home/coder
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: config
+          configMap:
+            name: code-server-config
+        - name: storage
+          persistentVolumeClaim:
+            claimName: code-server-storage

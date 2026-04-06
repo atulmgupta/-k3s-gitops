@@ -1,0 +1,18 @@
+# Service name must match the Traefik global-error-pages middleware reference
+apiVersion: v1
+kind: Service
+metadata:
+  name: error-pages-custom-error-pages
+  labels:
+    app.kubernetes.io/name: error-pages
+    app.kubernetes.io/instance: error-pages
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: error-pages
+    app.kubernetes.io/instance: error-pages

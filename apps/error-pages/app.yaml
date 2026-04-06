@@ -1,0 +1,27 @@
+# =============================================================================
+# Error Pages — Kustomize Application (ArgoCD)
+# =============================================================================
+# Custom error pages (tarampampam/error-pages) used by Traefik
+# global-error-pages middleware for 404 and 5xx responses.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: error-pages
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/error-pages/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: error-pages
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

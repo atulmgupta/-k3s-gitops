@@ -1,0 +1,27 @@
+# =============================================================================
+# Code Server — Kustomize Application (ArgoCD)
+# =============================================================================
+# Web-based VS Code IDE (ghcr.io/coder/code-server).
+# Auth handled by authentik ForwardAuth. Persistent storage on Longhorn.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: code-server
+  namespace: argocd
+  labels:
+    tier: tools
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/code-server/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: code-server
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
