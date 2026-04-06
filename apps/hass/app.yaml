@@ -1,0 +1,28 @@
+# =============================================================================
+# Home Assistant — Kustomize Application (ArgoCD)
+# =============================================================================
+# Home automation platform. StatefulSet with Longhorn PVC and
+# init container for configuration bootstrapping.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hass
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/hass/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hass
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

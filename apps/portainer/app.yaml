@@ -1,0 +1,28 @@
+# =============================================================================
+# Portainer — Kustomize Application (ArgoCD)
+# =============================================================================
+# Container management UI (Portainer EE). Cluster-admin access via
+# ServiceAccount + ClusterRoleBinding.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portainer
+  namespace: argocd
+  labels:
+    tier: tools
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/portainer/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portainer
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

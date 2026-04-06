@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hass-home-assistant
+  labels:
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/instance: hass
+spec:
+  serviceName: hass-home-assistant
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: home-assistant
+      app.kubernetes.io/instance: hass
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: home-assistant
+        app.kubernetes.io/instance: hass
+    spec:
+      initContainers:
+        - name: setup-config
+          image: mikefarah/yq:4
+          command: ["/bin/sh", "-c"]
+          args: ["/bin/sh /mnt/init/init.sh"]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: init-volume
+              mountPath: /mnt/init/init.sh
+              subPath: init.sh
+            - name: config-volume
+              mountPath: /config-templates
+            - name: hass-home-assistant
+              mountPath: /config
+      containers:
+        - name: home-assistant
+          image: ghcr.io/home-assistant/home-assistant:2024.10.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8123
+              protocol: TCP
+          env:
+            - name: TZ
+              value: America/Los_Angeles
+          volumeMounts:
+            - name: hass-home-assistant
+              mountPath: /config
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            periodSeconds: 20
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            failureThreshold: 3
+            periodSeconds: 10
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: init-volume
+          configMap:
+            name: init-script
+        - name: config-volume
+          configMap:
+            name: hass-configuration
+  volumeClaimTemplates:
+    - metadata:
+        name: hass-home-assistant
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 5Gi
