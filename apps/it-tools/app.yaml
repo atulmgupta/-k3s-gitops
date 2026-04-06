@@ -1,0 +1,31 @@
+# =============================================================================
+# IT-Tools — Kustomize Application (ArgoCD)
+# =============================================================================
+# Developer utility toolbox (corentinth/it-tools).
+# Simple stateless app — raw manifests managed via Kustomize.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: it-tools
+  namespace: argocd
+  labels:
+    tier: tools
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/it-tools/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: it-tools
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  # After successful first sync, enable automated:
+  # syncPolicy:
+  #   automated: { prune: true, selfHeal: true }
+  #   syncOptions: [CreateNamespace=true]
