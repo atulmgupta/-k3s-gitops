@@ -21,6 +21,10 @@ spec:
         - name: custom-error-pages
           image: tarampampam/error-pages:latest
           imagePullPolicy: IfNotPresent
+          args:
+            - serve
+            - --default-error-page=404
+            - --default-http-code=404
           ports:
             - name: http
               containerPort: 8080
