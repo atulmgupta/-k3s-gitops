@@ -16,6 +16,8 @@ spec:
       labels:
         app.kubernetes.io/name: home-assistant
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       initContainers:
         - name: proxy-config
           image: busybox:latest
