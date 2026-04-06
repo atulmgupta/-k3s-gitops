@@ -9,20 +9,20 @@ spec:
   type: NodePort
   ports:
     - port: 9000
-      targetPort: http
+      targetPort: 9000
       nodePort: 30777
       protocol: TCP
       name: http
     - port: 9443
-      targetPort: https
+      targetPort: 9443
       nodePort: 30779
       protocol: TCP
       name: https
-    - port: 8000
-      targetPort: tcp-edge
+    - port: 30776
+      targetPort: 30776
       nodePort: 30776
       protocol: TCP
-      name: tcp-edge
+      name: edge
   selector:
     app.kubernetes.io/name: portainer
     app.kubernetes.io/instance: portainer
