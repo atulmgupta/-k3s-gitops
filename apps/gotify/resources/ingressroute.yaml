@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/group: "Applications"
     gethomepage.dev/icon: "gotify"
     gethomepage.dev/description: "Push Notifications"
+    gethomepage.dev/href: "https://gotify.cyphers.app"
 spec:
   entryPoints:
     - websecure

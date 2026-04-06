@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/group: "Applications"
     gethomepage.dev/icon: "vscode"
     gethomepage.dev/description: "Web IDE"
+    gethomepage.dev/href: "https://code.cyphers.app"
 spec:
   entryPoints:
     - websecure

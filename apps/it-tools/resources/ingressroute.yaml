@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/group: "Applications"
     gethomepage.dev/icon: "it-tools"
     gethomepage.dev/description: "Developer Utilities"
+    gethomepage.dev/href: "https://devtools.cyphers.app"
 spec:
   entryPoints:
     - websecure

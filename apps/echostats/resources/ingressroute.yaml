@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/group: "Applications"
     gethomepage.dev/icon: "mdi-chart-bar"
     gethomepage.dev/description: "Spotify Analytics"
+    gethomepage.dev/href: "https://echostats.cyphers.app"
 spec:
   entryPoints:
     - websecure

@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/group: "Monitoring"
     gethomepage.dev/icon: "kubernetes-dashboard"
     gethomepage.dev/description: "Kubernetes Dashboard"
+    gethomepage.dev/href: "https://k8s.cyphers.app"
 spec:
   entryPoints:
     - websecure

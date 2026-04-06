@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/group: "Applications"
     gethomepage.dev/icon: "plex"
     gethomepage.dev/description: "Media Server"
+    gethomepage.dev/href: "https://plex.cyphers.app"
 spec:
   entryPoints:
     - websecure

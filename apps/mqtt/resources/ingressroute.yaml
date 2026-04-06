@@ -9,6 +9,7 @@ metadata:
     gethomepage.dev/group: "Monitoring"
     gethomepage.dev/icon: "emqx"
     gethomepage.dev/description: "MQTT Broker"
+    gethomepage.dev/href: "https://mqtt.cyphers.app"
 spec:
   entryPoints:
     - websecure
