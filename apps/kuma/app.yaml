@@ -1,0 +1,27 @@
+# =============================================================================
+# Uptime Kuma — Kustomize Application (ArgoCD)
+# =============================================================================
+# Self-hosted uptime monitoring tool. Accessible at kuma.cyphers.app.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kuma
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/kuma/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kuma
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
