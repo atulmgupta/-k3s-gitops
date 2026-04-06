@@ -4,3 +4,4 @@ namespace: error-pages
 resources:
   - deployment.yaml
   - service.yaml
+  - catchall.yaml
