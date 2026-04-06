@@ -70,7 +70,7 @@ spec:
                 provider: google
                 target: _blank
 
-          services: {}
+          services: []
 
           bookmarks: []
 
