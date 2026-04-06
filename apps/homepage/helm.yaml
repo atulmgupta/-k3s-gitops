@@ -32,8 +32,7 @@ spec:
           name: homepage
 
         env:
-          - name: HOMEPAGE_ALLOWED_HOSTS
-            value: "home.cyphers.app"
+          HOMEPAGE_ALLOWED_HOSTS: "home.cyphers.app"
 
         config:
           kubernetes:
