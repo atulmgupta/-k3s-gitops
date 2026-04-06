@@ -9,9 +9,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://homeopshub.github.io/helm-for-home
-    chart: freshrss
-    targetRevision: "0.2.0"
+    repoURL: https://github.com/HomeOpsHub/helm-for-home.git
+    targetRevision: main
+    path: charts/stable/freshrss
     helm:
       releaseName: freshrss
       valuesObject:
