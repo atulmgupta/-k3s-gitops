@@ -1,0 +1,26 @@
+# =============================================================================
+# Reflector — auto-mirrors Secrets/ConfigMaps across namespaces
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reflector
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://emberstack.github.io/helm-charts
+    chart: reflector
+    targetRevision: "10.*.*"
+    helm:
+      releaseName: reflector
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
