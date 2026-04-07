@@ -1,0 +1,77 @@
+# =============================================================================
+# MQTT (EMQX) — Helm Application (ArgoCD)
+# =============================================================================
+# EMQX MQTT broker. Used by TeslaMate, TeslaSync, Home Assistant.
+# ⚠️ MANUAL SYNC ONLY — never auto-sync a message broker.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mqtt
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://repos.emqx.io/charts
+    chart: emqx
+    targetRevision: "5.8.1"
+    helm:
+      releaseName: mqtt
+      valuesObject:
+        replicaCount: 2
+
+        emqxConfig:
+          EMQX_CLUSTER__DISCOVERY_STRATEGY: dns
+          EMQX_DASHBOARD__DEFAULT_USERNAME: admin
+          EMQX_DASHBOARD__DEFAULT_PASSWORD: public
+
+        service:
+          type: LoadBalancer
+          mqtt: 1883
+          mqttssl: 8883
+          ws: 8083
+          wss: 8084
+          dashboard: 18083
+
+        persistence:
+          enabled: false
+
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+        metrics:
+          enabled: true
+          type: prometheus
+
+        containerSecurityContext:
+          enabled: true
+          runAsNonRoot: true
+          runAsUser: 1000
+
+        podSecurityContext:
+          enabled: true
+          fsGroup: 1000
+          runAsUser: 1000
+
+        ingress:
+          dashboard:
+            enabled: false
+          mqtt:
+            enabled: false
+          ws:
+            enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mqtt
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
