@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: teslamate-teslamate-import-pvc
+  labels:
+    app.kubernetes.io/name: teslamate
+    app.kubernetes.io/instance: teslamate
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 4Gi

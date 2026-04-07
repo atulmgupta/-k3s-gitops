@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: teslamate
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: TeslaMate
+    gethomepage.dev/description: Tesla Data Logger
+    gethomepage.dev/group: Applications
+    gethomepage.dev/icon: teslamate
+    gethomepage.dev/href: https://teslamate.cyphers.app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`teslamate.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: teslamate-teslamate
+          namespace: teslamate
+          port: 4000
+  tls:
+    secretName: production-cyphers-app-tls

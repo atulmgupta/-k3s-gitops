@@ -1,0 +1,28 @@
+# =============================================================================
+# TeslaMate — Kustomize Application (ArgoCD)
+# =============================================================================
+# Self-hosted Tesla data logger. Single deployment with Longhorn PVC,
+# secrets managed via SOPS/age, data stored in external postgres-v17.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: teslamate
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/teslamate/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: teslamate
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
