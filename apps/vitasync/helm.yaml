@@ -100,6 +100,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: vitasync
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
