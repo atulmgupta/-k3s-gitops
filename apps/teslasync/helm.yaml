@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.29.0-rc.fix-misc-fixes.fed2a0b"
+    targetRevision: "0.29.0-rc.feature-pwa-install-prompt.d54a641"
     helm:
       releaseName: teslasync
       valuesObject:
