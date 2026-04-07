@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: ghcr.io/biosync-io/charts
     chart: vitasync
-    targetRevision: "2.25.0-rc.chore-quality-improvements.a31c9f0"
+    targetRevision: "2.24.4"
     helm:
       releaseName: vitasync
       valuesObject:
