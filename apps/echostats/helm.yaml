@@ -14,7 +14,7 @@ spec:
   source:
     repoURL: ghcr.io/spotify-devs/charts
     chart: echostats
-    targetRevision: "0.23.16"
+    targetRevision: "0.25.0"
     helm:
       releaseName: echostats
       valuesObject:
