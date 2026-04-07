@@ -1,0 +1,40 @@
+# =============================================================================
+# MariaDB — Helm Application (ArgoCD)
+# =============================================================================
+# ⚠️ MANUAL SYNC ONLY — database infrastructure.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mariadb
+  namespace: argocd
+  labels:
+    tier: database
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: mariadb
+    targetRevision: "21.*.*"
+    helm:
+      releaseName: mariadb
+      valuesObject:
+        auth:
+          existingSecret: mariadb-credentials
+        primary:
+          persistence:
+            enabled: true
+            size: 8Gi
+            storageClass: longhorn
+        service:
+          type: NodePort
+        global:
+          defaultStorageClass: longhorn
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mariadb
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
