@@ -67,6 +67,7 @@ resources:
   - dashboards/teslasync-infra/cep-rule-engine.yaml
   - dashboards/teslasync-infra/infrastructure.yaml
   - dashboards/teslasync-infra/sessions-business.yaml
+  - dashboards/teslasync-infra/sse-realtime.yaml
   - dashboards/teslasync-infra/telemetry-pipeline.yaml
 
 generators:
