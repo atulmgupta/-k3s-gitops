@@ -478,7 +478,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "sum by (method) (rate(teslasync_http_requests_total[5m]))",
-              "legendFormat": "{{operation}}",
+              "legendFormat": "{{method}}",
               "refId": "A",
               "range": true,
               "instant": false
@@ -560,7 +560,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "teslasync_signal_store_entries",
-              "legendFormat": "{{state}}",
+              "legendFormat": "Signal Store",
               "refId": "A",
               "range": true,
               "instant": false
@@ -641,8 +641,8 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (code) (rate(teslasync_http_requests_total[5m]))",
-              "legendFormat": "{{result}}",
+              "expr": "sum by (status) (rate(teslasync_http_requests_total[5m]))",
+              "legendFormat": "{{status}}",
               "refId": "A",
               "range": true,
               "instant": false
@@ -820,7 +820,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "rate(teslasync_telemetry_messages_received_total[5m])",
-              "legendFormat": "{{result}}",
+              "legendFormat": "Messages/s",
               "refId": "A",
               "range": true,
               "instant": false
@@ -880,7 +880,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "teslasync_streaming_vehicles_active",
-              "legendFormat": "{{reason}}",
+              "legendFormat": "Active",
               "refId": "A",
               "instant": true,
               "range": false
@@ -1143,7 +1143,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "rate(teslasync_alerts_evaluated_total[5m])",
-              "legendFormat": "{{severity}}",
+              "legendFormat": "Evaluations/s",
               "refId": "A",
               "range": true,
               "instant": false
@@ -1238,7 +1238,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "rate(teslasync_mqtt_messages_published_total[5m])",
-              "legendFormat": "{{channel_type}} - {{result}}",
+              "legendFormat": "MQTT Published",
               "refId": "A",
               "range": true,
               "instant": false
@@ -1320,7 +1320,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "teslasync_mqtt_connected",
-              "legendFormat": "{{result}}",
+              "legendFormat": "Connected",
               "refId": "A",
               "range": true,
               "instant": false
@@ -1466,3 +1466,4 @@ data:
       },
       "links": []
     }
+    

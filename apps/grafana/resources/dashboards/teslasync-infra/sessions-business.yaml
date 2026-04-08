@@ -725,7 +725,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "teslasync_streaming_vehicles_active",
-              "legendFormat": "{{state}}",
+              "legendFormat": "Streaming",
               "refId": "A",
               "instant": true,
               "range": false
@@ -1055,7 +1055,7 @@ data:
                 "uid": "prometheus"
               },
               "expr": "rate(teslasync_address_backfill_completed_total[5m])",
-              "legendFormat": "{{type}}",
+              "legendFormat": "Backfills/s",
               "refId": "A",
               "range": true,
               "instant": false
@@ -1075,3 +1075,4 @@ data:
       },
       "links": []
     }
+    
