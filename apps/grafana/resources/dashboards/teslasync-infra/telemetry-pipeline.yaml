@@ -100,7 +100,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "rate(teslasync_telemetry_messages_received_total[5m])",
               "legendFormat": "msg/s",
@@ -111,7 +111,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -163,7 +163,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "teslasync_streaming_vehicles_active",
               "legendFormat": "Vehicles",
@@ -174,7 +174,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -244,7 +244,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "teslasync_mqtt_connected",
               "legendFormat": "MQTT",
@@ -255,7 +255,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -307,7 +307,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "teslasync_sse_connections_active",
               "legendFormat": "SSE Connections",
@@ -318,7 +318,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -376,7 +376,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "teslasync_signal_store_entries",
               "legendFormat": "Entries",
@@ -387,7 +387,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -471,7 +471,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "sum(rate(teslasync_telemetry_signals_processed_total[5m]))",
               "legendFormat": "Signals Processed",
@@ -482,7 +482,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -533,7 +533,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "topk(15, sum by (signal) (rate(teslasync_telemetry_signals_processed_total[5m])))",
               "legendFormat": "{{signal}}",
@@ -544,7 +544,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -616,7 +616,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_telemetry_processing_duration_seconds_bucket[5m])))",
               "legendFormat": "P95 Latency",
@@ -627,7 +627,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -699,7 +699,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_signal_flush_duration_seconds_bucket[5m])))",
               "legendFormat": "P95 Flush Duration",
@@ -710,7 +710,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -794,7 +794,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "sum by (event_type) (rate(teslasync_sse_events_sent_total[5m]))",
               "legendFormat": "{{event_type}}",
@@ -805,7 +805,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         },
         {
@@ -882,7 +882,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "expr": "teslasync_vehicle_last_seen_seconds",
               "legendFormat": "{{vehicle}}",
@@ -893,7 +893,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           }
         }
       ],
@@ -905,3 +905,4 @@ data:
       },
       "links": []
     }
+
