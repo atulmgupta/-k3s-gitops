@@ -406,8 +406,8 @@ data:
         {
           "id": 3,
           "type": "timeseries",
-          "title": "Signal Processing Rate",
-          "description": "Total rate of telemetry signals processed",
+          "title": "Telemetry Message Rate",
+          "description": "Rate of telemetry messages received per second",
           "gridPos": {
             "x": 0,
             "y": 6,
@@ -473,8 +473,8 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum(rate(teslasync_telemetry_signals_processed_total[5m]))",
-              "legendFormat": "Signals Processed",
+              "expr": "rate(teslasync_telemetry_messages_received_total[5m])",
+              "legendFormat": "Messages Received",
               "refId": "A",
               "range": true,
               "instant": false
@@ -488,7 +488,7 @@ data:
         {
           "id": 4,
           "type": "bargauge",
-          "title": "Top Signals by Volume",
+          "title": "MQTT Messages Published Rate",
           "description": "Top 15 signal types ranked by processing rate",
           "gridPos": {
             "x": 12,
@@ -535,8 +535,8 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "topk(15, sum by (signal) (rate(teslasync_telemetry_signals_processed_total[5m])))",
-              "legendFormat": "{{signal}}",
+              "expr": "rate(teslasync_mqtt_messages_published_total[5m])",
+              "legendFormat": "MQTT Published",
               "refId": "A",
               "instant": true,
               "range": false
@@ -729,7 +729,7 @@ data:
         {
           "id": 8,
           "type": "timeseries",
-          "title": "SSE Events by Type",
+          "title": "MQTT Reconnection Rate",
           "description": "Rate of SSE events sent grouped by event type",
           "gridPos": {
             "x": 0,
@@ -796,7 +796,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (event_type) (rate(teslasync_sse_events_sent_total[5m]))",
+              "expr": "rate(teslasync_mqtt_reconnects_total[5m])",
               "legendFormat": "{{event_type}}",
               "refId": "A",
               "range": true,
@@ -811,8 +811,8 @@ data:
         {
           "id": 11,
           "type": "table",
-          "title": "Vehicle Last Seen",
-          "description": "Seconds since each vehicle was last seen",
+          "title": "Active Streaming Vehicles",
+          "description": "Number of vehicles currently streaming telemetry data",
           "gridPos": {
             "x": 12,
             "y": 23,
@@ -884,7 +884,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "teslasync_vehicle_last_seen_seconds",
+              "expr": "teslasync_streaming_vehicles_active",
               "legendFormat": "{{vehicle}}",
               "refId": "A",
               "format": "table",

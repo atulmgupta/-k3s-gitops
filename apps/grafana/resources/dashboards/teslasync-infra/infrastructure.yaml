@@ -395,7 +395,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_db_query_duration_seconds_bucket[5m])))",
+              "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_http_request_duration_seconds_bucket[5m])))",
               "legendFormat": "P95 Query Duration",
               "refId": "A",
               "range": true,
@@ -410,7 +410,7 @@ data:
         {
           "id": 6,
           "type": "timeseries",
-          "title": "DB Query Rate by Operation",
+          "title": "HTTP Request Rate by Method",
           "description": "Rate of database queries grouped by operation type",
           "gridPos": {
             "x": 12,
@@ -477,7 +477,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (operation) (rate(teslasync_db_query_duration_seconds_count[5m]))",
+              "expr": "sum by (method) (rate(teslasync_http_requests_total[5m]))",
               "legendFormat": "{{operation}}",
               "refId": "A",
               "range": true,
@@ -492,7 +492,7 @@ data:
         {
           "id": 7,
           "type": "timeseries",
-          "title": "DB Connection Pool",
+          "title": "Signal Store Entries",
           "description": "Database connection pool usage by state",
           "gridPos": {
             "x": 0,
@@ -559,7 +559,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "teslasync_db_pool_connections",
+              "expr": "teslasync_signal_store_entries",
               "legendFormat": "{{state}}",
               "refId": "A",
               "range": true,
@@ -574,7 +574,7 @@ data:
         {
           "id": 8,
           "type": "timeseries",
-          "title": "DB Transactions",
+          "title": "HTTP Requests by Status",
           "description": "Rate of database transactions by result",
           "gridPos": {
             "x": 12,
@@ -641,7 +641,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (result) (rate(teslasync_db_transactions_total[5m]))",
+              "expr": "sum by (code) (rate(teslasync_http_requests_total[5m]))",
               "legendFormat": "{{result}}",
               "refId": "A",
               "range": true,
@@ -752,7 +752,7 @@ data:
         {
           "id": 10,
           "type": "timeseries",
-          "title": "Polls by Result",
+          "title": "Telemetry Messages Rate",
           "description": "Rate of polls grouped by result (stacked)",
           "gridPos": {
             "x": 8,
@@ -819,7 +819,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (result) (rate(teslasync_polls_total[5m]))",
+              "expr": "rate(teslasync_telemetry_messages_received_total[5m])",
               "legendFormat": "{{result}}",
               "refId": "A",
               "range": true,
@@ -834,7 +834,7 @@ data:
         {
           "id": 11,
           "type": "piechart",
-          "title": "Polls Saved by Reason",
+          "title": "Streaming Vehicles Active",
           "description": "Distribution of saved polls by reason",
           "gridPos": {
             "x": 16,
@@ -879,7 +879,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (reason) (teslasync_polls_saved_total)",
+              "expr": "teslasync_streaming_vehicles_active",
               "legendFormat": "{{reason}}",
               "refId": "A",
               "instant": true,
@@ -907,7 +907,7 @@ data:
         {
           "id": 12,
           "type": "timeseries",
-          "title": "Cache Hit Rate",
+          "title": "SSE Connections Active",
           "description": "Ratio of cache hits to total cache operations",
           "gridPos": {
             "x": 0,
@@ -977,7 +977,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum(rate(teslasync_cache_operations_total{result=\"hit\"}[5m])) / sum(rate(teslasync_cache_operations_total[5m]))",
+              "expr": "teslasync_sse_connections_active",
               "legendFormat": "Cache Hit Rate",
               "refId": "A",
               "range": true,
@@ -1075,7 +1075,7 @@ data:
         {
           "id": 14,
           "type": "timeseries",
-          "title": "Alerts Fired",
+          "title": "Alerts Evaluation Rate",
           "description": "Rate of alerts fired by severity",
           "gridPos": {
             "x": 16,
@@ -1142,7 +1142,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (severity) (rate(teslasync_alerts_fired_total[5m]))",
+              "expr": "rate(teslasync_alerts_evaluated_total[5m])",
               "legendFormat": "{{severity}}",
               "refId": "A",
               "range": true,
@@ -1170,7 +1170,7 @@ data:
         {
           "id": 15,
           "type": "timeseries",
-          "title": "Notifications Sent",
+          "title": "MQTT Messages Published",
           "description": "Rate of notifications sent by channel type and result",
           "gridPos": {
             "x": 0,
@@ -1237,7 +1237,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (channel_type, result) (rate(teslasync_notifications_sent_total[5m]))",
+              "expr": "rate(teslasync_mqtt_messages_published_total[5m])",
               "legendFormat": "{{channel_type}} - {{result}}",
               "refId": "A",
               "range": true,
@@ -1252,7 +1252,7 @@ data:
         {
           "id": 18,
           "type": "timeseries",
-          "title": "Token Refreshes",
+          "title": "MQTT Connected",
           "description": "Rate of OAuth token refresh operations by result",
           "gridPos": {
             "x": 12,
@@ -1319,7 +1319,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by (result) (rate(teslasync_token_refreshes_total[5m]))",
+              "expr": "teslasync_mqtt_connected",
               "legendFormat": "{{result}}",
               "refId": "A",
               "range": true,
@@ -1334,7 +1334,7 @@ data:
         {
           "id": 16,
           "type": "stat",
-          "title": "Backup Runs",
+          "title": "Maintenance Runs",
           "description": "Total number of backup runs completed",
           "gridPos": {
             "x": 0,
@@ -1382,7 +1382,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "teslasync_backup_runs_total",
+              "expr": "teslasync_maintenance_runs_total",
               "legendFormat": "Backups",
               "refId": "A",
               "instant": true,
