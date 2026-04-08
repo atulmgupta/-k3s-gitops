@@ -64,6 +64,7 @@ resources:
   - dashboards/cert-manager/cert-manager.yaml
   # TeslaSync Infra
   - dashboards/teslasync-infra/api-performance.yaml
+  - dashboards/teslasync-infra/cep-rule-engine.yaml
   - dashboards/teslasync-infra/infrastructure.yaml
   - dashboards/teslasync-infra/sessions-business.yaml
   - dashboards/teslasync-infra/telemetry-pipeline.yaml
