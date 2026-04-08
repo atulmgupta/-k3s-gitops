@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.30.0-rc.fix-anoher-round.9f1a670"
+    targetRevision: "0.30.0-rc.fix-anoher-round.bdb938a"
     helm:
       releaseName: teslasync
       valuesObject:
