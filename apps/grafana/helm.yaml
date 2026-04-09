@@ -133,7 +133,9 @@ spec:
             nut-ups:
               gnetId: 23972
               revision: 1
-              datasource: Prometheus
+              datasource:
+                - name: DS_PROMETHEUS
+                  value: Prometheus
           kubernetes:
             k8s-cluster:
               gnetId: 7249
