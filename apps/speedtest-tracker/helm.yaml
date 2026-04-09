@@ -27,6 +27,8 @@ spec:
           PGID: "1000"
           SPEEDTEST_SCHEDULE: "0 * * * *"
           OOKLA_EULA_GDPR: "true"
+          APP_KEY: "base64:jURDsaTTZVN+Jji0PlXMIoBiwCw40VgmDrt0aQKOsIk="
+          DB_CONNECTION: sqlite
 
         service:
           type: ClusterIP
