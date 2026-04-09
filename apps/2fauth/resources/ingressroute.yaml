@@ -22,7 +22,7 @@ spec:
           namespace: traefik
       services:
         - name: twofauth
-          namespace: 2fauth
+          namespace: twofauth
           port: 8000
   tls:
     secretName: production-cyphers-app-tls
