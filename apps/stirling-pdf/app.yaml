@@ -1,0 +1,25 @@
+# Stirling PDF — Kustomize Application (ArgoCD)
+# Browser-based PDF toolkit (merge, split, OCR, convert, compress).
+# No database needed. ~200MB RAM.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: stirling-pdf
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/stirling-pdf/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stirling-pdf
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -1,0 +1,57 @@
+# Immich — Helm Application (ArgoCD)
+# Google Photos replacement — AI face/object recognition, phone auto-backup.
+# Uses official OCI chart. Needs PostgreSQL (pgvector) + Redis.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: immich
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/immich-app/immich-charts
+    chart: immich
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: immich
+      valuesObject:
+        image:
+          tag: release
+
+        immich:
+          persistence:
+            library:
+              existingClaim: immich-library
+
+        postgresql:
+          enabled: false
+
+        redis:
+          enabled: true
+
+        server:
+          enabled: true
+
+        env:
+          DB_HOSTNAME: postgres-v17-postgresql.postgres-v17.svc.cluster.local
+          DB_PORT: "5432"
+          DB_USERNAME: immich
+          DB_PASSWORD: immich_cyphers_2026
+          DB_DATABASE_NAME: immich
+          IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: immich
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jqPathExpressions:
+        - .spec.template
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

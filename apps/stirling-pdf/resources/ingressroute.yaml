@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: stirling-pdf
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Stirling PDF"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "stirling-pdf"
+    gethomepage.dev/description: "PDF Toolkit"
+    gethomepage.dev/href: "https://pdf.cyphers.app"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`pdf.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: stirling-pdf
+          namespace: stirling-pdf
+          port: 8080
+  tls:
+    secretName: production-cyphers-app-tls
