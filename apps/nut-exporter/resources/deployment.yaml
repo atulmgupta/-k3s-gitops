@@ -18,9 +18,11 @@ spec:
       containers:
         - name: nut-exporter
           image: druggeri/nut_exporter:3.1.1
-          args:
-            - --nut.server=lithium
-            - --nut.ups=homelab-ups
+          env:
+            - name: NUT_EXPORTER_SERVER
+              value: "lithium"
+            - name: NUT_EXPORTER_VARIABLES
+              value: "battery.charge,battery.voltage,battery.voltage.nominal,battery.runtime,battery.runtime.low,input.voltage,input.voltage.nominal,output.voltage,ups.load,ups.status,ups.realpower.nominal"
           ports:
             - name: metrics
               containerPort: 9199
