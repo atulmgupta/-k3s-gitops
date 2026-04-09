@@ -14,8 +14,18 @@ spec:
       labels:
         app.kubernetes.io/name: filebrowser
     spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+        - name: fix-permissions
+          image: busybox:latest
+          command: ["sh", "-c", "chown -R 1000:1000 /srv /config"]
+          volumeMounts:
+            - name: data
+              mountPath: /srv
+            - name: config
+              mountPath: /config
       containers:
-        - name: filebrowser
           image: filebrowser/filebrowser:latest
           ports:
             - name: http

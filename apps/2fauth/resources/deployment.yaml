@@ -14,8 +14,16 @@ spec:
       labels:
         app.kubernetes.io/name: 2fauth
     spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+        - name: fix-permissions
+          image: busybox:latest
+          command: ["sh", "-c", "chown -R 1000:1000 /2fauth"]
+          volumeMounts:
+            - name: data
+              mountPath: /2fauth
       containers:
-        - name: 2fauth
           image: 2fauth/2fauth:latest
           ports:
             - name: http
