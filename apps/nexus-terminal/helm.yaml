@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: ghcr.io/nexus-devs-lab/nexus-terminal/charts
     chart: nexus-terminal
-    targetRevision: 2.0.13
+    targetRevision: 2.0.15
     helm:
       valuesObject:
         namespace:
@@ -20,6 +20,21 @@ spec:
         config:
           existingSecret: nexus-terminal-secrets
           logLevel: info
+          apiEndpoint: http://nexus-terminal-api.nexus-terminal.svc.cluster.local:8000
+          webEndpoint: https://nexus.cyphers.app
+          corsOrigins: https://nexus.cyphers.app
+
+        encryption:
+          key: ""  # provided via existingSecret
+
+        monitoring:
+          serviceMonitor:
+            enabled: true
+            namespace: prometheus
+            interval: "15s"
+            scrapeTimeout: "10s"
+          grafanaDashboard:
+            enabled: false  # we manage dashboards via gitops
 
         # ── PostgreSQL (external — credentials in existingSecret) ──
         postgresql:
@@ -86,6 +101,8 @@ spec:
         # ── Workers ──
         marketWorker:
           enabled: true
+          tickInterval: "5"
+          maxQuotesPerProvider: "500"
           resources:
             requests:
               cpu: 50m
@@ -109,10 +126,10 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 64Mi
+              memory: 32Mi
             limits:
               cpu: 200m
-              memory: 256Mi
+              memory: 128Mi
 
         # ── Ingress (Traefik) ──
         ingress:
