@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gatus-config
+data:
+  config.yaml: |
+    storage:
+      type: sqlite
+      path: /data/gatus.db
+
+    ui:
+      title: cyphers.app Status
+      header: Service Health
+
+    endpoints:
+      - name: TeslaSync
+        group: Applications
+        url: https://teslasync.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+          - "[RESPONSE_TIME] < 5000"
+
+      - name: Grafana
+        group: Monitoring
+        url: https://grafana.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: ArgoCD
+        group: Infrastructure
+        url: https://argocd.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: Homepage
+        group: Applications
+        url: https://homepage.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: Outline
+        group: Applications
+        url: https://outline.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: Nextcloud
+        group: Applications
+        url: https://nextcloud.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: AdGuard
+        group: Infrastructure
+        url: https://adguard.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: Ntfy
+        group: Services
+        url: https://ntfy.cyphers.app/v1/health
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: FreshRSS
+        group: Applications
+        url: https://freshrss.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: EchoStats
+        group: Applications
+        url: https://echostats.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: Nexus Terminal
+        group: Applications
+        url: https://nexus.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
+
+      - name: Dozzle
+        group: Monitoring
+        url: https://dozzle.cyphers.app
+        interval: 5m
+        conditions:
+          - "[STATUS] == 200"
