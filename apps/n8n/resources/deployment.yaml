@@ -16,6 +16,13 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
+      initContainers:
+        - name: fix-permissions
+          image: busybox:latest
+          command: ["sh", "-c", "chown -R 1000:1000 /home/node/.n8n"]
+          volumeMounts:
+            - name: data
+              mountPath: /home/node/.n8n
       containers:
         - name: n8n
           image: n8nio/n8n:latest
