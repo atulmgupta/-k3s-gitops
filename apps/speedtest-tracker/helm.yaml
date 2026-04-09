@@ -25,10 +25,16 @@ spec:
           TZ: America/Los_Angeles
           PUID: "1000"
           PGID: "1000"
-          SPEEDTEST_SCHEDULE: "0 * * * *"
-          OOKLA_EULA_GDPR: "true"
-          APP_KEY: "base64:jURDsaTTZVN+Jji0PlXMIoBiwCw40VgmDrt0aQKOsIk="
-          DB_CONNECTION: sqlite
+
+        extraEnv:
+          - name: SPEEDTEST_SCHEDULE
+            value: "0 * * * *"
+          - name: OOKLA_EULA_GDPR
+            value: "true"
+          - name: APP_KEY
+            value: "base64:jURDsaTTZVN+Jji0PlXMIoBiwCw40VgmDrt0aQKOsIk="
+          - name: DB_CONNECTION
+            value: sqlite
 
         service:
           type: ClusterIP
