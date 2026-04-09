@@ -1,0 +1,26 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mealie
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: Mealie
+    gethomepage.dev/description: Recipe Manager
+    gethomepage.dev/group: Applications
+    gethomepage.dev/icon: mealie
+    gethomepage.dev/href: https://mealie.cyphers.app
+spec:
+  entryPoints: [websecure]
+  routes:
+    - kind: Rule
+      match: Host(`mealie.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: mealie
+          namespace: mealie
+          port: 9000
+  tls:
+    secretName: production-cyphers-app-tls
