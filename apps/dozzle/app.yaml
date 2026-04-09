@@ -1,0 +1,31 @@
+# =============================================================================
+# Dozzle — Kustomize Application (ArgoCD)
+# =============================================================================
+# Lightweight real-time log viewer for Kubernetes pods.
+# Single pod, ~20MB RAM, web UI with namespace/pod filtering.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dozzle
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/dozzle/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dozzle
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
