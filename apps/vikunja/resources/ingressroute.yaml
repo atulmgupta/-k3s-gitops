@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vikunja
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Vikunja"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "vikunja"
+    gethomepage.dev/description: "Task Manager"
+    gethomepage.dev/href: "https://tasks.cyphers.app"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`tasks.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: vikunja-web
+          namespace: vikunja
+          port: 3456
+  tls:
+    secretName: production-cyphers-app-tls

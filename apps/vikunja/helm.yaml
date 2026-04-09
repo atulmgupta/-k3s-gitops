@@ -1,0 +1,59 @@
+# =============================================================================
+# Vikunja — Helm Application (ArgoCD)
+# =============================================================================
+# Open-source task/project management (Todoist alternative).
+# Single container, ~50MB RAM. Uses SQLite by default (Longhorn PVC).
+# Secured behind authentik ForwardAuth at tasks.cyphers.app.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vikunja
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://charts.pascaliske.dev
+    chart: vikunja
+    targetRevision: "5.*.*"
+    helm:
+      releaseName: vikunja
+      valuesObject:
+        env:
+          - name: TZ
+            value: America/Los_Angeles
+          - name: VIKUNJA_SERVICE_ENABLEREGISTRATION
+            value: "false"
+          - name: VIKUNJA_SERVICE_FRONTENDURL
+            value: "https://tasks.cyphers.app"
+          - name: VIKUNJA_DATABASE_PATH
+            value: "/app/vikunja/files/vikunja.db"
+
+        securityContext:
+          fsGroup: 1000
+
+        persistentVolumeClaim:
+          create: true
+          accessMode: ReadWriteOnce
+          size: 5Gi
+          storageClassName: longhorn
+          mountPath: /app/vikunja/files
+
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vikunja
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
