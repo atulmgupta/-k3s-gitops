@@ -16,7 +16,7 @@ spec:
   routes:
     # OIDC endpoints must bypass forward-auth (Headlamp handles its own OIDC)
     - kind: Rule
-      match: Host(`k8s.cyphers.app`) && (Path(`/oidc`) || Path(`/oidc-callback`))
+      match: Host(`k8s.cyphers.app`) && (Path(`/oidc`) || Path(`/oidc-callback`) || Path(`/auth`))
       middlewares:
         - name: default-headers
           namespace: traefik
