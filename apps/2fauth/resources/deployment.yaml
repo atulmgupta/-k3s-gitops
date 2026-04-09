@@ -35,8 +35,14 @@ spec:
               value: https://2fauth.cyphers.app
             - name: APP_KEY
               value: "base64:aa9BtIN6DBouOIWvFyxqOudfrvRn36uLiQwqi2fNCO4="
+            - name: AUTHENTICATION_GUARD
+              value: reverse-proxy-guard
+            - name: AUTH_PROXY_HEADER_FOR_USER
+              value: X-authentik-username
+            - name: AUTH_PROXY_HEADER_FOR_EMAIL
+              value: X-authentik-email
             - name: THROTTLE_API
-              value: "0"
+              value: "500"
           resources:
             requests:
               cpu: 10m
