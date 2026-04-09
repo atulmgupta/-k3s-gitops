@@ -131,10 +131,10 @@ spec:
               revision: 2
               datasource: Prometheus
             nut-ups:
-              gnetId: 23972
-              revision: 1
+              gnetId: 15406
+              revision: 2
               datasource:
-                - name: DS_PROMETHEUS
+                - name: DS_GRAFANACLOUD-DENYAGO-PROM
                   value: prometheus
           kubernetes:
             k8s-cluster:
