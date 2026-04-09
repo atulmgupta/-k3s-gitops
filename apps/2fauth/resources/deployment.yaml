@@ -38,9 +38,9 @@ spec:
             - name: AUTHENTICATION_GUARD
               value: reverse-proxy-guard
             - name: AUTH_PROXY_HEADER_FOR_USER
-              value: X-authentik-username
+              value: HTTP_X_AUTHENTIK_USERNAME
             - name: AUTH_PROXY_HEADER_FOR_EMAIL
-              value: X-authentik-email
+              value: HTTP_X_AUTHENTIK_EMAIL
             - name: THROTTLE_API
               value: "500"
             - name: TRUSTED_PROXIES
