@@ -15,6 +15,11 @@ spec:
     helm:
       releaseName: outline
       valuesObject:
+        command:
+          - sh
+          - -c
+          - "yarn db:migrate --env production-ssl-disabled && yarn start"
+
         configmap:
           enabled: true
           data:
