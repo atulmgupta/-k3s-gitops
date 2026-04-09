@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: nut-exporter
-          image: hon95/prometheus-nut-exporter:1.2.6
+          image: hon95/prometheus-nut-exporter:1.2.1
           env:
             - name: NUT_EXPORTER_SERVER_HOST
               value: "lithium"
