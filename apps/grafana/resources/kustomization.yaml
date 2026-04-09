@@ -62,6 +62,10 @@ resources:
   - dashboards/argocd/argocd.yaml
   # cert-manager
   - dashboards/cert-manager/cert-manager.yaml
+  # Nexus Terminal
+  - dashboards/nexus-terminal/nexus-business.yaml
+  - dashboards/nexus-terminal/nexus-infrastructure.yaml
+  - dashboards/nexus-terminal/nexus-state-machines.yaml
   # TeslaSync Infra
   - dashboards/teslasync-infra/api-performance.yaml
   - dashboards/teslasync-infra/cep-rule-engine.yaml

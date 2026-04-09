@@ -1,0 +1,335 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexus-terminal-nexus-infrastructure
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Nexus Terminal
+data:
+  nexus-infrastructure.json: |
+    {
+      "annotations": { "list": [] },
+      "description": "Nexus Terminal — HTTP RED metrics, database health, Redis/MongoDB ops, latency tracking",
+      "editable": true,
+      "graphTooltip": 1,
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+          "id": 100,
+          "title": "🚦 HTTP Overview",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] }, "unit": "reqps" } },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+          "id": 1,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Request Rate",
+          "type": "stat",
+          "targets": [{ "expr": "sum(rate(nexus_http_requests_total[5m]))", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.01 }, { "color": "red", "value": 0.05 }] }, "unit": "percentunit" } },
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+          "id": 2,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Error Rate (5xx)",
+          "type": "stat",
+          "targets": [{ "expr": "sum(rate(nexus_http_requests_total{status=~\"5..\"}[5m])) / sum(rate(nexus_http_requests_total[5m]))", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] }, "unit": "s" } },
+          "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+          "id": 3,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "p95 Latency",
+          "type": "stat",
+          "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(nexus_http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+          "id": 4,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "In-Flight Requests",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_http_requests_in_progress", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 20, "stacking": { "mode": "normal" } }, "unit": "reqps" } },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+          "id": 5,
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "Request Rate by Endpoint",
+          "type": "timeseries",
+          "targets": [{ "expr": "sum(rate(nexus_http_requests_total[5m])) by (endpoint)", "legendFormat": "{{endpoint}}" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 20, "stacking": { "mode": "normal" } }, "unit": "reqps" } },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+          "id": 6,
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "Request Rate by Status Code",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum(rate(nexus_http_requests_total{status=~\"2..\"}[5m]))", "legendFormat": "2xx" },
+            { "expr": "sum(rate(nexus_http_requests_total{status=~\"4..\"}[5m]))", "legendFormat": "4xx" },
+            { "expr": "sum(rate(nexus_http_requests_total{status=~\"5..\"}[5m]))", "legendFormat": "5xx" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 }, "unit": "s" } },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 },
+          "id": 7,
+          "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+          "title": "Latency Percentiles",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "histogram_quantile(0.50, sum(rate(nexus_http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p50" },
+            { "expr": "histogram_quantile(0.90, sum(rate(nexus_http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p90" },
+            { "expr": "histogram_quantile(0.95, sum(rate(nexus_http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95" },
+            { "expr": "histogram_quantile(0.99, sum(rate(nexus_http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p99" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 }, "unit": "s" } },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 13 },
+          "id": 8,
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+          "title": "Latency by Endpoint (p95)",
+          "type": "timeseries",
+          "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(nexus_http_request_duration_seconds_bucket[5m])) by (le, endpoint))", "legendFormat": "{{endpoint}}" }]
+        },
+    
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 21 },
+          "id": 101,
+          "title": "🗄️ Database Health",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] },
+              "mappings": [{ "type": "value", "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } } }]
+            }
+          },
+          "gridPos": { "h": 4, "w": 4, "x": 0, "y": 22 },
+          "id": 10,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "SQLite",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_database_healthy", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] },
+              "mappings": [{ "type": "value", "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } } }]
+            }
+          },
+          "gridPos": { "h": 4, "w": 4, "x": 4, "y": 22 },
+          "id": 11,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "MongoDB",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_mongodb_healthy", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] },
+              "mappings": [{ "type": "value", "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } } }]
+            }
+          },
+          "gridPos": { "h": 4, "w": 4, "x": 8, "y": 22 },
+          "id": 12,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Redis",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_redis_healthy", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 50 }, { "color": "red", "value": 200 }] }, "unit": "ms" } },
+          "gridPos": { "h": 4, "w": 4, "x": 12, "y": 22 },
+          "id": 13,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "SQLite Latency",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_database_latency_ms", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 50 }, { "color": "red", "value": 200 }] }, "unit": "ms" } },
+          "gridPos": { "h": 4, "w": 4, "x": 16, "y": 22 },
+          "id": 14,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "MongoDB Latency",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_mongodb_latency_ms", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 10 }, { "color": "red", "value": 50 }] }, "unit": "ms" } },
+          "gridPos": { "h": 4, "w": 4, "x": 20, "y": 22 },
+          "id": 15,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Redis Latency",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_redis_latency_ms", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 }, "unit": "ms" } },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 26 },
+          "id": 16,
+          "title": "Database Latencies Over Time",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "nexus_database_latency_ms", "legendFormat": "SQLite" },
+            { "expr": "nexus_mongodb_latency_ms", "legendFormat": "MongoDB" },
+            { "expr": "nexus_redis_latency_ms", "legendFormat": "Redis" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 20 }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 26 },
+          "id": 17,
+          "title": "MongoDB Collection Sizes",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_mongodb_collection_documents", "legendFormat": "{{collection}}" }]
+        },
+    
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
+          "id": 102,
+          "title": "⏱️ Rate Limiting",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 35 },
+          "id": 20,
+          "title": "Requests Through Rate Limiter",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_rate_limit_requests_total", "legendFormat": "{{provider}}" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 10 }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 35 },
+          "id": 21,
+          "title": "Throttled Requests",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_rate_limit_throttled_total", "legendFormat": "{{provider}}" }]
+        },
+    
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 43 },
+          "id": 103,
+          "title": "🖥️ System",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] }, "unit": "s" } },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 44 },
+          "id": 30,
+          "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "API Uptime",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_uptime_seconds", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] }, "unit": "decbytes" } },
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 44 },
+          "id": 31,
+          "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "MongoDB Data Size",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_mongodb_data_size_bytes", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] },
+              "mappings": [{ "type": "value", "options": { "0": { "text": "DOWN" }, "1": { "text": "UP" } } }]
+            }
+          },
+          "gridPos": { "h": 4, "w": 4, "x": 12, "y": 44 },
+          "id": 32,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Market Worker",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_worker_status{worker=\"market_worker\"}", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] },
+              "mappings": [{ "type": "value", "options": { "0": { "text": "DOWN" }, "1": { "text": "UP" } } }]
+            }
+          },
+          "gridPos": { "h": 4, "w": 4, "x": 16, "y": 44 },
+          "id": 33,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Alert Worker",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_worker_status{worker=\"alert_worker\"}", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] },
+              "mappings": [{ "type": "value", "options": { "0": { "text": "DOWN" }, "1": { "text": "UP" } } }]
+            }
+          },
+          "gridPos": { "h": 4, "w": 4, "x": 20, "y": 44 },
+          "id": 34,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Notification Worker",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_worker_status{worker=\"notification_worker\"}", "legendFormat": "" }]
+        }
+      ],
+      "refresh": "15s",
+      "schemaVersion": 39,
+      "tags": ["nexus", "infrastructure", "sre"],
+      "time": { "from": "now-1h", "to": "now" },
+      "timezone": "utc",
+      "title": "Nexus Terminal — API & Infrastructure",
+      "uid": "nexus-infrastructure",
+      "version": 1
+    }
+    

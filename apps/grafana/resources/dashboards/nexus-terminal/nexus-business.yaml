@@ -1,0 +1,288 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexus-terminal-nexus-business
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Nexus Terminal
+data:
+  nexus-business.json: |
+    {
+      "annotations": { "list": [] },
+      "description": "Nexus Terminal — Users, portfolios, alerts, notifications, market data quality, trading activity",
+      "editable": true,
+      "graphTooltip": 1,
+      "panels": [
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+          "id": 100,
+          "title": "👥 Users & Accounts",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "blue", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+          "id": 1,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Total Users",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_users_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "purple", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
+          "id": 2,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Portfolios",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_portfolios_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "orange", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
+          "id": 3,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Watchlists",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_watchlists_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
+          "id": 4,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Active Alerts",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_alerts_active", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "yellow", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
+          "id": 5,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "API Keys",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_api_keys_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "red", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 20, "y": 1 },
+          "id": 6,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Notification Rules",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_notification_rules_total", "legendFormat": "" }]
+        },
+    
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+          "id": 101,
+          "title": "📊 Market Data Quality",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 15 }] }, "unit": "s" } },
+          "gridPos": { "h": 5, "w": 6, "x": 0, "y": 6 },
+          "id": 10,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Data Freshness",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_data_age_seconds", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 5, "w": 6, "x": 6, "y": 6 },
+          "id": 11,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Symbols Tracked",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_data_symbols_in_cache", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 5, "w": 6, "x": 12, "y": 6 },
+          "id": 12,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Market Indices",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_data_indices_in_cache", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } } },
+          "gridPos": { "h": 5, "w": 6, "x": 18, "y": 6 },
+          "id": 13,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Quotes Rejected",
+          "type": "stat",
+          "targets": [{ "expr": "sum(nexus_worker_quotes_rejected_total)", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 15 }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 11 },
+          "id": 14,
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull"] }, "tooltip": { "mode": "multi" } },
+          "title": "Quotes Validated Over Time",
+          "type": "timeseries",
+          "targets": [
+            { "expr": "sum(nexus_worker_quotes_validated_total)", "legendFormat": "validated" },
+            { "expr": "sum(nexus_worker_quotes_rejected_total)", "legendFormat": "rejected" }
+          ]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 15 }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 11 },
+          "id": 15,
+          "title": "Provider Data Volume (quotes/tick)",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_data_symbols_in_cache", "legendFormat": "symbols in cache" }]
+        },
+    
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 19 },
+          "id": 102,
+          "title": "🔔 Notifications & Alerts",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "blue", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 0, "y": 20 },
+          "id": 20,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Total Notifications",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_notifications_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 4, "y": 20 },
+          "id": 21,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Unread",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_notifications_unread", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 8, "y": 20 },
+          "id": 22,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Delivery Logs",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_delivery_logs_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 12, "y": 20 },
+          "id": 23,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Active Rules",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_notification_rules_active", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 4, "x": 16, "y": 20 },
+          "id": 24,
+          "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Channels Configured",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_notification_channels_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 20, "stacking": { "mode": "normal" } }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+          "id": 25,
+          "title": "Delivery Logs by Status",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_delivery_logs_by_status", "legendFormat": "{{status}}" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 15 }, "unit": "percentunit" } },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+          "id": 26,
+          "title": "Channel Success Rates",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_channel_success_rate", "legendFormat": "{{channel_type}}" }]
+        },
+    
+        {
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 32 },
+          "id": 103,
+          "title": "📡 External API Usage",
+          "type": "row"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } } },
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 33 },
+          "id": 30,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "Total API Calls",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_api_calls_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } } },
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 33 },
+          "id": 31,
+          "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "title": "API Errors",
+          "type": "stat",
+          "targets": [{ "expr": "nexus_api_calls_errors_total", "legendFormat": "" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 20, "stacking": { "mode": "normal" } }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 37 },
+          "id": 32,
+          "title": "API Calls by Provider",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_api_calls_by_provider", "legendFormat": "{{provider}}" }]
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "custom": { "lineWidth": 2, "fillOpacity": 20, "stacking": { "mode": "normal" } }, "unit": "short" } },
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 37 },
+          "id": 33,
+          "title": "API Calls by Status Code",
+          "type": "timeseries",
+          "targets": [{ "expr": "nexus_api_calls_by_status", "legendFormat": "{{status_code}}" }]
+        }
+      ],
+      "refresh": "30s",
+      "schemaVersion": 39,
+      "tags": ["nexus", "business", "trading"],
+      "time": { "from": "now-6h", "to": "now" },
+      "timezone": "utc",
+      "title": "Nexus Terminal — Business & Market Data",
+      "uid": "nexus-business",
+      "version": 1
+    }
+    
