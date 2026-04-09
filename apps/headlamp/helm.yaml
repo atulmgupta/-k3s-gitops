@@ -30,22 +30,8 @@ spec:
           oidc:
             clientID: ""
             clientSecret: ""
-            issuerURL: https://authentik.cyphers.app/application/o/headlamp/
-            scopes: "openid profile email"
-        extraArgs:
-          - "--oidc-client-id=$(OIDC_CLIENT_ID)"
-          - "--oidc-client-secret=$(OIDC_CLIENT_SECRET)"
-        extraEnv:
-          - name: OIDC_CLIENT_ID
-            valueFrom:
-              secretKeyRef:
-                name: headlamp-oidc
-                key: clientID
-          - name: OIDC_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: headlamp-oidc
-                key: clientSecret
+            issuerURL: ""
+            scopes: ""
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp
