@@ -1,0 +1,51 @@
+# =============================================================================
+# Actual Budget — Helm Application (ArgoCD)
+# =============================================================================
+# Personal finance / budgeting app (envelope budgeting).
+# Lightweight, ~50MB RAM. Data stored in Longhorn PVC.
+# Secured behind authentik ForwardAuth at budget.cyphers.app.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: actualbudget
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://community-charts.github.io/helm-charts
+    chart: actualbudget
+    targetRevision: "1.*.*"
+    helm:
+      releaseName: actualbudget
+      valuesObject:
+        persistence:
+          enabled: true
+          storageClass: longhorn
+          size: 5Gi
+
+        service:
+          type: ClusterIP
+          port: 5006
+
+        ingress:
+          enabled: false
+
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: actualbudget
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

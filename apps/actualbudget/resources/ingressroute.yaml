@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: actualbudget
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Actual Budget"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "actual-budget"
+    gethomepage.dev/description: "Personal Finance"
+    gethomepage.dev/href: "https://budget.cyphers.app"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`budget.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: actualbudget
+          namespace: actualbudget
+          port: 5006
+  tls:
+    secretName: production-cyphers-app-tls
