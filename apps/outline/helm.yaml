@@ -49,7 +49,8 @@ spec:
             AWS_S3_UPLOAD_BUCKET_URL: http://localhost:9000
 
         secret:
-          enabled: false
+          enabled: true
+          data: {}
 
         ingressRoute:
           enabled: false
@@ -71,5 +72,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: outline
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: outline-secret
+      jsonPointers:
+        - /data
+        - /stringData
   syncPolicy:
-    syncOptions: [CreateNamespace=true, ServerSideApply=true]
+    syncOptions: [CreateNamespace=true, ServerSideApply=true, RespectIgnoreDifferences=true]
