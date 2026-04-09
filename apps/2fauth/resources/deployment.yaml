@@ -36,11 +36,11 @@ spec:
             - name: APP_KEY
               value: "base64:aa9BtIN6DBouOIWvFyxqOudfrvRn36uLiQwqi2fNCO4="
             - name: AUTHENTICATION_GUARD
-              value: reverse-proxy-guard
+              value: web-guard
             - name: AUTH_PROXY_HEADER_FOR_USER
-              value: HTTP_X_AUTHENTIK_USERNAME
+              value: X-authentik-username
             - name: AUTH_PROXY_HEADER_FOR_EMAIL
-              value: HTTP_X_AUTHENTIK_EMAIL
+              value: X-authentik-email
             - name: THROTTLE_API
               value: "500"
             - name: TRUSTED_PROXIES
