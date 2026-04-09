@@ -16,8 +16,6 @@ spec:
     - kind: Rule
       match: Host(`2fauth.cyphers.app`)
       middlewares:
-        - name: authentik-auth
-          namespace: authentik
         - name: default-headers
           namespace: traefik
       services:
