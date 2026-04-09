@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: speedtest-tracker
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: Speedtest Tracker
+    gethomepage.dev/description: ISP Speed Monitor
+    gethomepage.dev/group: Monitoring
+    gethomepage.dev/icon: speedtest-tracker
+    gethomepage.dev/href: https://speedtest.cyphers.app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`speedtest.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: speedtest-tracker
+          namespace: speedtest-tracker
+          port: 80
+  tls:
+    secretName: production-cyphers-app-tls

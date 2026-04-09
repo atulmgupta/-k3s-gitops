@@ -1,0 +1,60 @@
+# =============================================================================
+# Speedtest Tracker — Helm Application (ArgoCD)
+# =============================================================================
+# Self-hosted ISP speed monitoring. Runs scheduled Ookla speedtests
+# and displays results in a web dashboard with historical graphs.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: speedtest-tracker
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/HomeOpsHub/helm-for-home.git
+    targetRevision: main
+    path: charts/stable/speedtest-tracker
+    helm:
+      releaseName: speedtest-tracker
+      valuesObject:
+        env:
+          TZ: America/Los_Angeles
+          PUID: "1000"
+          PGID: "1000"
+          SPEEDTEST_SCHEDULE: "0 * * * *"
+          OOKLA_EULA_GDPR: "true"
+
+        service:
+          type: ClusterIP
+          port: 80
+
+        ingressRoute:
+          enabled: false
+
+        persistence:
+          config:
+            enabled: true
+            storageClass: longhorn
+            accessModes: [ReadWriteOnce]
+            size: 2Gi
+
+        resources:
+          requests:
+            cpu: 25m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: speedtest-tracker
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions: [CreateNamespace=true]
