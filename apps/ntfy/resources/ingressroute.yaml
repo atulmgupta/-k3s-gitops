@@ -1,0 +1,27 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ntfy
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: Ntfy
+    gethomepage.dev/description: Push Notifications
+    gethomepage.dev/group: Services
+    gethomepage.dev/icon: ntfy
+    gethomepage.dev/href: https://ntfy.cyphers.app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`ntfy.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: ntfy
+          namespace: ntfy
+          port: 80
+  tls:
+    secretName: production-cyphers-app-tls
