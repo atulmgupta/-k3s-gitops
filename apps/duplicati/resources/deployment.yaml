@@ -28,6 +28,8 @@ spec:
               value: "1000"
             - name: TZ
               value: America/Los_Angeles
+            - name: SETTINGS_ENCRYPTION_KEY
+              value: cyphers-duplicati-2026
           resources:
             requests:
               cpu: 10m
