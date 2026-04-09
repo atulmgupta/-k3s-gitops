@@ -21,7 +21,7 @@ spec:
         - name: default-headers
           namespace: traefik
       services:
-        - name: trilium
+        - name: trilium-web
           namespace: trilium
           port: 8080
   tls:
