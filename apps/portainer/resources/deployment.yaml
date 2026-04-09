@@ -22,7 +22,7 @@ spec:
       serviceAccountName: portainer-sa-clusteradmin
       containers:
         - name: portainer
-          image: portainer/portainer-ee:2.21.4
+          image: portainer/portainer-ee:2.39.1
           imagePullPolicy: Always
           ports:
             - name: http
