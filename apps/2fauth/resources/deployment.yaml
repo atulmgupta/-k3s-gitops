@@ -64,4 +64,4 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimname: twofauth-data
+            claimName: twofauth-data
