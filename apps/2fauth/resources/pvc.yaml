@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: 2fauth-data
+  name: twofauth-data
   labels:
-    app.kubernetes.io/name: 2fauth
+    app.kubernetes.io/name: twofauth
 spec:
   accessModes: [ReadWriteOnce]
   storageClassName: longhorn

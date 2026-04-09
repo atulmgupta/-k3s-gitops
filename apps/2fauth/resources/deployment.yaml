@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 2fauth
+  name: twofauth
   labels:
-    app.kubernetes.io/name: 2fauth
+    app.kubernetes.io/name: twofauth
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: 2fauth
+      app.kubernetes.io/name: twofauth
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: 2fauth
+        app.kubernetes.io/name: twofauth
     spec:
       securityContext:
         fsGroup: 1000
@@ -24,6 +24,7 @@ spec:
             - name: data
               mountPath: /2fauth
       containers:
+        - name: twofauth
           image: 2fauth/2fauth:latest
           ports:
             - name: http
@@ -63,4 +64,4 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: 2fauth-data
+            claimname: twofauth-data

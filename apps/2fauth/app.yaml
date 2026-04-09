@@ -7,7 +7,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 2fauth
+  name: twofauth
   namespace: argocd
   labels:
     tier: apps
@@ -20,7 +20,7 @@ spec:
     kustomize: {}
   destination:
     server: https://kubernetes.default.svc
-    namespace: 2fauth
+    namespace: twofauth
   syncPolicy:
     automated:
       prune: true

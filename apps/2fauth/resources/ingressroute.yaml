@@ -1,11 +1,11 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: 2fauth
+  name: twofauth
   annotations:
     kubernetes.io/ingress.class: traefik-external
     gethomepage.dev/enabled: "true"
-    gethomepage.dev/name: 2FAuth
+    gethomepage.dev/name: twofauth
     gethomepage.dev/description: Two-Factor Authentication
     gethomepage.dev/group: Security
     gethomepage.dev/icon: 2fauth
@@ -21,7 +21,7 @@ spec:
         - name: default-headers
           namespace: traefik
       services:
-        - name: 2fauth
+        - name: twofauth
           namespace: 2fauth
           port: 8000
   tls:
