@@ -13,5 +13,7 @@ spec:
       app.kubernetes.io/name: nut-exporter
   endpoints:
     - port: metrics
-      path: /metrics
+      path: /nut
+      params:
+        target: ["lithium"]
       interval: 30s
