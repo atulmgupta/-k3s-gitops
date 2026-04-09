@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: syncthing
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: Syncthing
+    gethomepage.dev/description: File Synchronization
+    gethomepage.dev/group: Services
+    gethomepage.dev/icon: syncthing
+    gethomepage.dev/href: https://syncthing.cyphers.app
+spec:
+  entryPoints: [websecure]
+  routes:
+    - kind: Rule
+      match: Host(`syncthing.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: syncthing
+          namespace: syncthing
+          port: 8384
+  tls:
+    secretName: production-cyphers-app-tls

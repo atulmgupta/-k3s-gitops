@@ -1,0 +1,26 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vaultwarden
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: Vaultwarden
+    gethomepage.dev/description: Password Manager
+    gethomepage.dev/group: Security
+    gethomepage.dev/icon: vaultwarden
+    gethomepage.dev/href: https://vault.cyphers.app
+spec:
+  entryPoints: [websecure]
+  routes:
+    - kind: Rule
+      match: Host(`vault.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: vaultwarden
+          namespace: vaultwarden
+          port: 80
+  tls:
+    secretName: production-cyphers-app-tls

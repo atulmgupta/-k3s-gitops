@@ -1,0 +1,30 @@
+# =============================================================================
+# 2FAuth — Kustomize Application (ArgoCD)
+# =============================================================================
+# Web-based self-hosted 2FA/TOTP manager.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 2fauth
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/2fauth/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: 2fauth
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

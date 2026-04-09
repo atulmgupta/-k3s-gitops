@@ -1,0 +1,30 @@
+# =============================================================================
+# Trilium — Kustomize Application (ArgoCD)
+# =============================================================================
+# Personal knowledge base and note-taking application.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: trilium
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/trilium/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: trilium
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

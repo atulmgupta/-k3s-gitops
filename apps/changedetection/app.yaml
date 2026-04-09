@@ -1,0 +1,30 @@
+# =============================================================================
+# Change Detection — Kustomize Application (ArgoCD)
+# =============================================================================
+# Website change detection and monitoring.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: changedetection
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/changedetection/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: changedetection
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

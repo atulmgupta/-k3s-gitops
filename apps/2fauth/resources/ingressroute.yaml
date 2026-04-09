@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: 2fauth
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: 2FAuth
+    gethomepage.dev/description: Two-Factor Authentication
+    gethomepage.dev/group: Security
+    gethomepage.dev/icon: 2fauth
+    gethomepage.dev/href: https://2fauth.cyphers.app
+spec:
+  entryPoints: [websecure]
+  routes:
+    - kind: Rule
+      match: Host(`2fauth.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: 2fauth
+          namespace: 2fauth
+          port: 8000
+  tls:
+    secretName: production-cyphers-app-tls

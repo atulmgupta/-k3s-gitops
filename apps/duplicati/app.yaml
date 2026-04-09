@@ -1,0 +1,30 @@
+# =============================================================================
+# Duplicati — Kustomize Application (ArgoCD)
+# =============================================================================
+# Free backup software with encryption and cloud storage support.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: duplicati
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/duplicati/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: duplicati
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

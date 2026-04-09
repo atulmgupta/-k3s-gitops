@@ -1,0 +1,30 @@
+# =============================================================================
+# Filebrowser — Kustomize Application (ArgoCD)
+# =============================================================================
+# Web-based file manager.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: filebrowser
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/filebrowser/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: filebrowser
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
