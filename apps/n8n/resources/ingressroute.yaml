@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: n8n
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: n8n
+    gethomepage.dev/description: Workflow Automation
+    gethomepage.dev/group: Services
+    gethomepage.dev/icon: n8n
+    gethomepage.dev/href: https://n8n.cyphers.app
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`n8n.cyphers.app`)
+      middlewares:
+        - name: authentik-auth
+          namespace: authentik
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: n8n
+          namespace: n8n
+          port: 5678
+  tls:
+    secretName: production-cyphers-app-tls
