@@ -36,7 +36,7 @@ spec:
             - name: APP_KEY
               value: "base64:aa9BtIN6DBouOIWvFyxqOudfrvRn36uLiQwqi2fNCO4="
             - name: AUTHENTICATION_GUARD
-              value: web-guard
+              value: reverse-proxy-guard
             - name: AUTH_PROXY_HEADER_FOR_USER
               value: X-authentik-username
             - name: AUTH_PROXY_HEADER_FOR_EMAIL
