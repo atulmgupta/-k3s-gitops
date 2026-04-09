@@ -28,10 +28,10 @@ spec:
           port: 80
         config:
           oidc:
-            clientID: ""
-            clientSecret: ""
-            issuerURL: ""
-            scopes: ""
+            clientID: "from-secret"
+            clientSecret: "from-secret"
+            issuerURL: "from-secret"
+            scopes: "from-secret"
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp
