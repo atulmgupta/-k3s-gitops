@@ -14,6 +14,17 @@ spec:
   entryPoints:
     - websecure
   routes:
+    # OIDC endpoints must bypass forward-auth (Headlamp handles its own OIDC)
+    - kind: Rule
+      match: Host(`k8s.cyphers.app`) && (Path(`/oidc`) || Path(`/oidc-callback`))
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: headlamp
+          namespace: headlamp
+          port: 80
+    # All other routes use forward-auth
     - kind: Rule
       match: Host(`k8s.cyphers.app`)
       middlewares:
