@@ -28,6 +28,7 @@ spec:
           port: 80
         config:
           oidc:
+            callbackURL: "https://k8s.cyphers.app/oidc-callback"
             externalSecret:
               enabled: true
               name: oidc

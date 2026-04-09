@@ -19,6 +19,8 @@ spec:
       middlewares:
         - name: default-headers
           namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
       services:
         - name: headlamp
           namespace: headlamp
