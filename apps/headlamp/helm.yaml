@@ -1,8 +1,9 @@
 # =============================================================================
 # Headlamp — Helm Application (ArgoCD)
 # =============================================================================
-# Modern Kubernetes dashboard (CNCF sandbox). Replaces deprecated k8s-dashboard.
+# Modern Kubernetes dashboard (CNCF sandbox).
 # Secured behind authentik ForwardAuth at k8s.cyphers.app.
+# Uses SA token for K8s API access (set via initContainer).
 # =============================================================================
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -26,12 +27,6 @@ spec:
         service:
           type: ClusterIP
           port: 80
-        config:
-          oidc:
-            callbackURL: "https://k8s.cyphers.app/oidc-callback"
-            externalSecret:
-              enabled: true
-              name: oidc
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp
