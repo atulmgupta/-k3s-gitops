@@ -43,6 +43,8 @@ spec:
               value: X-authentik-email
             - name: THROTTLE_API
               value: "500"
+            - name: TRUSTED_PROXIES
+              value: "*"
           resources:
             requests:
               cpu: 10m
