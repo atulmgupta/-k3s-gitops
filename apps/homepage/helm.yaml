@@ -49,6 +49,12 @@ spec:
               - Applications:
                   style: row
                   columns: 4
+              - Services:
+                  style: row
+                  columns: 4
+              - Security:
+                  style: row
+                  columns: 4
               - Monitoring:
                   style: row
                   columns: 4
@@ -125,6 +131,30 @@ spec:
                     icon: outline
                     href: https://outline.cyphers.app
                     description: Wiki & Docs
+                - Mealie:
+                    icon: mealie
+                    href: https://mealie.cyphers.app
+                    description: Recipe Manager
+                - Nexus Terminal:
+                    icon: mdi-chart-timeline-variant
+                    href: https://nexus.cyphers.app
+                    description: Stock Intelligence
+                - Trilium:
+                    icon: mdi-notebook-outline
+                    href: https://trilium.cyphers.app
+                    description: Notes
+                - FreshRSS:
+                    icon: freshrss
+                    href: https://rss.cyphers.app
+                    description: RSS Reader
+                - TeslaMate:
+                    icon: mdi-car-electric
+                    href: https://teslamate.cyphers.app
+                    description: Tesla Data Logger
+                - Grocy:
+                    icon: grocy
+                    href: https://grocy.cyphers.app
+                    description: Household Management
             - Monitoring:
                 - Grafana:
                     icon: grafana
@@ -138,18 +168,65 @@ spec:
                     icon: uptime-kuma
                     href: https://kuma.cyphers.app
                     description: Uptime Monitoring
+                - Gatus:
+                    icon: gatus
+                    href: https://gatus.cyphers.app
+                    description: Health Status
+                - Dozzle:
+                    icon: dozzle
+                    href: https://dozzle.cyphers.app
+                    description: Log Viewer
+                - Speedtest:
+                    icon: mdi-speedometer
+                    href: https://speedtest.cyphers.app
+                    description: ISP Speed Monitor
                 - Headlamp:
                     icon: kubernetes-dashboard
                     href: https://k8s.cyphers.app
                     description: Kubernetes Dashboard
-                - EMQX:
-                    icon: emqx
-                    href: https://mqtt.cyphers.app
-                    description: MQTT Broker
                 - Netdata:
                     icon: netdata
                     href: https://netdata.cyphers.app
                     description: System Monitoring
+
+            - Services:
+                - n8n:
+                    icon: n8n
+                    href: https://n8n.cyphers.app
+                    description: Workflow Automation
+                - Ntfy:
+                    icon: ntfy
+                    href: https://ntfy.cyphers.app
+                    description: Push Notifications
+                - FileBrowser:
+                    icon: filebrowser
+                    href: https://files.cyphers.app
+                    description: File Manager
+                - Syncthing:
+                    icon: syncthing
+                    href: https://syncthing.cyphers.app
+                    description: File Sync
+                - Duplicati:
+                    icon: duplicati
+                    href: https://duplicati.cyphers.app
+                    description: Backups
+                - Changedetection:
+                    icon: changedetection-io
+                    href: https://changedetection.cyphers.app
+                    description: Website Monitor
+                - Nextcloud:
+                    icon: nextcloud
+                    href: https://nextcloud.cyphers.app
+                    description: Cloud Storage
+            - Security:
+                - Vaultwarden:
+                    icon: vaultwarden
+                    href: https://vault.cyphers.app
+                    description: Password Manager
+                - 2FAuth:
+                    icon: mdi-two-factor-authentication
+                    href: https://2fauth.cyphers.app
+                    description: 2FA Manager
 
           bookmarks: []
 
