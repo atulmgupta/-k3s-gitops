@@ -17,7 +17,7 @@ spec:
   source:
     repoURL: ghcr.io/biosync-io/charts
     chart: vitasync
-    targetRevision: "2.25.0-rc.feature-user-boundaries.000241b"
+    targetRevision: "2.25.0-rc.feature-user-boundaries.6f38f56"
     helm:
       releaseName: vitasync
       valuesObject:
