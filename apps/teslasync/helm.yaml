@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.29.1"
+    targetRevision: "0.30.0-rc.feature-premium-ui.72c85be"
     helm:
       releaseName: teslasync
       valuesObject:
