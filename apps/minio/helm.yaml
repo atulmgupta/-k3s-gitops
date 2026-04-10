@@ -1,0 +1,28 @@
+# =============================================================================
+# MinIO — Kustomize Application (ArgoCD)
+# =============================================================================
+# S3-compatible object storage. Used as backup target for Velero.
+# Single-node mode. Console at s3.cyphers.app, API at port 9000.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/minio/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: minio
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

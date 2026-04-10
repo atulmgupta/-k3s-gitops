@@ -1,0 +1,69 @@
+# =============================================================================
+# CrowdSec — Helm Application (ArgoCD)
+# =============================================================================
+# Collaborative intrusion detection system. Analyzes Traefik logs,
+# blocks malicious IPs. Pairs with Traefik bouncer plugin.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crowdsec
+  namespace: argocd
+  labels:
+    tier: security
+spec:
+  project: default
+  source:
+    repoURL: https://crowdsecurity.github.io/helm-charts
+    chart: crowdsec
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: crowdsec
+      valuesObject:
+        container_runtime: containerd
+
+        lapi:
+          enabled: true
+          replicas: 1
+          persistentVolume:
+            data:
+              enabled: true
+              storageClassName: longhorn
+              size: 2Gi
+            config:
+              enabled: true
+              storageClassName: longhorn
+              size: 1Gi
+          env:
+            - name: ENROLL_KEY
+              value: ""
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+
+        agent:
+          enabled: true
+          acquisition:
+            - namespace: traefik
+              podName: traefik-*
+              program: traefik
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: crowdsec
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

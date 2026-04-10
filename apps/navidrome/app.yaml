@@ -1,0 +1,27 @@
+# Navidrome — Kustomize Application (ArgoCD)
+# Open-source music server and streamer.
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: navidrome
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/navidrome/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: navidrome
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

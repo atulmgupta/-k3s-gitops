@@ -1,0 +1,79 @@
+# =============================================================================
+# Velero — Helm Application (ArgoCD)
+# =============================================================================
+# Kubernetes backup/restore tool. Backs up cluster resources + PVCs to MinIO.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://vmware-tanzu.github.io/helm-charts
+    chart: velero
+    targetRevision: "12.*.*"
+    helm:
+      releaseName: velero
+      valuesObject:
+        initContainers:
+          - name: velero-plugin-for-aws
+            image: velero/velero-plugin-for-aws:v1.12.1
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+              - name: plugins
+                mountPath: /target
+
+        configuration:
+          backupStorageLocation:
+            - name: default
+              provider: aws
+              bucket: velero
+              config:
+                region: us-east-1
+                s3ForcePathStyle: "true"
+                s3Url: http://minio.minio.svc.cluster.local:9000
+
+          volumeSnapshotLocation: []
+
+          features: EnableCSI
+
+        credentials:
+          useSecret: true
+          secretContents:
+            cloud: |
+              [default]
+              aws_access_key_id=admin
+              aws_secret_access_key=minio_cyphers_2026
+
+        deployNodeAgent: true
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: "1"
+            memory: 512Mi
+
+        schedules:
+          daily-backup:
+            disabled: false
+            schedule: "0 3 * * *"
+            template:
+              ttl: 168h
+              includedNamespaces:
+                - "*"
+              storageLocation: default
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: velero
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
