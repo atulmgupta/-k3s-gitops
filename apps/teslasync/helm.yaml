@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.31.0-rc.feature-premium-ui.5786ee3"
+    targetRevision: "0.31.0-rc.feature-premium-ui.d401bf9"
     helm:
       releaseName: teslasync
       valuesObject:
@@ -68,6 +68,9 @@ spec:
 
         encryption:
           key: MANAGED_VIA_SOPS
+
+        retention:
+          signalHistoryDays: 15
 
         gasPrice:
           enabled: true
