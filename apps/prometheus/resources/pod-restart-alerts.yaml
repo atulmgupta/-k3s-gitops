@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: pod-restart-alerts
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: pod-restarts
+      rules:
+        # Warning: pod restarted at least once in last 5 minutes
+        - alert: PodRestarted
+          expr: increase(kube_pod_container_status_restarts_total[5m]) > 0
+          for: 0m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} restarted"
+            description: "Container {{ $labels.container }} in pod {{ $labels.pod }} (ns: {{ $labels.namespace }}) restarted {{ $value | humanize }} time(s) in the last 5 minutes."
+
+        # Critical: pod is in CrashLoopBackOff
+        - alert: PodCrashLooping
+          expr: increase(kube_pod_container_status_restarts_total[10m]) > 3
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} crash-looping"
+            description: "Container {{ $labels.container }} in pod {{ $labels.pod }} (ns: {{ $labels.namespace }}) has restarted {{ $value | humanize }} times in 10 minutes."

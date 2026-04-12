@@ -42,6 +42,24 @@ spec:
                   resources:
                     requests:
                       storage: 8Gi
+          config:
+            global:
+              resolve_timeout: 5m
+            route:
+              receiver: ntfy
+              group_by: [alertname, namespace, pod]
+              group_wait: 30s
+              group_interval: 5m
+              repeat_interval: 4h
+              routes:
+                - receiver: ntfy
+                  matchers:
+                    - severity =~ "warning|critical"
+            receivers:
+              - name: ntfy
+                webhook_configs:
+                  - url: "http://ntfy.ntfy.svc.cluster.local/k8s-alerts"
+                    send_resolved: true
         nodeExporter:
           enabled: true
         prometheus-node-exporter:
