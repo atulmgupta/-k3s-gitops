@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: timescaledb-config
+  labels:
+    app.kubernetes.io/name: timescaledb
+    app.kubernetes.io/instance: timescaledb
+data:
+  init.sql: |
+    -- Enable TimescaleDB extension in the teslasync database
+    CREATE EXTENSION IF NOT EXISTS timescaledb;

@@ -1,0 +1,29 @@
+# =============================================================================
+# TimescaleDB — Kustomize Application (ArgoCD)
+# =============================================================================
+# Dedicated TimescaleDB instance for time-series workloads. Uses the official
+# timescale/timescaledb-ha image with PG17. Deployed as a StatefulSet with
+# Longhorn storage. Secrets managed via SOPS/age.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: timescaledb
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/timescaledb/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: timescaledb
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
