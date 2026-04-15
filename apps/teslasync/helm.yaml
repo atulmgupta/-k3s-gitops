@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.32.0-rc.refactor-cleanup.f8d1592"
+    targetRevision: "0.32.0-rc.refactor-cleanup.b1d1dc5"
     helm:
       releaseName: teslasync
       valuesObject:
