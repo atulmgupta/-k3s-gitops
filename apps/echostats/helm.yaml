@@ -57,23 +57,23 @@ spec:
           web: { port: 3000, type: ClusterIP }
 
         spotify:
-          clientId: MANAGED_VIA_SOPS
-          clientSecret: MANAGED_VIA_SOPS
+          clientId: ""
+          clientSecret: ""
           redirectUri: https://echostats.cyphers.app/api/v1/auth/callback
 
         security:
-          jwtSecret: MANAGED_VIA_SOPS
-          encryptionKey: MANAGED_VIA_SOPS
+          jwtSecret: ""
+          encryptionKey: ""
 
         mongodb:
           enabled: false
           external:
-            uri: MANAGED_VIA_SOPS
+            uri: ""
 
         redis:
           enabled: false
           external:
-            url: MANAGED_VIA_SOPS
+            url: ""
 
         ingressRoute:
           enabled: false

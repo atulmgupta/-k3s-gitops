@@ -51,13 +51,13 @@ spec:
         secret:
           enabled: true
           data:
-            DATABASE_URL: MANAGED_VIA_SOPS
-            REDIS_URL: MANAGED_VIA_SOPS
-            OIDC_CLIENT_ID: MANAGED_VIA_SOPS
-            OIDC_CLIENT_SECRET: MANAGED_VIA_SOPS
-            SECRET_KEY: MANAGED_VIA_SOPS
-            UTILS_SECRET: MANAGED_VIA_SOPS
-            SMTP_PASSWORD: MANAGED_VIA_SOPS
+            DATABASE_URL: ""
+            REDIS_URL: ""
+            OIDC_CLIENT_ID: ""
+            OIDC_CLIENT_SECRET: ""
+            SECRET_KEY: ""
+            UTILS_SECRET: ""
+            SMTP_PASSWORD: ""
 
         ingressRoute:
           enabled: false

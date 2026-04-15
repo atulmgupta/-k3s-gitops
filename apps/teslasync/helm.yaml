@@ -33,9 +33,9 @@ spec:
           logLevel: info
           pollInterval: 30s
           authentikURL: http://authentik-server.authentik.svc.cluster.local/application/o/wZacMmH9lDFSCE1aWLC90PV2x6DIESIshUTJ5SqM/jwks/
-          authentikHMACKey: MANAGED_VIA_SOPS
+          authentikHMACKey: ""
           azureMaps:
-            apiKey: MANAGED_VIA_SOPS
+            apiKey: ""
           openTelemetry:
             enabled: false
             endpoint: jaeger:4317
@@ -62,19 +62,19 @@ spec:
 
         tesla:
           apiBaseUrl: https://fleet-api.prd.na.vn.cloud.tesla.com
-          clientId: MANAGED_VIA_SOPS
-          clientSecret: MANAGED_VIA_SOPS
+          clientId: ""
+          clientSecret: ""
           redirectUri: https://teslasync.cyphers.app/api/v1/auth/callback
 
         encryption:
-          key: MANAGED_VIA_SOPS
+          key: ""
 
         retention:
           signalHistoryDays: 15
 
         gasPrice:
           enabled: true
-          apiKey: MANAGED_VIA_SOPS
+          apiKey: ""
           pollInterval: 15d
 
         web:
@@ -161,7 +161,7 @@ spec:
             port: 5432
             database: teslasync
             username: teslasync
-            password: MANAGED_VIA_SOPS
+            password: ""
             sslMode: disable
 
         redis:
@@ -169,14 +169,14 @@ spec:
           external:
             host: redis-master.redis.svc.cluster.local
             port: 6379
-            password: MANAGED_VIA_SOPS
+            password: ""
 
         mongodb:
           enabled: false
           database: teslasync
           ttlDays: 7
           external:
-            uri: MANAGED_VIA_SOPS
+            uri: ""
 
         mqtt:
           enabled: false
