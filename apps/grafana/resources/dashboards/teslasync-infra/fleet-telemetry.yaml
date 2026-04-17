@@ -70,7 +70,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 2,
@@ -103,7 +103,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 3,
@@ -135,7 +135,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 4,
@@ -167,7 +167,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 5,
@@ -201,7 +201,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 6,
@@ -235,7 +235,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 200,
@@ -280,7 +280,7 @@ data:
               "refId": "B"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 8,
@@ -312,7 +312,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 9,
@@ -349,7 +349,7 @@ data:
               "refId": "B"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 10,
@@ -381,7 +381,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 300,
@@ -421,7 +421,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 12,
@@ -453,7 +453,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 400,
@@ -503,7 +503,7 @@ data:
               "refId": "C"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 14,
@@ -535,7 +535,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "id": 15,
@@ -567,7 +567,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         }
       ],
       "templating": {
