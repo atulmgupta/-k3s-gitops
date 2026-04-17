@@ -33,6 +33,18 @@ data:
       "id": null,
       "links": [
         {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "◀ Prev",
+          "tooltip": "TeslaSync 🔋 Battery Health",
+          "type": "link",
+          "url": "/d/teslasync-battery-health"
+        },
+        {
           "asDropdown": true,
           "icon": "external link",
           "includeVars": true,
@@ -41,7 +53,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "🔀 Navigate to...",
+          "title": "⚡ TeslaSync",
           "type": "dashboards"
         },
         {
@@ -54,6 +66,18 @@ data:
           "title": "⬅️ Back to Charging Sessions",
           "type": "link",
           "url": "/d/teslasync-charging-sessions?var-vehicle_id=${vehicle_id}"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next ▶",
+          "tooltip": "TeslaSync ⚡ Charging Heatmap",
+          "type": "link",
+          "url": "/d/teslasync-charging-heatmap"
         }
       ],
       "panels": [
@@ -177,7 +201,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  ctr.battery_level AS \"SoC %\",\n  ctr.power_kw AS \"Power (kW)\",\n  TO_CHAR(cs.start_date, 'YYYY-MM-DD HH24:MI') AS \"Session\"\nFROM charge_telemetry_readings ctr\nJOIN charging_sessions cs ON ctr.session_id = cs.id\nWHERE cs.vehicle_id = ${vehicle_id}\n  AND ctr.power_kw IS NOT NULL\n  AND ctr.battery_level IS NOT NULL\n  AND cs.id IN (\n    SELECT id FROM charging_sessions\n    WHERE vehicle_id = ${vehicle_id}\n    ORDER BY start_date DESC\n    LIMIT 5\n  )\nORDER BY ctr.battery_level",
+              "rawSql": "SELECT\n  f.soc AS \"SoC %\",\n  f.power_kw AS \"Power (kW)\",\n  TO_CHAR(cs.start_date, 'YYYY-MM-DD HH24:MI') AS \"Session\"\nFROM fn_charging_rate_vs_soc(${vehicle_id}::bigint) f\nJOIN charging_sessions cs ON f.session_id = cs.id",
               "refId": "A"
             }
           ],
@@ -281,7 +305,10 @@ data:
                   {
                     "id": "custom.lineStyle",
                     "value": {
-                      "dash": [10, 10],
+                      "dash": [
+                        10,
+                        10
+                      ],
                       "fill": "dash"
                     }
                   }
@@ -298,7 +325,10 @@ data:
           "id": 2,
           "options": {
             "legend": {
-              "calcs": ["mean", "max"],
+              "calcs": [
+                "mean",
+                "max"
+              ],
               "displayMode": "table",
               "placement": "bottom"
             },
@@ -316,7 +346,7 @@ data:
               "editorMode": "code",
               "format": "time_series",
               "rawQuery": true,
-              "rawSql": "SELECT\n  created_at AS time,\n  battery_temp AS \"Battery Temp\",\n  outside_temp AS \"Outside Temp\"\nFROM charge_telemetry_readings\nWHERE session_id = ${session_id}\nORDER BY created_at",
+              "rawSql": "SELECT\n  time,\n  battery_temp AS \"Battery Temp\",\n  outside_temp AS \"Outside Temp\"\nFROM fn_charging_temperature(${session_id}::bigint)",
               "refId": "A"
             }
           ],
@@ -383,3 +413,4 @@ data:
       "version": 1,
       "weekStart": ""
     }
+    

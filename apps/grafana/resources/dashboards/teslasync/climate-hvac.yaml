@@ -33,6 +33,18 @@ data:
       "id": null,
       "links": [
         {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "◀ Prev",
+          "tooltip": "TeslaSync ⚡ Charging History",
+          "type": "link",
+          "url": "/d/teslasync-charging"
+        },
+        {
           "asDropdown": true,
           "icon": "external link",
           "includeVars": true,
@@ -41,8 +53,20 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "🔀 Navigate to...",
+          "title": "⚡ TeslaSync",
           "type": "dashboards"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next ▶",
+          "tooltip": "TeslaSync 🎵 Comfort & Media",
+          "type": "link",
+          "url": "/d/teslasync-comfort-media"
         }
       ],
       "panels": [
@@ -452,7 +476,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  COUNT(*) FILTER (WHERE defrost_mode = true) AS \"Defrost Events\",\n  COUNT(*) FILTER (WHERE battery_heater_on = true) AS \"Battery Heater Events\",\n  COUNT(*) AS \"Total Snapshots\"\nFROM climate_snapshots\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(created_at)",
+              "rawSql": "SELECT\n  COUNT(*) FILTER (WHERE defrost_mode IS NOT NULL AND defrost_mode != '') AS \"Defrost Events\",\n  COUNT(*) FILTER (WHERE battery_heater_on = true) AS \"Battery Heater Events\",\n  COUNT(*) AS \"Total Snapshots\"\nFROM climate_snapshots\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(created_at)",
               "refId": "A"
             }
           ],
@@ -703,7 +727,7 @@ data:
           },
           "targets": [
             {
-              "rawSql": "SELECT created_at AS \"Time\",\n  hvac_steering_wheel_heat_level AS \"Steering Wheel Level\",\n  CASE WHEN defrost_mode THEN 'ON' ELSE 'Off' END AS \"Defrost\",\n  CASE WHEN rear_defrost_enabled THEN 'ON' ELSE 'Off' END AS \"Rear Defrost\",\n  CASE WHEN wiper_heat_enabled THEN 'ON' ELSE 'Off' END AS \"Wiper Heat\",\n  COALESCE(climate_keeper_mode, 'Off') AS \"Climate Keeper\",\n  COALESCE(cabin_overheat_mode, 'Off') AS \"Overheat Protection\"\nFROM climate_snapshots\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at)\nORDER BY created_at DESC LIMIT 50",
+              "rawSql": "SELECT created_at AS \"Time\",\n  hvac_steering_wheel_heat_level AS \"Steering Wheel Level\",\n  CASE WHEN defrost_mode IS NOT NULL AND defrost_mode != '' THEN 'ON' ELSE 'Off' END AS \"Defrost\",\n  CASE WHEN rear_defrost_enabled THEN 'ON' ELSE 'Off' END AS \"Rear Defrost\",\n  CASE WHEN wiper_heat_enabled THEN 'ON' ELSE 'Off' END AS \"Wiper Heat\",\n  COALESCE(climate_keeper_mode, 'Off') AS \"Climate Keeper\",\n  COALESCE(cabin_overheat_mode, 'Off') AS \"Overheat Protection\"\nFROM climate_snapshots\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at)\nORDER BY created_at DESC LIMIT 50",
               "format": "table",
               "refId": "A",
               "datasource": {

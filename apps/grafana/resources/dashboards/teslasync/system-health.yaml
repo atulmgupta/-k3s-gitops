@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: teslasync-charging-stats
+  name: teslasync-system-health
   namespace: grafana
   labels:
     grafana_dashboard: "1"
   annotations:
     grafana_folder: TeslaSync
 data:
-  charging-stats.json: |
+  system-health.json: |
     {
       "annotations": {
         "list": [
@@ -40,9 +40,9 @@ data:
           "tags": [],
           "targetBlank": false,
           "title": "◀ Prev",
-          "tooltip": "TeslaSync ⚡ Charging Sessions",
+          "tooltip": "TeslaSync 🔄 Charging vs Driving",
           "type": "link",
-          "url": "/d/teslasync-charging-sessions"
+          "url": "/d/teslasync-charging-driving"
         },
         {
           "asDropdown": true,
@@ -64,71 +64,24 @@ data:
           "tags": [],
           "targetBlank": false,
           "title": "Next ▶",
-          "tooltip": "TeslaSync ⚡ Charging History",
+          "tooltip": "TeslaSync 🔍 Anomaly Detection",
           "type": "link",
-          "url": "/d/teslasync-charging"
+          "url": "/d/teslasync-anomaly-detection"
         }
       ],
       "panels": [
         {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "DS_TESLASYNC_POSTGRESQL"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "fixedColor": "yellow",
-                "mode": "fixed"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "kwatth"
-            }
-          },
+          "type": "row",
+          "title": "Status",
           "gridPos": {
-            "h": 4,
-            "w": 4,
             "x": 0,
-            "y": 0
+            "y": 0,
+            "w": 24,
+            "h": 1
           },
           "id": 1,
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "colorMode": "value",
-            "graphMode": "none",
-            "textMode": "auto"
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-postgresql-datasource",
-                "uid": "DS_TESLASYNC_POSTGRESQL"
-              },
-              "editorMode": "code",
-              "format": "table",
-              "rawQuery": true,
-              "rawSql": "SELECT ROUND(SUM(charge_energy_added)::numeric, 1) AS \"⚡ kWh\" FROM v_charging_sessions WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)",
-              "refId": "A"
-            }
-          ],
-          "title": "Total Energy Charged",
-          "type": "stat",
-          "transparent": false
+          "collapsed": false,
+          "panels": []
         },
         {
           "datasource": {
@@ -138,7 +91,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "red",
+                "fixedColor": "#06b6d4",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -151,15 +104,14 @@ data:
                   }
                 ]
               },
-              "unit": "currencyUSD",
-              "decimals": 2
+              "unit": "none"
             }
           },
           "gridPos": {
             "h": 4,
-            "w": 4,
-            "x": 4,
-            "y": 0
+            "w": 6,
+            "x": 0,
+            "y": 1
           },
           "id": 2,
           "options": {
@@ -183,11 +135,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT ROUND(SUM(cost)::numeric, 2) AS \"$\" FROM v_charging_sessions WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)",
+              "rawSql": "SELECT version FROM schema_migrations",
               "refId": "A"
             }
           ],
-          "title": "Total Cost",
+          "title": "DB Migration Version",
           "type": "stat",
           "transparent": false
         },
@@ -199,7 +151,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "orange",
+                "fixedColor": "#22c55e",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -212,14 +164,14 @@ data:
                   }
                 ]
               },
-              "decimals": 3
+              "unit": "none"
             }
           },
           "gridPos": {
             "h": 4,
-            "w": 4,
-            "x": 8,
-            "y": 0
+            "w": 6,
+            "x": 6,
+            "y": 1
           },
           "id": 3,
           "options": {
@@ -243,11 +195,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT ROUND((SUM(cost) / NULLIF(SUM(charge_energy_added), 0))::numeric, 3) AS \"$/kWh\" FROM v_charging_sessions WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date) AND cost IS NOT NULL",
+              "rawSql": "SELECT COUNT(*) FROM vehicles",
               "refId": "A"
             }
           ],
-          "title": "Avg Cost / kWh",
+          "title": "Total Vehicles",
           "type": "stat",
           "transparent": false
         },
@@ -259,7 +211,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "blue",
+                "fixedColor": "#3b82f6",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -271,14 +223,15 @@ data:
                     "value": null
                   }
                 ]
-              }
+              },
+              "unit": "none"
             }
           },
           "gridPos": {
             "h": 4,
-            "w": 4,
+            "w": 6,
             "x": 12,
-            "y": 0
+            "y": 1
           },
           "id": 4,
           "options": {
@@ -302,11 +255,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COUNT(*) AS \"🔄 Sessions\" FROM v_charging_sessions WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)",
+              "rawSql": "SELECT COUNT(*) FROM drives",
               "refId": "A"
             }
           ],
-          "title": "Total Sessions",
+          "title": "Total Drives",
           "type": "stat",
           "transparent": false
         },
@@ -318,7 +271,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "green",
+                "fixedColor": "#f59e0b",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -331,14 +284,14 @@ data:
                   }
                 ]
               },
-              "unit": "kwatth"
+              "unit": "none"
             }
           },
           "gridPos": {
             "h": 4,
-            "w": 4,
-            "x": 16,
-            "y": 0
+            "w": 6,
+            "x": 18,
+            "y": 1
           },
           "id": 5,
           "options": {
@@ -362,13 +315,26 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT ROUND(AVG(charge_energy_added)::numeric, 1) AS \"⚡ kWh\" FROM v_charging_sessions WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)",
+              "rawSql": "SELECT COUNT(*) FROM charging_sessions",
               "refId": "A"
             }
           ],
-          "title": "Avg kWh / Session",
+          "title": "Total Charging Sessions",
           "type": "stat",
           "transparent": false
+        },
+        {
+          "type": "row",
+          "title": "Database Stats",
+          "gridPos": {
+            "x": 0,
+            "y": 5,
+            "w": 24,
+            "h": 1
+          },
+          "id": 6,
+          "collapsed": false,
+          "panels": []
         },
         {
           "datasource": {
@@ -378,8 +344,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "purple",
-                "mode": "fixed"
+                "mode": "thresholds"
               },
               "mappings": [],
               "thresholds": {
@@ -390,28 +355,23 @@ data:
                     "value": null
                   }
                 ]
-              },
-              "unit": "min"
-            }
+              }
+            },
+            "overrides": []
           },
           "gridPos": {
-            "h": 4,
-            "w": 4,
-            "x": 20,
-            "y": 0
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 6
           },
-          "id": 6,
+          "id": 7,
           "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "colorMode": "value",
-            "graphMode": "none",
-            "textMode": "auto"
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
           },
           "targets": [
             {
@@ -422,12 +382,12 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT ROUND(AVG(duration_min)::numeric) AS \"min\" FROM v_charging_sessions WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)",
+              "rawSql": "SELECT relname AS \"Table\", pg_size_pretty(pg_total_relation_size(relid)) AS \"Size\", n_live_tup AS \"Rows\" FROM pg_stat_user_tables ORDER BY pg_total_relation_size(relid) DESC LIMIT 20",
               "refId": "A"
             }
           ],
-          "title": "Avg Duration",
-          "type": "stat",
+          "title": "Table Sizes",
+          "type": "table",
           "transparent": false
         },
         {
@@ -441,23 +401,13 @@ data:
                 "mode": "palette-classic"
               },
               "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "lineInterpolation": "smooth",
                 "lineWidth": 2,
+                "fillOpacity": 20,
+                "gradientMode": "scheme",
+                "axisPlacement": "auto",
+                "drawStyle": "line",
                 "pointSize": 5,
-                "showPoints": "auto",
-                "spanNulls": true,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                }
+                "showPoints": "auto"
               },
               "mappings": [],
               "thresholds": {
@@ -468,89 +418,7 @@ data:
                     "value": null
                   }
                 ]
-              },
-              "unit": "kwatth"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 4
-          },
-          "id": 7,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-postgresql-datasource",
-                "uid": "DS_TESLASYNC_POSTGRESQL"
-              },
-              "editorMode": "code",
-              "format": "time_series",
-              "rawQuery": true,
-              "rawSql": "SELECT\n  $__timeGroup(start_date, '1M') AS time,\n  SUM(charge_energy_added) AS \"⚡ Energy\"\nFROM v_charging_sessions\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)\nGROUP BY time ORDER BY time",
-              "refId": "A"
-            }
-          ],
-          "title": "Monthly Energy Charged (kWh)",
-          "type": "timeseries",
-          "transparent": false
-        },
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "DS_TESLASYNC_POSTGRESQL"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "lineInterpolation": "smooth",
-                "lineWidth": 2,
-                "pointSize": 5,
-                "showPoints": "auto",
-                "spanNulls": true,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "currencyUSD"
+              }
             },
             "overrides": []
           },
@@ -558,21 +426,17 @@ data:
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 4
+            "y": 6
           },
           "id": 8,
           "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "bottom"
-            },
             "tooltip": {
               "mode": "multi",
               "sort": "desc"
+            },
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
             }
           },
           "targets": [
@@ -584,173 +448,204 @@ data:
               "editorMode": "code",
               "format": "time_series",
               "rawQuery": true,
-              "rawSql": "SELECT\n  $__timeGroup(start_date, '1M') AS time,\n  SUM(cost) AS \"💰 Cost\"\nFROM v_charging_sessions\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date) AND cost IS NOT NULL\nGROUP BY time ORDER BY time",
+              "rawSql": "SELECT date_trunc('hour', created_at) AS time, COUNT(*) AS \"API Calls\" FROM api_call_logs WHERE $__timeFilter(created_at) GROUP BY date_trunc('hour', created_at) ORDER BY time",
               "refId": "A"
             }
           ],
-          "title": "Monthly Charging Cost",
+          "title": "Recent API Calls",
+          "type": "timeseries",
+          "transparent": false
+        },
+        {
+          "type": "row",
+          "title": "Prometheus Metrics",
+          "gridPos": {
+            "x": 0,
+            "y": 14,
+            "w": 24,
+            "h": 1
+          },
+          "id": 9,
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "DS_TESLASYNC_PROMETHEUS"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 20,
+                "gradientMode": "scheme",
+                "axisPlacement": "auto",
+                "drawStyle": "line",
+                "pointSize": 5,
+                "showPoints": "auto"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 15
+          },
+          "id": 10,
+          "options": {
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            },
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "DS_TESLASYNC_PROMETHEUS"
+              },
+              "editorMode": "code",
+              "expr": "rate(http_requests_total[5m])",
+              "refId": "A"
+            }
+          ],
+          "title": "HTTP Request Rate",
           "type": "timeseries",
           "transparent": false
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "DS_TESLASYNC_POSTGRESQL"
+            "type": "prometheus",
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "fieldConfig": {
             "defaults": {
               "color": {
                 "mode": "palette-classic"
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 8,
-            "x": 0,
-            "y": 12
-          },
-          "id": 9,
-          "options": {
-            "legend": {
-              "calcs": [
-                "percent"
-              ],
-              "displayMode": "table",
-              "placement": "right"
-            },
-            "tooltip": {
-              "mode": "multi"
-            },
-            "pieType": "pie",
-            "reduceOptions": {
-              "calcs": [
-                "sum"
-              ],
-              "fields": "",
-              "values": true
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-postgresql-datasource",
-                "uid": "DS_TESLASYNC_POSTGRESQL"
               },
-              "editorMode": "code",
-              "format": "table",
-              "rawQuery": true,
-              "rawSql": "SELECT\n  COALESCE(fast_charger_type, 'AC') AS \"🏷️ Type\",\n  COUNT(*) AS \"🔄 Sessions\"\nFROM v_charging_sessions\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)\nGROUP BY COALESCE(fast_charger_type, 'AC')\nORDER BY 2 DESC",
-              "refId": "A"
-            }
-          ],
-          "title": "Charger Type Breakdown",
-          "type": "piechart",
-          "transparent": false
-        },
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "DS_TESLASYNC_POSTGRESQL"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 8,
-            "x": 8,
-            "y": 12
-          },
-          "id": 10,
-          "options": {
-            "calculate": false,
-            "cellGap": 1,
-            "color": {
-              "exponent": 0.5,
-              "fill": "dark-orange",
-              "mode": "scheme",
-              "reverse": false,
-              "scale": "exponential",
-              "scheme": "Oranges",
-              "steps": 64
-            },
-            "exemplars": {
-              "color": "rgba(255,0,255,0.7)"
-            },
-            "filterValues": {
-              "le": 1E-09
-            },
-            "legend": {
-              "show": true
-            },
-            "rowsFrame": {
-              "layout": "auto"
-            },
-            "tooltip": {
-              "show": true,
-              "yHistogram": false
-            },
-            "yAxis": {
-              "axisPlacement": "left",
-              "reverse": false
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-postgresql-datasource",
-                "uid": "DS_TESLASYNC_POSTGRESQL"
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 20,
+                "gradientMode": "scheme",
+                "axisPlacement": "auto",
+                "drawStyle": "line",
+                "pointSize": 5,
+                "showPoints": "auto"
               },
-              "editorMode": "code",
-              "format": "table",
-              "rawQuery": true,
-              "rawSql": "SELECT\n  EXTRACT(DOW FROM start_date) AS \"dayofweek\",\n  EXTRACT(HOUR FROM start_date) AS \"hourofday\",\n  COUNT(*) AS \"count\"\nFROM v_charging_sessions\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(start_date)\nGROUP BY 1, 2 ORDER BY 1, 2",
-              "refId": "A"
-            }
-          ],
-          "title": "Charging Heatmap (Hour × Day of Week)",
-          "type": "heatmap",
-          "transparent": false
-        },
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "DS_TESLASYNC_POSTGRESQL"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
               }
             },
             "overrides": []
           },
           "gridPos": {
             "h": 8,
-            "w": 8,
-            "x": 16,
-            "y": 12
+            "w": 12,
+            "x": 12,
+            "y": 15
           },
           "id": 11,
           "options": {
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            },
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "DS_TESLASYNC_PROMETHEUS"
+              },
+              "editorMode": "code",
+              "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+              "refId": "A"
+            }
+          ],
+          "title": "Request Duration (p95)",
+          "type": "timeseries",
+          "transparent": false
+        },
+        {
+          "type": "row",
+          "title": "Audit Log",
+          "gridPos": {
+            "x": 0,
+            "y": 23,
+            "w": 24,
+            "h": 1
+          },
+          "id": 12,
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 24
+          },
+          "id": 13,
+          "options": {
             "showHeader": true,
+            "cellHeight": "sm",
             "footer": {
               "show": false
-            },
-            "cellHeight": "sm",
-            "sortBy": [
-              {
-                "displayName": "Date",
-                "desc": true
-              }
-            ]
+            }
           },
           "targets": [
             {
@@ -761,11 +656,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  COALESCE(a.display_name, a.city, 'Unknown') AS \"📍 Location\",\n  COUNT(*) AS \"🔄 Sessions\",\n  ROUND(SUM(cs.charge_energy_added)::numeric, 1) AS \"⚡ Total kWh\",\n  ROUND(SUM(cs.cost)::numeric, 2) AS \"💰 Total Cost\",\n  ROUND(AVG(cs.charge_energy_added)::numeric, 1) AS \"⚡ Avg kWh\"\nFROM v_charging_sessions cs\nLEFT JOIN addresses a ON cs.address_id = a.id\nWHERE cs.vehicle_id = ${vehicle_id} AND $__timeFilter(cs.start_date)\nGROUP BY a.id, a.display_name, a.city\nORDER BY 2 DESC\nLIMIT 20",
+              "rawSql": "SELECT created_at AS \"Time\", action AS \"Action\", resource AS \"Resource\", details AS \"Details\", ip AS \"IP\" FROM audit_logs ORDER BY created_at DESC LIMIT 30",
               "refId": "A"
             }
           ],
-          "title": "Top Charging Locations",
+          "title": "Audit Log (Recent)",
           "type": "table",
           "transparent": false
         }
@@ -798,58 +693,6 @@ data:
             "skipUrlSync": false,
             "sort": 0,
             "type": "query"
-          },
-          {
-            "current": {
-              "text": "mi",
-              "value": "mi",
-              "selected": true
-            },
-            "hide": 0,
-            "includeAll": false,
-            "multi": false,
-            "name": "unit_length",
-            "label": "Distance",
-            "options": [
-              {
-                "text": "km",
-                "value": "km",
-                "selected": false
-              },
-              {
-                "text": "mi",
-                "value": "mi",
-                "selected": true
-              }
-            ],
-            "query": "km,mi",
-            "type": "custom"
-          },
-          {
-            "current": {
-              "text": "C",
-              "value": "C",
-              "selected": true
-            },
-            "hide": 0,
-            "includeAll": false,
-            "multi": false,
-            "name": "unit_temp",
-            "label": "Temperature",
-            "options": [
-              {
-                "text": "C",
-                "value": "C",
-                "selected": true
-              },
-              {
-                "text": "F",
-                "value": "F",
-                "selected": false
-              }
-            ],
-            "query": "C,F",
-            "type": "custom"
           }
         ]
       },
@@ -859,8 +702,8 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "TeslaSync 📊 Charging Analytics",
-      "uid": "teslasync-charging-stats",
+      "title": "TeslaSync 🖥️ System Health",
+      "uid": "teslasync-system-health",
       "version": 1,
       "weekStart": ""
     }

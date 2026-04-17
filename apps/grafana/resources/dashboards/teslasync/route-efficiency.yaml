@@ -33,6 +33,18 @@ data:
       "id": null,
       "links": [
         {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "◀ Prev",
+          "tooltip": "TeslaSync ♻️ Regen Efficiency",
+          "type": "link",
+          "url": "/d/teslasync-regen-efficiency"
+        },
+        {
           "asDropdown": true,
           "icon": "external link",
           "includeVars": true,
@@ -41,8 +53,20 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "🔀 Navigate to...",
+          "title": "⚡ TeslaSync",
           "type": "dashboards"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next ▶",
+          "tooltip": "TeslaSync 🔒 Security & Access",
+          "type": "link",
+          "url": "/d/teslasync-security-access"
         }
       ],
       "panels": [
@@ -158,7 +182,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  COALESCE(start_address, 'Unknown') || ' → ' || COALESCE(end_address, 'Unknown') AS \"Route\",\n  ROUND(AVG(CASE WHEN distance > 0 THEN energy_used_kwh * 1000 / distance END)::numeric, 0) AS \"Avg Wh/km\",\n  COUNT(*) AS \"Trips\"\nFROM drives\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(start_date)\n  AND distance > 1\nGROUP BY start_address, end_address\nHAVING COUNT(*) >= 3\nORDER BY \"Avg Wh/km\"\nLIMIT 15",
+              "rawSql": "SELECT route AS \"Route\", avg_wh_per_km AS \"Avg Wh/km\", trips AS \"Trips\"\nFROM fn_route_efficiency(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)\nWHERE trips >= 3\nORDER BY avg_wh_per_km\nLIMIT 15",
               "refId": "A"
             }
           ],
@@ -302,7 +326,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  COALESCE(start_address, '?') || ' → ' || COALESCE(end_address, '?') AS \"Route\",\n  COUNT(*) AS \"Trips\",\n  ROUND(AVG(distance)::numeric, 1) AS \"Avg Dist\",\n  ROUND(MIN(CASE WHEN distance > 0 THEN energy_used_kwh * 1000 / distance END)::numeric, 0) AS \"Best Wh/km\",\n  ROUND(AVG(CASE WHEN distance > 0 THEN energy_used_kwh * 1000 / distance END)::numeric, 0) AS \"Avg Wh/km\",\n  ROUND(MAX(CASE WHEN distance > 0 THEN energy_used_kwh * 1000 / distance END)::numeric, 0) AS \"Worst Wh/km\"\nFROM drives\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(start_date)\n  AND distance > 1\nGROUP BY start_address, end_address\nHAVING COUNT(*) >= 2\nORDER BY COUNT(*) DESC",
+              "rawSql": "SELECT\n  COALESCE(start_address, '?') || ' → ' || COALESCE(end_address, '?') AS \"Route\",\n  COUNT(*) AS \"Trips\",\n  ROUND(AVG(distance)::numeric, 1) AS \"Avg Dist (km)\",\n  ROUND(MIN(CASE WHEN distance > 0 THEN (COALESCE(start_rated_range_km,0) - COALESCE(end_rated_range_km,0)) * 1000 / distance END)::numeric, 0) AS \"Best Wh/km\",\n  ROUND(AVG(CASE WHEN distance > 0 THEN (COALESCE(start_rated_range_km,0) - COALESCE(end_rated_range_km,0)) * 1000 / distance END)::numeric, 0) AS \"Avg Wh/km\",\n  ROUND(MAX(CASE WHEN distance > 0 THEN (COALESCE(start_rated_range_km,0) - COALESCE(end_rated_range_km,0)) * 1000 / distance END)::numeric, 0) AS \"Worst Wh/km\"\nFROM drives\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(start_date)\n  AND distance > 1\n  AND start_rated_range_km IS NOT NULL AND end_rated_range_km IS NOT NULL\nGROUP BY start_address, end_address\nHAVING COUNT(*) >= 2\nORDER BY COUNT(*) DESC",
               "refId": "A"
             }
           ],
@@ -425,7 +449,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "WITH routes AS (\n  SELECT\n    COALESCE(start_address, '?') || ' → ' || COALESCE(end_address, '?') AS route,\n    CASE WHEN distance > 0 THEN energy_used_kwh * 1000 / distance ELSE NULL END AS whkm\n  FROM drives\n  WHERE vehicle_id = ${vehicle_id}\n    AND $__timeFilter(start_date)\n    AND distance > 1\n)\nSELECT\n  route AS \"Route\",\n  ROUND(MIN(whkm)::numeric, 0) AS \"Best\",\n  ROUND(AVG(whkm)::numeric, 0) AS \"Average\",\n  ROUND(MAX(whkm)::numeric, 0) AS \"Worst\"\nFROM routes\nGROUP BY route\nHAVING COUNT(*) >= 3\nORDER BY COUNT(*) DESC\nLIMIT 10",
+              "rawSql": "WITH routes AS (\n  SELECT\n    COALESCE(start_address, '?') || ' → ' || COALESCE(end_address, '?') AS route,\n    CASE WHEN distance > 0 THEN (COALESCE(start_rated_range_km,0) - COALESCE(end_rated_range_km,0)) * 1000 / distance ELSE NULL END AS whkm\n  FROM drives\n  WHERE vehicle_id = ${vehicle_id}\n    AND $__timeFilter(start_date)\n    AND distance > 1\n    AND start_rated_range_km IS NOT NULL AND end_rated_range_km IS NOT NULL\n)\nSELECT\n  route AS \"Route\",\n  ROUND(MIN(whkm)::numeric, 0) AS \"Best\",\n  ROUND(AVG(whkm)::numeric, 0) AS \"Average\",\n  ROUND(MAX(whkm)::numeric, 0) AS \"Worst\"\nFROM routes\nGROUP BY route\nHAVING COUNT(*) >= 3\nORDER BY COUNT(*) DESC\nLIMIT 10",
               "refId": "A"
             }
           ],
@@ -512,7 +536,7 @@ data:
               "editorMode": "code",
               "format": "time_series",
               "rawQuery": true,
-              "rawSql": "SELECT\n  start_date AS time,\n  ROUND((energy_used_kwh * 1000 / NULLIF(distance, 0))::numeric, 0) AS \"Wh/km\"\nFROM drives\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(start_date)\n  AND start_address = '${route_start}'\n  AND end_address = '${route_end}'\n  AND distance > 1\nORDER BY start_date",
+              "rawSql": "SELECT\n  start_date AS time,\n  ROUND(((COALESCE(start_rated_range_km,0) - COALESCE(end_rated_range_km,0)) * 1000 / NULLIF(distance, 0))::numeric, 0) AS \"Wh/km\"\nFROM drives\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(start_date)\n  AND start_address = '${route_start}'\n  AND end_address = '${route_end}'\n  AND distance > 1\n  AND start_rated_range_km IS NOT NULL AND end_rated_range_km IS NOT NULL\nORDER BY start_date",
               "refId": "A"
             }
           ],
@@ -604,3 +628,4 @@ data:
       "uid": "teslasync-route-efficiency",
       "version": 1
     }
+    

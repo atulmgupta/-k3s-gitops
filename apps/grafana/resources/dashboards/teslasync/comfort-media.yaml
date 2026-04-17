@@ -33,6 +33,18 @@ data:
       "id": null,
       "links": [
         {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "◀ Prev",
+          "tooltip": "TeslaSync 🌡️ Climate & HVAC",
+          "type": "link",
+          "url": "/d/teslasync-climate-hvac"
+        },
+        {
           "asDropdown": true,
           "icon": "external link",
           "includeVars": true,
@@ -41,8 +53,20 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "🔀 Navigate to...",
+          "title": "⚡ TeslaSync",
           "type": "dashboards"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next ▶",
+          "tooltip": "TeslaSync 📊 Change Delta Stats",
+          "type": "link",
+          "url": "/d/teslasync-compare"
         }
       ],
       "panels": [
@@ -316,7 +340,7 @@ data:
               "editorMode": "code",
               "format": "time_series",
               "rawQuery": true,
-              "rawSql": "SELECT created_at AS time, CASE WHEN hvac_ac_enabled THEN 1 ELSE 0 END AS \"AC Enabled\", CASE WHEN defrost_mode THEN 1 ELSE 0 END AS \"Defrost\", CASE WHEN rear_defrost_enabled THEN 1 ELSE 0 END AS \"Rear Defrost\", CASE WHEN wiper_heat_enabled THEN 1 ELSE 0 END AS \"Wiper Heat\" FROM climate_snapshots WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at) ORDER BY created_at",
+              "rawSql": "SELECT created_at AS time, CASE WHEN hvac_ac_enabled THEN 1 ELSE 0 END AS \"AC Enabled\", CASE WHEN defrost_mode IS NOT NULL AND defrost_mode != '' THEN 1 ELSE 0 END AS \"Defrost\", CASE WHEN rear_defrost_enabled THEN 1 ELSE 0 END AS \"Rear Defrost\", CASE WHEN wiper_heat_enabled THEN 1 ELSE 0 END AS \"Wiper Heat\" FROM climate_snapshots WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at) ORDER BY created_at",
               "refId": "A"
             }
           ],

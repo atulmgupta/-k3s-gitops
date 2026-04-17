@@ -47,6 +47,10 @@ resources:
   - dashboards/teslasync/speed-profile.yaml
   - dashboards/teslasync/true-cost.yaml
   - dashboards/teslasync/weekly-digest.yaml
+  - dashboards/teslasync/alerts-notifications.yaml
+  - dashboards/teslasync/charging-driving-correlation.yaml
+  - dashboards/teslasync/home.yaml
+  - dashboards/teslasync/system-health.yaml
   # TeslaMate dashboards
   - dashboards/teslamate/battery-health.yaml
   - dashboards/teslamate/charge-level.yaml

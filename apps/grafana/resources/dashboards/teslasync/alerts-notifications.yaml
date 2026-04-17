@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: teslasync-tire-pressure
+  name: teslasync-alerts-notifications
   namespace: grafana
   labels:
     grafana_dashboard: "1"
   annotations:
     grafana_folder: TeslaSync
 data:
-  tire-pressure.json: |
+  alerts-notifications.json: |
     {
       "annotations": {
         "list": [
@@ -40,9 +40,9 @@ data:
           "tags": [],
           "targetBlank": false,
           "title": "◀ Prev",
-          "tooltip": "TeslaSync ⏱️ State Timeline",
+          "tooltip": "TeslaSync 🏠 Home",
           "type": "link",
-          "url": "/d/teslasync-timeline"
+          "url": "/d/teslasync-home"
         },
         {
           "asDropdown": true,
@@ -64,92 +64,24 @@ data:
           "tags": [],
           "targetBlank": false,
           "title": "Next ▶",
-          "tooltip": "TeslaSync ✈️ Trip History",
+          "tooltip": "TeslaSync 🔄 Charging vs Driving",
           "type": "link",
-          "url": "/d/teslasync-trips"
+          "url": "/d/teslasync-charging-driving"
         }
       ],
       "panels": [
         {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "DS_TESLASYNC_POSTGRESQL"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "lineInterpolation": "smooth",
-                "lineWidth": 2,
-                "pointSize": 5,
-                "showPoints": "auto",
-                "spanNulls": true,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": []
-          },
+          "type": "row",
+          "title": "Overview",
           "gridPos": {
-            "h": 12,
-            "w": 24,
             "x": 0,
-            "y": 0
+            "y": 0,
+            "w": 24,
+            "h": 1
           },
           "id": 1,
-          "options": {
-            "legend": {
-              "calcs": [
-                "mean",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "grafana-postgresql-datasource",
-                "uid": "DS_TESLASYNC_POSTGRESQL"
-              },
-              "editorMode": "code",
-              "format": "time_series",
-              "rawQuery": true,
-              "rawSql": "SELECT\n  created_at AS time,\n  convert_pressure(front_left) AS \"Front Left\",\n  convert_pressure(front_right) AS \"Front Right\",\n  convert_pressure(rear_left) AS \"Rear Left\",\n  convert_pressure(rear_right) AS \"Rear Right\"\nFROM tire_pressure_snapshots\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(created_at)\nORDER BY created_at",
-              "refId": "A"
-            }
-          ],
-          "title": "Tire Pressure Over Time",
-          "type": "timeseries",
-          "transparent": false
+          "collapsed": false,
+          "panels": []
         },
         {
           "datasource": {
@@ -159,7 +91,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "blue",
+                "fixedColor": "#22c55e",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -179,7 +111,7 @@ data:
             "h": 4,
             "w": 6,
             "x": 0,
-            "y": 12
+            "y": 1
           },
           "id": 2,
           "options": {
@@ -203,11 +135,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT convert_pressure(front_left) AS \"Front Left\" FROM tire_pressure_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "rawSql": "SELECT COUNT(*) FROM alert_rules WHERE enabled = true",
               "refId": "A"
             }
           ],
-          "title": "Front Left",
+          "title": "Active Rules",
           "type": "stat",
           "transparent": false
         },
@@ -219,7 +151,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "blue",
+                "fixedColor": "#f59e0b",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -239,7 +171,7 @@ data:
             "h": 4,
             "w": 6,
             "x": 6,
-            "y": 12
+            "y": 1
           },
           "id": 3,
           "options": {
@@ -263,11 +195,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT convert_pressure(front_right) AS \"Front Right\" FROM tire_pressure_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "rawSql": "SELECT COUNT(*) FROM alerts WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at)",
               "refId": "A"
             }
           ],
-          "title": "Front Right",
+          "title": "Total Alerts",
           "type": "stat",
           "transparent": false
         },
@@ -279,7 +211,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "blue",
+                "fixedColor": "#ef4444",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -299,7 +231,7 @@ data:
             "h": 4,
             "w": 6,
             "x": 12,
-            "y": 12
+            "y": 1
           },
           "id": 4,
           "options": {
@@ -323,11 +255,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT convert_pressure(rear_left) AS \"Rear Left\" FROM tire_pressure_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "rawSql": "SELECT COUNT(*) FROM alerts WHERE vehicle_id = ${vehicle_id} AND is_read = false AND $__timeFilter(created_at)",
               "refId": "A"
             }
           ],
-          "title": "Rear Left",
+          "title": "Unacknowledged",
           "type": "stat",
           "transparent": false
         },
@@ -339,7 +271,7 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "blue",
+                "fixedColor": "#a855f7",
                 "mode": "fixed"
               },
               "mappings": [],
@@ -352,14 +284,14 @@ data:
                   }
                 ]
               },
-              "unit": "none"
+              "unit": "percent"
             }
           },
           "gridPos": {
             "h": 4,
             "w": 6,
             "x": 18,
-            "y": 12
+            "y": 1
           },
           "id": 5,
           "options": {
@@ -383,44 +315,293 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT convert_pressure(rear_right) AS \"Rear Right\" FROM tire_pressure_snapshots WHERE vehicle_id = ${vehicle_id} ORDER BY created_at DESC LIMIT 1",
+              "rawSql": "SELECT ROUND((100.0 * COUNT(*) FILTER (WHERE status = 'sent') / NULLIF(COUNT(*), 0))::numeric, 1) FROM notification_logs WHERE $__timeFilter(created_at)",
               "refId": "A"
             }
           ],
-          "title": "Rear Right",
+          "title": "Notification Success %",
           "type": "stat",
           "transparent": false
         },
         {
+          "type": "row",
+          "title": "Alerts Timeline",
+          "gridPos": {
+            "x": 0,
+            "y": 5,
+            "w": 24,
+            "h": 1
+          },
           "id": 6,
-          "type": "table",
-          "title": "TPMS Warnings History",
+          "collapsed": false,
+          "panels": []
+        },
+        {
           "datasource": {
             "type": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 20,
+                "gradientMode": "scheme",
+                "axisPlacement": "auto",
+                "drawStyle": "line",
+                "pointSize": 5,
+                "showPoints": "auto"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 16
+            "y": 6
+          },
+          "id": 7,
+          "options": {
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            },
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            }
           },
           "targets": [
             {
-              "rawSql": "SELECT created_at AS \"Time\",\n  COALESCE(tpms_hard_warnings, 'None') AS \"Hard Warnings\",\n  COALESCE(tpms_soft_warnings, 'None') AS \"Soft Warnings\",\n  last_seen_time_fl AS \"FL Last Seen\",\n  last_seen_time_fr AS \"FR Last Seen\",\n  last_seen_time_rl AS \"RL Last Seen\",\n  last_seen_time_rr AS \"RR Last Seen\"\nFROM tire_pressure_snapshots\nWHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at)\n  AND (tpms_hard_warnings IS NOT NULL OR tpms_soft_warnings IS NOT NULL OR last_seen_time_fl IS NOT NULL)\nORDER BY created_at DESC LIMIT 30",
-              "format": "table",
-              "refId": "A",
               "datasource": {
                 "type": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
-              }
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT created_at AS time, severity AS metric, 1 AS value FROM alerts WHERE vehicle_id = ${vehicle_id} AND $__timeFilter(created_at) ORDER BY created_at",
+              "refId": "A"
             }
           ],
+          "title": "Alerts Over Time",
+          "type": "timeseries",
+          "transparent": false
+        },
+        {
+          "type": "row",
+          "title": "Alert Rules",
+          "gridPos": {
+            "x": 0,
+            "y": 14,
+            "w": 24,
+            "h": 1
+          },
+          "id": 8,
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
           "fieldConfig": {
-            "defaults": {},
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
             "overrides": []
           },
-          "options": {}
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 15
+          },
+          "id": 9,
+          "options": {
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT name AS \"Rule\", type AS \"Type\", expression AS \"Expression\", threshold::text AS \"Threshold\", severity AS \"Severity\", CASE WHEN enabled THEN '✅' ELSE '❌' END AS \"Enabled\" FROM alert_rules ORDER BY severity, name",
+              "refId": "A"
+            }
+          ],
+          "title": "Alert Rules",
+          "type": "table",
+          "transparent": false
+        },
+        {
+          "type": "row",
+          "title": "Recent Alerts",
+          "gridPos": {
+            "x": 0,
+            "y": 23,
+            "w": 24,
+            "h": 1
+          },
+          "id": 10,
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 24
+          },
+          "id": 11,
+          "options": {
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT a.created_at AS \"Time\", a.title AS \"Alert\", a.severity AS \"Severity\", a.message AS \"Message\", CASE WHEN a.is_read THEN '✅' ELSE '⏳' END AS \"Read\" FROM alerts a WHERE a.vehicle_id = ${vehicle_id} AND $__timeFilter(a.created_at) ORDER BY a.created_at DESC LIMIT 50",
+              "refId": "A"
+            }
+          ],
+          "title": "Recent Alerts",
+          "type": "table",
+          "transparent": false
+        },
+        {
+          "type": "row",
+          "title": "Notification Logs",
+          "gridPos": {
+            "x": 0,
+            "y": 34,
+            "w": 24,
+            "h": 1
+          },
+          "id": 12,
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 35
+          },
+          "id": 13,
+          "options": {
+            "showHeader": true,
+            "cellHeight": "sm",
+            "footer": {
+              "show": false
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT nl.created_at AS \"Time\", nc.name AS \"Channel\", nc.type AS \"Type\", nl.status AS \"Status\", nl.error AS \"Error\" FROM notification_logs nl LEFT JOIN notification_channels nc ON nl.channel_id = nc.id WHERE $__timeFilter(nl.created_at) ORDER BY nl.created_at DESC LIMIT 50",
+              "refId": "A"
+            }
+          ],
+          "title": "Notification Logs",
+          "type": "table",
+          "transparent": false
         }
       ],
       "schemaVersion": 39,
@@ -451,58 +632,6 @@ data:
             "skipUrlSync": false,
             "sort": 0,
             "type": "query"
-          },
-          {
-            "current": {
-              "text": "mi",
-              "value": "mi",
-              "selected": true
-            },
-            "hide": 0,
-            "includeAll": false,
-            "multi": false,
-            "name": "unit_length",
-            "label": "Distance",
-            "options": [
-              {
-                "text": "km",
-                "value": "km",
-                "selected": false
-              },
-              {
-                "text": "mi",
-                "value": "mi",
-                "selected": true
-              }
-            ],
-            "query": "km,mi",
-            "type": "custom"
-          },
-          {
-            "current": {
-              "text": "C",
-              "value": "C",
-              "selected": true
-            },
-            "hide": 0,
-            "includeAll": false,
-            "multi": false,
-            "name": "unit_temp",
-            "label": "Temperature",
-            "options": [
-              {
-                "text": "C",
-                "value": "C",
-                "selected": true
-              },
-              {
-                "text": "F",
-                "value": "F",
-                "selected": false
-              }
-            ],
-            "query": "C,F",
-            "type": "custom"
           }
         ]
       },
@@ -512,8 +641,8 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "TeslaSync 🛞 Tire Pressure",
-      "uid": "teslasync-tire-pressure",
+      "title": "TeslaSync 🔔 Alerts & Notifications",
+      "uid": "teslasync-alerts-notifications",
       "version": 1,
       "weekStart": ""
     }

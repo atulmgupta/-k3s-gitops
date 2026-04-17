@@ -33,6 +33,18 @@ data:
       "id": null,
       "links": [
         {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "◀ Prev",
+          "tooltip": "TeslaSync 🌡️ Drivetrain Thermal",
+          "type": "link",
+          "url": "/d/teslasync-drivetrain-thermal"
+        },
+        {
           "asDropdown": true,
           "icon": "external link",
           "includeVars": true,
@@ -41,8 +53,20 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "🔀 Navigate to...",
+          "title": "⚡ TeslaSync",
           "type": "dashboards"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next ▶",
+          "tooltip": "TeslaSync ⚙️ Driving Efficiency",
+          "type": "link",
+          "url": "/d/teslasync-efficiency"
         }
       ],
       "panels": [
@@ -128,7 +152,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "WITH readings AS (\n  SELECT\n    dtr.drive_id,\n    dtr.speed,\n    dtr.created_at,\n    LAG(dtr.speed)      OVER (PARTITION BY dtr.drive_id ORDER BY dtr.created_at) AS prev_speed,\n    LAG(dtr.created_at) OVER (PARTITION BY dtr.drive_id ORDER BY dtr.created_at) AS prev_time\n  FROM drive_telemetry_readings dtr\n  JOIN drives d ON d.id = dtr.drive_id\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND $__timeFilter(d.start_date)\n    AND dtr.speed IS NOT NULL\n)\nSELECT\n  ROUND(\n    CAST(\n      ((speed - prev_speed) * 0.44704)\n      / NULLIF(EXTRACT(EPOCH FROM (created_at - prev_time)), 0)\n      / 9.81\n    AS numeric),\n  4) AS \"Acceleration (g)\"\nFROM readings\nWHERE prev_speed IS NOT NULL\n  AND prev_time IS NOT NULL\n  AND EXTRACT(EPOCH FROM (created_at - prev_time)) BETWEEN 1 AND 30\n  AND ABS(\n    ((speed - prev_speed) * 0.44704)\n    / NULLIF(EXTRACT(EPOCH FROM (created_at - prev_time)), 0)\n    / 9.81\n  ) <= 0.5",
+              "rawSql": "SELECT * FROM fn_driving_acceleration_distribution(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
               "refId": "A"
             }
           ],
@@ -331,7 +355,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  d.start_date AS time,\n  COUNT(*) FILTER (WHERE dt.acceleration_gs < -0.3) AS \"Hard Brakes\",\n  COUNT(*) FILTER (WHERE dt.acceleration_gs < -0.2 AND dt.acceleration_gs >= -0.3) AS \"Moderate Brakes\",\n  ROUND(AVG(dt.acceleration_gs) FILTER (WHERE dt.acceleration_gs < 0)::numeric, 3) AS \"Avg Decel (g)\"\nFROM drive_telemetry_readings dt\nJOIN drives d ON dt.drive_id = d.id\nWHERE d.vehicle_id = ${vehicle_id}\n  AND $__timeFilter(d.start_date)\nGROUP BY d.id, d.start_date\nORDER BY d.start_date",
+              "rawSql": "SELECT * FROM fn_driving_braking_intensity(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
               "refId": "A"
             }
           ],
@@ -344,57 +368,63 @@ data:
             "type": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
-          "description": "Quick summary stats: average acceleration, average deceleration, max speed recorded, and driving style classification (Conservative / Moderate / Aggressive) based on power and speed patterns from the driving coach analysis.",
+          "description": "Driving style breakdown: gentle / moderate / aggressive percentages based on average speed and energy efficiency per drive. Uses fn_driving_style_summary().",
           "fieldConfig": {
             "defaults": {
               "color": {
-                "fixedColor": "#00d3ff",
-                "mode": "fixed"
+                "mode": "palette-classic"
               },
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "#00d3ff",
-                    "value": null
-                  }
-                ]
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
               }
             },
             "overrides": [
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "Avg Accel (g)"
+                  "options": "Gentle"
                 },
                 "properties": [
                   {
-                    "id": "unit",
-                    "value": "accG"
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#73BF69",
+                      "mode": "fixed"
+                    }
                   }
                 ]
               },
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "Avg Decel (g)"
+                  "options": "Moderate"
                 },
                 "properties": [
                   {
-                    "id": "unit",
-                    "value": "accG"
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#FF9830",
+                      "mode": "fixed"
+                    }
                   }
                 ]
               },
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "Max Speed (km/h)"
+                  "options": "Aggressive"
                 },
                 "properties": [
                   {
-                    "id": "unit",
-                    "value": "velocitykmh"
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#F2495C",
+                      "mode": "fixed"
+                    }
                   }
                 ]
               }
@@ -408,18 +438,29 @@ data:
           },
           "id": 4,
           "options": {
-            "colorMode": "value",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "horizontal",
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "right",
+              "values": [
+                "percent"
+              ]
+            },
+            "pieType": "donut",
             "reduceOptions": {
               "calcs": [
                 "lastNotNull"
               ],
               "fields": "",
-              "values": false
+              "values": true
             },
-            "textMode": "auto"
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
           },
           "targets": [
             {
@@ -430,12 +471,29 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  (SELECT ROUND(AVG(dt.acceleration_gs)::numeric, 3)\n   FROM drive_telemetry_readings dt\n   JOIN drives d ON dt.drive_id = d.id\n   WHERE d.vehicle_id = ${vehicle_id}\n     AND $__timeFilter(d.start_date)\n     AND dt.acceleration_gs > 0\n  ) AS \"Avg Accel (g)\",\n\n  (SELECT ROUND(AVG(dt.acceleration_gs)::numeric, 3)\n   FROM drive_telemetry_readings dt\n   JOIN drives d ON dt.drive_id = d.id\n   WHERE d.vehicle_id = ${vehicle_id}\n     AND $__timeFilter(d.start_date)\n     AND dt.acceleration_gs < 0\n  ) AS \"Avg Decel (g)\",\n\n  (SELECT ROUND(MAX(speed_max)::numeric, 0)\n   FROM drives\n   WHERE vehicle_id = ${vehicle_id}\n     AND $__timeFilter(start_date)\n  ) AS \"Max Speed (km/h)\",\n\n  (SELECT style FROM (\n     SELECT\n       CASE\n         WHEN COALESCE(power_max, 0) > 150\n           OR COALESCE(speed_max, 0) > 130 THEN 'Aggressive'\n         WHEN COALESCE(power_max, 0) < 80\n          AND (COALESCE(speed_max, 0) - COALESCE(speed_avg, 0)) < 30\n          AND power_max > 0\n          AND ABS(COALESCE(power_min, 0)) / power_max > 0.3\n           THEN 'Conservative'\n         ELSE 'Moderate'\n       END AS style,\n       COUNT(*) AS cnt\n     FROM drives\n     WHERE vehicle_id = ${vehicle_id}\n       AND $__timeFilter(start_date)\n       AND distance > 0.5\n     GROUP BY 1\n     ORDER BY cnt DESC\n     LIMIT 1\n  ) sub) AS \"Driving Style\"",
+              "rawSql": "SELECT * FROM fn_driving_style_summary(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
               "refId": "A"
             }
           ],
           "title": "Driving Style Summary",
-          "type": "stat",
+          "transformations": [
+            {
+              "id": "rowsToFields",
+              "options": {
+                "mappings": [
+                  {
+                    "fieldName": "style",
+                    "type": "field"
+                  },
+                  {
+                    "fieldName": "percent",
+                    "type": "field"
+                  }
+                ]
+              }
+            }
+          ],
+          "type": "piechart",
           "transparent": false
         },
         {
@@ -531,7 +589,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT\n  speed_avg AS \"Avg Speed\",\n  CASE WHEN distance > 0\n    THEN ROUND(((start_rated_range_km - end_rated_range_km) / distance * 150)::numeric, 0)\n    ELSE NULL END AS \"Wh/km\"\nFROM drives\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(start_date)\n  AND distance > 1\n  AND speed_avg > 0\n  AND speed_avg IS NOT NULL\n  AND start_rated_range_km IS NOT NULL\n  AND end_rated_range_km IS NOT NULL\n  AND (start_rated_range_km - end_rated_range_km) > 0",
+              "rawSql": "SELECT avg_speed AS \"Avg Speed\", wh_per_km AS \"Wh/km\" FROM fn_driving_speed_vs_efficiency(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
               "refId": "A"
             }
           ],
@@ -582,3 +640,4 @@ data:
       "version": 1,
       "weekStart": ""
     }
+    
