@@ -92,6 +92,7 @@ resources:
   - dashboards/teslasync-infra/sessions-business.yaml
   - dashboards/teslasync-infra/sse-realtime.yaml
   - dashboards/teslasync-infra/telemetry-pipeline.yaml
+  - dashboards/teslasync-infra/fleet-telemetry.yaml
 
 generators:
   - ksops-generator.yaml
