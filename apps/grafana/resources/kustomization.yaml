@@ -32,6 +32,21 @@ resources:
   - dashboards/teslasync/vampire-drain.yaml
   - dashboards/teslasync/vehicle-intelligence.yaml
   - dashboards/teslasync/vehicle-overview.yaml
+  - dashboards/teslasync/anomaly-detection.yaml
+  - dashboards/teslasync/battery-cells.yaml
+  - dashboards/teslasync/battery-degradation.yaml
+  - dashboards/teslasync/charging-curve.yaml
+  - dashboards/teslasync/charging-heatmap.yaml
+  - dashboards/teslasync/compare.yaml
+  - dashboards/teslasync/drive-score.yaml
+  - dashboards/teslasync/driving-dynamics.yaml
+  - dashboards/teslasync/quick-stats.yaml
+  - dashboards/teslasync/regen-efficiency.yaml
+  - dashboards/teslasync/route-efficiency.yaml
+  - dashboards/teslasync/sleep-efficiency.yaml
+  - dashboards/teslasync/speed-profile.yaml
+  - dashboards/teslasync/true-cost.yaml
+  - dashboards/teslasync/weekly-digest.yaml
   # TeslaMate dashboards
   - dashboards/teslamate/battery-health.yaml
   - dashboards/teslamate/charge-level.yaml

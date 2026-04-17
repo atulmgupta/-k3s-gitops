@@ -1,0 +1,539 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: teslasync-anomaly-detection
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: TeslaSync
+data:
+  anomaly-detection.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "description": "Timeline of detected anomalies from signal telemetry, plotted over time with severity-based coloring. Each point represents a z-score outlier event (>3σ from the mean).",
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [
+        {
+          "asDropdown": true,
+          "icon": "external link",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [
+            "teslasync"
+          ],
+          "targetBlank": false,
+          "title": "🔀 Navigate to...",
+          "type": "dashboards"
+        }
+      ],
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "description": "Each point is a signal reading that deviates >3 standard deviations from its mean. Severity: critical (red) = z>5 or critical-signal z>4, warning (orange) = z>4 or critical-signal z>3, info (blue) = z>3.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "fixed",
+                "fixedColor": "blue"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Z-Score (σ)",
+                "axisPlacement": "auto",
+                "drawStyle": "points",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "lineWidth": 0,
+                "pointSize": 6,
+                "showPoints": "always",
+                "spanNulls": false
+              },
+              "decimals": 2,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 4
+                  },
+                  {
+                    "color": "red",
+                    "value": 5
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Critical"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "red"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Warning"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "orange"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Info"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "blue"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 1,
+          "options": {
+            "legend": {
+              "calcs": [
+                "count"
+              ],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showValues": "auto"
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "WITH stats AS (\n  SELECT signal, AVG(value_num) AS mean, STDDEV(value_num) AS stddev\n  FROM signal_history\n  WHERE vehicle_id = ${vehicle_id}\n    AND $__timeFilter(created_at)\n    AND value_num IS NOT NULL\n  GROUP BY signal\n  HAVING STDDEV(value_num) > 0 AND COUNT(*) >= 30\n)\nSELECT\n  sh.created_at AS time,\n  ROUND(CAST(ABS(sh.value_num - s.mean) / s.stddev AS numeric), 2) AS \"Critical\",\n  sh.signal AS \"Signal\",\n  'z_score' AS \"Type\"\nFROM signal_history sh\nJOIN stats s ON sh.signal = s.signal\nWHERE sh.vehicle_id = ${vehicle_id}\n  AND $__timeFilter(sh.created_at)\n  AND ABS(sh.value_num - s.mean) / s.stddev > 3\n  AND (\n    (sh.signal IN ('IsolationResistance','TpmsPressureFl','TpmsPressureFr','TpmsPressureRl','TpmsPressureRr','ModuleTempMax')\n     AND ABS(sh.value_num - s.mean) / s.stddev > 4)\n    OR ABS(sh.value_num - s.mean) / s.stddev > 5\n  )\nORDER BY sh.created_at",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "WITH stats AS (\n  SELECT signal, AVG(value_num) AS mean, STDDEV(value_num) AS stddev\n  FROM signal_history\n  WHERE vehicle_id = ${vehicle_id}\n    AND $__timeFilter(created_at)\n    AND value_num IS NOT NULL\n  GROUP BY signal\n  HAVING STDDEV(value_num) > 0 AND COUNT(*) >= 30\n)\nSELECT\n  sh.created_at AS time,\n  ROUND(CAST(ABS(sh.value_num - s.mean) / s.stddev AS numeric), 2) AS \"Warning\",\n  sh.signal AS \"Signal\",\n  'z_score' AS \"Type\"\nFROM signal_history sh\nJOIN stats s ON sh.signal = s.signal\nWHERE sh.vehicle_id = ${vehicle_id}\n  AND $__timeFilter(sh.created_at)\n  AND ABS(sh.value_num - s.mean) / s.stddev > 3\n  AND NOT (\n    (sh.signal IN ('IsolationResistance','TpmsPressureFl','TpmsPressureFr','TpmsPressureRl','TpmsPressureRr','ModuleTempMax')\n     AND ABS(sh.value_num - s.mean) / s.stddev > 4)\n    OR ABS(sh.value_num - s.mean) / s.stddev > 5\n  )\n  AND (\n    ABS(sh.value_num - s.mean) / s.stddev > 4\n    OR sh.signal IN ('IsolationResistance','TpmsPressureFl','TpmsPressureFr','TpmsPressureRl','TpmsPressureRr','ModuleTempMax')\n  )\nORDER BY sh.created_at",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "WITH stats AS (\n  SELECT signal, AVG(value_num) AS mean, STDDEV(value_num) AS stddev\n  FROM signal_history\n  WHERE vehicle_id = ${vehicle_id}\n    AND $__timeFilter(created_at)\n    AND value_num IS NOT NULL\n  GROUP BY signal\n  HAVING STDDEV(value_num) > 0 AND COUNT(*) >= 30\n)\nSELECT\n  sh.created_at AS time,\n  ROUND(CAST(ABS(sh.value_num - s.mean) / s.stddev AS numeric), 2) AS \"Info\",\n  sh.signal AS \"Signal\",\n  'z_score' AS \"Type\"\nFROM signal_history sh\nJOIN stats s ON sh.signal = s.signal\nWHERE sh.vehicle_id = ${vehicle_id}\n  AND $__timeFilter(sh.created_at)\n  AND ABS(sh.value_num - s.mean) / s.stddev > 3\n  AND ABS(sh.value_num - s.mean) / s.stddev <= 4\n  AND sh.signal NOT IN ('IsolationResistance','TpmsPressureFl','TpmsPressureFr','TpmsPressureRl','TpmsPressureRr','ModuleTempMax')\nORDER BY sh.created_at",
+              "refId": "C"
+            }
+          ],
+          "title": "Anomaly Timeline",
+          "type": "timeseries",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "description": "Distribution of anomaly severity levels: critical, warning, info.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "critical"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "red"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "warning"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "orange"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "info"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "blue"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 10
+          },
+          "id": 3,
+          "options": {
+            "reduceOptions": {
+              "values": true,
+              "calcs": [],
+              "fields": "/^Count$/"
+            },
+            "pieType": "donut",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "values": [
+                "value",
+                "percent"
+              ]
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  severity AS \"Severity\",\n  COUNT(*) AS \"Count\"\nFROM anomalies\nWHERE vehicle_id = ${vehicle_id}\n  AND $__timeFilter(detected_at)\nGROUP BY severity\nORDER BY\n  CASE severity\n    WHEN 'critical' THEN 1\n    WHEN 'warning' THEN 2\n    WHEN 'info' THEN 3\n    ELSE 4\n  END",
+              "refId": "A"
+            }
+          ],
+          "title": "Severity Distribution",
+          "type": "piechart",
+          "transparent": false
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "DS_TESLASYNC_POSTGRESQL"
+          },
+          "description": "Latest anomaly events with full details.Each row is a signal reading that deviates >3σ from its rolling mean within the selected time range.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 170
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Signal"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 200
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Type"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 120
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Severity"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-background",
+                      "mode": "basic"
+                    }
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "type": "value",
+                        "options": {
+                          "critical": {
+                            "color": "red",
+                            "index": 0,
+                            "text": "Critical"
+                          },
+                          "warning": {
+                            "color": "yellow",
+                            "index": 1,
+                            "text": "Warning"
+                          },
+                          "info": {
+                            "color": "blue",
+                            "index": 2,
+                            "text": "Info"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Z-Score"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 90
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-background",
+                      "mode": "basic"
+                    }
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "yellow",
+                          "value": 2
+                        },
+                        {
+                          "color": "red",
+                          "value": 3
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 24,
+            "x": 0,
+            "y": 18
+          },
+          "id": 2,
+          "options": {
+            "showHeader": true,
+            "footer": {
+              "show": false
+            },
+            "cellHeight": "sm",
+            "sortBy": [
+              {
+                "displayName": "Time",
+                "desc": true
+              }
+            ]
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "DS_TESLASYNC_POSTGRESQL"
+              },
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "WITH stats AS (\n  SELECT signal, AVG(value_num) AS mean, STDDEV(value_num) AS stddev\n  FROM signal_history\n  WHERE vehicle_id = ${vehicle_id}\n    AND $__timeFilter(created_at)\n    AND value_num IS NOT NULL\n  GROUP BY signal\n  HAVING STDDEV(value_num) > 0 AND COUNT(*) >= 30\n)\nSELECT\n  sh.created_at AS \"Time\",\n  sh.signal AS \"Signal\",\n  'z_score_outlier' AS \"Type\",\n  CASE\n    WHEN (sh.signal IN ('IsolationResistance','TpmsPressureFl','TpmsPressureFr','TpmsPressureRl','TpmsPressureRr','ModuleTempMax')\n         AND ABS(sh.value_num - s.mean) / s.stddev > 4)\n         OR ABS(sh.value_num - s.mean) / s.stddev > 5 THEN 'critical'\n    WHEN ABS(sh.value_num - s.mean) / s.stddev > 4\n         OR sh.signal IN ('IsolationResistance','TpmsPressureFl','TpmsPressureFr','TpmsPressureRl','TpmsPressureRr','ModuleTempMax') THEN 'warning'\n    ELSE 'info'\n  END AS \"Severity\",\n  ROUND(CAST(ABS(sh.value_num - s.mean) / s.stddev AS numeric), 2) AS \"Z-Score\",\n  sh.signal || ' = ' || ROUND(sh.value_num::numeric, 2) || ' (\u03bc=' || ROUND(s.mean::numeric, 2) || ', \u03c3=' || ROUND(s.stddev::numeric, 2) || ')' AS \"Description\"\nFROM signal_history sh\nJOIN stats s ON sh.signal = s.signal\nWHERE sh.vehicle_id = ${vehicle_id}\n  AND $__timeFilter(sh.created_at)\n  AND ABS(sh.value_num - s.mean) / s.stddev > 3\nORDER BY sh.created_at DESC\nLIMIT 50",
+              "refId": "A"
+            }
+          ],
+          "title": "Recent Anomalies",
+          "type": "table",
+          "transparent": false
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": [
+        "teslasync"
+      ],
+      "templating": {
+        "list": [
+          {
+            "current": {
+              "selected": true,
+              "text": "1",
+              "value": "1"
+            },
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "DS_TESLASYNC_POSTGRESQL"
+            },
+            "definition": "SELECT id AS __value, display_name AS __text FROM vehicles ORDER BY display_name",
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "vehicle_id",
+            "options": [],
+            "query": "SELECT id AS __value, display_name AS __text FROM vehicles ORDER BY display_name",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "type": "query"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-30d",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "TeslaSync 🔍 Anomaly Detection",
+      "uid": "teslasync-anomaly-detection",
+      "version": 1,
+      "weekStart": ""
+    }
