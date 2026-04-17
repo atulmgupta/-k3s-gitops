@@ -132,6 +132,10 @@ spec:
             type: ClusterIP
           tls:
             secretName: production-cyphers-app-tls
+          metrics:
+            serviceMonitor:
+              enabled: true
+              interval: "30s"
           ingressRouteTCP:
             enabled: true
             annotations:
