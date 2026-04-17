@@ -571,14 +571,7 @@ data:
         }
       ],
       "templating": {
-        "list": [
-          {
-            "name": "DS_PROMETHEUS",
-            "type": "datasource",
-            "query": "prometheus",
-            "current": { "text": "Prometheus", "value": "prometheus" }
-          }
-        ]
+        "list": []
       }
     }
     
