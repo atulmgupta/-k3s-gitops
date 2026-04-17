@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fleet-telemetry
+  labels:
+    release: prometheus
+spec:
+  namespaceSelector:
+    matchNames: [teslasync]
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: fleet-telemetry
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s

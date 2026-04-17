@@ -6,4 +6,5 @@ resources:
   - metallb-podmonitor.yaml
   - servicemonitor-argocd.yaml
   - servicemonitor-emqx.yaml
+  - servicemonitor-fleet-telemetry.yaml
   - pod-restart-alerts.yaml
