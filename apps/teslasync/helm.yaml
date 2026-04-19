@@ -2,7 +2,7 @@
 # TeslaSync — Helm Application (ArgoCD)
 # =============================================================================
 # Real-time Tesla vehicle data platform. Chart deploys: API, Web, Command Proxy,
-# Fleet Telemetry, Export Worker, Notification Worker.
+# Fleet Telemetry, Export Worker, Notification Worker, Automation Worker.
 # Secrets managed via SOPS in resources.yaml using existingSecret.
 # =============================================================================
 ---
@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.32.4"
+    targetRevision: "0.33.0-rc.enhanced-commands.e1ff5bc"
     helm:
       releaseName: teslasync
       valuesObject:
@@ -170,6 +170,19 @@ spec:
             port: 8081
             type: ClusterIP
 
+        automationWorker:
+          enabled: true
+          replicaCount: 1
+          image:
+            repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
+            pullPolicy: IfNotPresent
+          resources:
+            requests: { cpu: 100m, memory: 64Mi }
+            limits: { cpu: 500m, memory: 256Mi }
+          service:
+            port: 8083
+            type: ClusterIP
+
         postgresql:
           enabled: false
           maxConns: 25
@@ -217,17 +230,17 @@ spec:
           entryPoints:
             - websecure
           namespace: teslasync
+          sseBypass:
+            match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/api/v1/events`)"
+            middlewares:
+              - name: default-headers
+                namespace: traefik
+            services:
+              - name: teslasync-web
+                port: 80
           routes:
             - kind: Rule
               match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/.well-known`)"
-              middlewares:
-                - name: default-headers
-                  namespace: traefik
-              services:
-                - name: teslasync-web
-                  port: 80
-            - kind: Rule
-              match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/api/v1/events`)"
               middlewares:
                 - name: default-headers
                   namespace: traefik
