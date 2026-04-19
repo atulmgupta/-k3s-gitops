@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.enhanced-commands.32188ce"
+    targetRevision: "0.33.0-rc.enhanced-commands.6dfe366"
     helm:
       releaseName: teslasync
       valuesObject:
@@ -147,6 +147,8 @@ spec:
         exportWorker:
           enabled: true
           replicaCount: 1
+          dbMaxConns: 5
+          dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
             pullPolicy: IfNotPresent
@@ -160,6 +162,8 @@ spec:
         notificationWorker:
           enabled: true
           replicaCount: 1
+          dbMaxConns: 5
+          dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
             pullPolicy: IfNotPresent
@@ -173,6 +177,8 @@ spec:
         automationWorker:
           enabled: true
           replicaCount: 1
+          dbMaxConns: 5
+          dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
             pullPolicy: IfNotPresent
