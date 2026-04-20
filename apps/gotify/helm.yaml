@@ -1,0 +1,56 @@
+# =============================================================================
+# Gotify — Helm Application (ArgoCD)
+# =============================================================================
+# Self-hosted push notification server with WebSocket support and web UI.
+# Uses SQLite backend with persistent storage on Longhorn.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gotify
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/gabe565/charts
+    chart: gotify
+    targetRevision: "0.4.0"
+    helm:
+      releaseName: gotify
+      valuesObject:
+        image:
+          repository: ghcr.io/gotify/server
+          pullPolicy: IfNotPresent
+          tag: "2.6.1"
+
+        env:
+          TZ: America/Los_Angeles
+          GOTIFY_DEFAULTUSER_NAME: admin
+          GOTIFY_DEFAULTUSER_PASS: admin
+          GOTIFY_REGISTRATION: "false"
+
+        service:
+          main:
+            ports:
+              http:
+                port: 80
+
+        persistence:
+          data:
+            enabled: true
+            mountPath: /app/data
+            retain: true
+            storageClass: longhorn
+            accessMode: ReadWriteOnce
+            size: 2Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gotify
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
