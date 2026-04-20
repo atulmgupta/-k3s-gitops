@@ -90,6 +90,8 @@ spec:
         # ── Metrics exporter ─────────────────────────────────────────────────
         metrics:
           enabled: true
+          image:
+            tag: "0.17.1-debian-12-r6"
           resources:
             requests:
               cpu: 50m
