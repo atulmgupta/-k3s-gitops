@@ -13,6 +13,10 @@ spec:
       port: 5432
       targetPort: 5432
       protocol: TCP
+    - name: pgbouncer
+      port: 6432
+      targetPort: 6432
+      protocol: TCP
   selector:
     app.kubernetes.io/name: timescaledb
     app.kubernetes.io/instance: timescaledb

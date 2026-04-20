@@ -2,8 +2,9 @@
 # TimescaleDB — Kustomize Application (ArgoCD)
 # =============================================================================
 # Dedicated TimescaleDB instance for time-series workloads. Uses the official
-# timescale/timescaledb-ha image with PG17. Deployed as a StatefulSet with
-# Longhorn storage. Secrets managed via SOPS/age.
+# timescale/timescaledb-ha image with PG17. Includes pgvector for AI/semantic
+# search and PgBouncer sidecar for connection pooling. Deployed as a
+# StatefulSet with Longhorn storage. Secrets managed via SOPS/age.
 # =============================================================================
 ---
 apiVersion: argoproj.io/v1alpha1

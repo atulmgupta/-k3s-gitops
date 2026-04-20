@@ -30,6 +30,22 @@ spec:
           args:
             - -c
             - timescaledb.telemetry_level=off
+            - -c
+            - max_connections=200
+            - -c
+            - shared_buffers=512MB
+            - -c
+            - effective_cache_size=1536MB
+            - -c
+            - work_mem=4MB
+            - -c
+            - maintenance_work_mem=128MB
+            - -c
+            - checkpoint_completion_target=0.9
+            - -c
+            - wal_buffers=16MB
+            - -c
+            - random_page_cost=1.1
           ports:
             - name: postgresql
               containerPort: 5432
@@ -50,15 +66,27 @@ spec:
             - name: data
               mountPath: /home/postgres/pgdata
             - name: config
-              mountPath: /docker-entrypoint-initdb.d/001-init-timescaledb.sql
+              mountPath: /docker-entrypoint-initdb.d/001-init-extensions.sql
               subPath: init.sql
           resources:
             requests:
-              cpu: 250m
-              memory: 256Mi
-            limits:
-              cpu: "1"
+              cpu: 500m
               memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          startupProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - teslasync
+                - -d
+                - teslasync
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 30
+            timeoutSeconds: 5
           livenessProbe:
             exec:
               command:
@@ -83,6 +111,59 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
+        - name: pgbouncer
+          image: bitnami/pgbouncer:1.23.1
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+          ports:
+            - name: pgbouncer
+              containerPort: 6432
+              protocol: TCP
+          env:
+            - name: PGBOUNCER_DATABASE
+              value: teslasync
+            - name: POSTGRESQL_HOST
+              value: "127.0.0.1"
+            - name: POSTGRESQL_PORT
+              value: "5432"
+            - name: POSTGRESQL_USERNAME
+              value: teslasync
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: timescaledb-secret
+                  key: POSTGRES_PASSWORD
+            - name: PGBOUNCER_PORT
+              value: "6432"
+            - name: PGBOUNCER_POOL_MODE
+              value: transaction
+            - name: PGBOUNCER_MAX_CLIENT_CONN
+              value: "200"
+            - name: PGBOUNCER_DEFAULT_POOL_SIZE
+              value: "20"
+            - name: PGBOUNCER_MIN_POOL_SIZE
+              value: "5"
+            - name: PGBOUNCER_RESERVE_POOL_SIZE
+              value: "5"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          livenessProbe:
+            tcpSocket:
+              port: pgbouncer
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: pgbouncer
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: config
           configMap:

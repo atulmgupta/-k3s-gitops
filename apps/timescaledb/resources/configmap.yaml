@@ -7,5 +7,5 @@ metadata:
     app.kubernetes.io/instance: timescaledb
 data:
   init.sql: |
-    -- Enable TimescaleDB extension in the teslasync database
     CREATE EXTENSION IF NOT EXISTS timescaledb;
+    CREATE EXTENSION IF NOT EXISTS vector;
