@@ -112,32 +112,17 @@ spec:
             timeoutSeconds: 5
             failureThreshold: 6
         - name: pgbouncer
-          image: edoburu/pgbouncer:latest
+          image: pgbouncer/pgbouncer:latest
           imagePullPolicy: IfNotPresent
-          securityContext:
-            runAsNonRoot: false
           ports:
             - name: pgbouncer
               containerPort: 6432
               protocol: TCP
-          env:
-            - name: DATABASE_URL
-              value: "postgres://teslasync:$(POSTGRES_PASSWORD)@127.0.0.1:5432/teslasync"
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: timescaledb-secret
-                  key: POSTGRES_PASSWORD
-            - name: POOL_MODE
-              value: transaction
-            - name: MAX_CLIENT_CONN
-              value: "200"
-            - name: DEFAULT_POOL_SIZE
-              value: "20"
-            - name: MIN_POOL_SIZE
-              value: "5"
-            - name: RESERVE_POOL_SIZE
-              value: "5"
+          command: ["pgbouncer", "/etc/pgbouncer/pgbouncer.ini"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/pgbouncer/pgbouncer.ini
+              subPath: pgbouncer.ini
           resources:
             requests:
               cpu: 50m

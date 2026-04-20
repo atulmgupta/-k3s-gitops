@@ -9,3 +9,23 @@ data:
   init.sql: |
     CREATE EXTENSION IF NOT EXISTS timescaledb;
     CREATE EXTENSION IF NOT EXISTS vector;
+  pgbouncer.ini: |
+    [databases]
+    teslasync = host=127.0.0.1 port=5432 dbname=teslasync
+
+    [pgbouncer]
+    listen_addr = 0.0.0.0
+    listen_port = 6432
+    auth_type = trust
+    pool_mode = transaction
+    max_client_conn = 200
+    default_pool_size = 20
+    min_pool_size = 5
+    reserve_pool_size = 5
+    reserve_pool_timeout = 3
+    server_lifetime = 3600
+    server_idle_timeout = 600
+    log_connections = 0
+    log_disconnections = 0
+    stats_period = 60
+    admin_users = teslasync
