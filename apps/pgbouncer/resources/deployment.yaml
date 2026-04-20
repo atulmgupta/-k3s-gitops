@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgbouncer
+  labels:
+    app.kubernetes.io/name: pgbouncer
+    app.kubernetes.io/instance: pgbouncer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pgbouncer
+      app.kubernetes.io/instance: pgbouncer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pgbouncer
+        app.kubernetes.io/instance: pgbouncer
+    spec:
+      containers:
+        - name: pgbouncer
+          image: pgbouncer/pgbouncer:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: pgbouncer
+              containerPort: 6432
+              protocol: TCP
+          env:
+            - name: DATABASES_HOST
+              value: postgres-v17-postgresql.postgres-v17.svc.cluster.local
+            - name: DATABASES_PORT
+              value: "5432"
+            - name: DATABASES_USER
+              value: cyphersadmin
+            - name: DATABASES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-v17-postgresql
+                  key: password
+            - name: PGBOUNCER_POOL_MODE
+              value: transaction
+            - name: PGBOUNCER_MAX_CLIENT_CONN
+              value: "400"
+            - name: PGBOUNCER_DEFAULT_POOL_SIZE
+              value: "25"
+            - name: PGBOUNCER_MIN_POOL_SIZE
+              value: "5"
+            - name: PGBOUNCER_RESERVE_POOL_SIZE
+              value: "5"
+            - name: PGBOUNCER_AUTH_TYPE
+              value: any
+            - name: PGBOUNCER_LISTEN_PORT
+              value: "6432"
+            - name: PGBOUNCER_IGNORE_STARTUP_PARAMETERS
+              value: extra_float_digits
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          livenessProbe:
+            tcpSocket:
+              port: pgbouncer
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: pgbouncer
+            initialDelaySeconds: 5
+            periodSeconds: 10

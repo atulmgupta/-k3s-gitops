@@ -1,0 +1,27 @@
+# =============================================================================
+# PgBouncer — Connection pooler for PostgreSQL v17 (ArgoCD)
+# =============================================================================
+# Lightweight connection pooler deployed in the postgres-v17 namespace.
+# Transaction pooling mode with trust auth for cluster-internal access.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pgbouncer
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/pgbouncer/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgres-v17
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
