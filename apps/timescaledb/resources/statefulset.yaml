@@ -118,11 +118,27 @@ spec:
             - name: pgbouncer
               containerPort: 6432
               protocol: TCP
-          command: ["pgbouncer", "/etc/pgbouncer/pgbouncer.ini"]
-          volumeMounts:
-            - name: config
-              mountPath: /etc/pgbouncer/pgbouncer.ini
-              subPath: pgbouncer.ini
+          env:
+            - name: DATABASES_HOST
+              value: "127.0.0.1"
+            - name: DATABASES_PORT
+              value: "5432"
+            - name: DATABASES_DBNAME
+              value: teslasync
+            - name: PGBOUNCER_POOL_MODE
+              value: transaction
+            - name: PGBOUNCER_MAX_CLIENT_CONN
+              value: "200"
+            - name: PGBOUNCER_DEFAULT_POOL_SIZE
+              value: "20"
+            - name: PGBOUNCER_MIN_POOL_SIZE
+              value: "5"
+            - name: PGBOUNCER_RESERVE_POOL_SIZE
+              value: "5"
+            - name: PGBOUNCER_AUTH_TYPE
+              value: trust
+            - name: PGBOUNCER_LISTEN_PORT
+              value: "6432"
           resources:
             requests:
               cpu: 50m
