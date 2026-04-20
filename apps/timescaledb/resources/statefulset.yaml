@@ -137,7 +137,7 @@ spec:
             - name: PGBOUNCER_RESERVE_POOL_SIZE
               value: "5"
             - name: PGBOUNCER_AUTH_TYPE
-              value: trust
+              value: any
             - name: PGBOUNCER_LISTEN_PORT
               value: "6432"
           resources:
