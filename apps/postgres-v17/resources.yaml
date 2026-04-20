@@ -1,0 +1,27 @@
+# =============================================================================
+# PostgreSQL v17 — SOPS Secrets (ArgoCD)
+# =============================================================================
+# Manages the postgres-v17-postgresql Secret via SOPS/KSOPS.
+# Must be synced after the Helm app to ensure credentials are up to date.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres-v17-resources
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/postgres-v17/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgres-v17
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true

@@ -1,0 +1,125 @@
+# =============================================================================
+# PostgreSQL v17 — Helm Application (ArgoCD)
+# =============================================================================
+# Shared PostgreSQL instance (Bitnami chart) serving: teslasync, teslamate,
+# immich, mealie, nexus, n8n, vitasync. Tuned for stability under concurrent
+# multi-app load with startup probe to survive WAL recovery.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres-v17
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: registry-1.docker.io/bitnamicharts
+    chart: postgresql
+    targetRevision: "16.7.15"
+    helm:
+      releaseName: postgres-v17
+      valuesObject:
+        architecture: standalone
+
+        image:
+          tag: "17.4.0-debian-12-r17"
+
+        global:
+          postgresql:
+            auth:
+              username: cyphersadmin
+              existingSecret: postgres-v17-postgresql
+              secretKeys:
+                adminPasswordKey: postgres-password
+                userPasswordKey: password
+
+        auth:
+          enablePostgresUser: true
+
+        # ── Primary instance tuning ──────────────────────────────────────────
+        primary:
+          extendedConfiguration: |
+            max_connections = 200
+            shared_buffers = 384MB
+            effective_cache_size = 1GB
+            maintenance_work_mem = 128MB
+            work_mem = 4MB
+            checkpoint_completion_target = 0.9
+            wal_buffers = 16MB
+            random_page_cost = 1.1
+
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+
+          # Startup probe: allows up to 5 min for WAL recovery before killing
+          startupProbe:
+            enabled: true
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 30
+            timeoutSeconds: 5
+
+          livenessProbe:
+            enabled: true
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 6
+            timeoutSeconds: 5
+
+          readinessProbe:
+            enabled: true
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 6
+            timeoutSeconds: 5
+
+          persistence:
+            enabled: true
+            size: 100Gi
+            storageClass: longhorn
+            labels:
+              app: postgresql-v17
+
+        # ── Metrics exporter ─────────────────────────────────────────────────
+        metrics:
+          enabled: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          serviceMonitor:
+            enabled: true
+            namespace: prometheus
+            interval: "30s"
+            scrapeTimeout: "30s"
+
+        # ── Backups ──────────────────────────────────────────────────────────
+        backup:
+          enabled: true
+          cronjob:
+            schedule: "@daily"
+            storage:
+              enabled: true
+              existingClaim: postgresql-v17-backup
+              mountPath: /backup/pgdump
+              size: 16Gi
+              storageClass: longhorn
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgres-v17
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
