@@ -83,7 +83,7 @@ spec:
 
           persistence:
             enabled: true
-            size: 8Gi
+            size: 100Gi
             labels:
               app: postgresql-v17
 
