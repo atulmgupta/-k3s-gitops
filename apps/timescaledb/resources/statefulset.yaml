@@ -115,8 +115,7 @@ spec:
           image: edoburu/pgbouncer:latest
           imagePullPolicy: IfNotPresent
           securityContext:
-            runAsUser: 999
-            runAsGroup: 999
+            runAsNonRoot: false
           ports:
             - name: pgbouncer
               containerPort: 6432
