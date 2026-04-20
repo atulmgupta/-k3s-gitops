@@ -20,13 +20,14 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
       containers:
         - name: timescaledb
           image: timescale/timescaledb-ha:pg17
           imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
           args:
             - -c
             - timescaledb.telemetry_level=off
