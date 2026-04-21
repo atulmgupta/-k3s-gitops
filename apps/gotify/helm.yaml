@@ -43,7 +43,9 @@ spec:
             enabled: true
             mountPath: /app/data
             retain: true
-            existingClaim: gotify-data
+            storageClass: longhorn
+            accessMode: ReadWriteOnce
+            size: 2Gi
 
   destination:
     server: https://kubernetes.default.svc
