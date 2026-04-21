@@ -26,29 +26,9 @@ spec:
           oidc:
             secret:
               create: false
+            externalSecret:
+              enabled: true
               name: oidc
-
-        env:
-          - name: OIDC_CLIENT_ID
-            valueFrom:
-              secretKeyRef:
-                name: oidc
-                key: OIDC_CLIENT_ID
-          - name: OIDC_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: oidc
-                key: OIDC_CLIENT_SECRET
-          - name: OIDC_ISSUER_URL
-            valueFrom:
-              secretKeyRef:
-                name: oidc
-                key: OIDC_ISSUER_URL
-          - name: OIDC_SCOPES
-            valueFrom:
-              secretKeyRef:
-                name: oidc
-                key: OIDC_SCOPES
 
         clusterRoleBinding:
           create: true
