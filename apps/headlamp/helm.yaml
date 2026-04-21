@@ -29,6 +29,7 @@ spec:
             externalSecret:
               enabled: true
               name: oidc
+            useCookie: true
 
         clusterRoleBinding:
           create: true
