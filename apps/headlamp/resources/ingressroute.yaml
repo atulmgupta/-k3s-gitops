@@ -15,6 +15,15 @@ spec:
     - websecure
   routes:
     - kind: Rule
+      match: Host(`k8s.cyphers.app`) && PathPrefix(`/oidc-callback`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+      services:
+        - name: headlamp
+          namespace: headlamp
+          port: 80
+    - kind: Rule
       match: Host(`k8s.cyphers.app`)
       middlewares:
         - name: default-headers
