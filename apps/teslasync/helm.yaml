@@ -25,6 +25,7 @@ spec:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
+          tag: "0.33.0-rc.enhanced-commands.557aa628"
           pullPolicy: IfNotPresent
 
         secrets:
@@ -91,6 +92,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -151,6 +153,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -166,6 +169,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -181,6 +185,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
