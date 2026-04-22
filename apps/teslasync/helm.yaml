@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.enhanced-commands.ad69322f"
+    targetRevision: "0.33.0-rc.final-enhanced-commands.83d54452"
     helm:
       releaseName: teslasync
       valuesObject:
