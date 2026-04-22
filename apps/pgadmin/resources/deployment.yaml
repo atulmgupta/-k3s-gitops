@@ -40,9 +40,15 @@ spec:
               value: '"Access gated by Authentik. Local creds: admin@cyphers.app / admin"'
             - name: PGADMIN_LISTEN_PORT
               value: "80"
+            - name: PGADMIN_SERVER_JSON_FILE
+              value: /pgadmin4/servers.json
           volumeMounts:
             - name: data
               mountPath: /var/lib/pgadmin
+            - name: servers
+              mountPath: /pgadmin4/servers.json
+              subPath: servers.json
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /misc/ping
@@ -66,3 +72,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: pgadmin-data
+        - name: servers
+          configMap:
+            name: pgadmin-servers
+            items:
+              - key: servers.json
+                path: servers.json

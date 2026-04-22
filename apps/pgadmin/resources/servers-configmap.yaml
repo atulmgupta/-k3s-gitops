@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-servers
+  labels:
+    app.kubernetes.io/name: pgadmin
+    app.kubernetes.io/instance: pgadmin
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "Postgres v17 (cyphersadmin)",
+          "Group": "Cluster",
+          "Host": "postgres-v17-postgresql.postgres-v17.svc.cluster.local",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "cyphersadmin",
+          "SSLMode": "prefer",
+          "Comment": "Bitnami Postgres 17 — primary cluster DB"
+        },
+        "2": {
+          "Name": "Postgres v17 (postgres superuser)",
+          "Group": "Cluster",
+          "Host": "postgres-v17-postgresql.postgres-v17.svc.cluster.local",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "postgres",
+          "SSLMode": "prefer",
+          "Comment": "Bitnami Postgres 17 — superuser"
+        },
+        "3": {
+          "Name": "Postgres v17 — via PgBouncer",
+          "Group": "Cluster",
+          "Host": "pgbouncer.postgres-v17.svc.cluster.local",
+          "Port": 6432,
+          "MaintenanceDB": "postgres",
+          "Username": "cyphersadmin",
+          "SSLMode": "prefer",
+          "Comment": "PgBouncer pool in front of Postgres 17"
+        },
+        "10": {
+          "Name": "TimescaleDB (teslasync)",
+          "Group": "Cluster",
+          "Host": "timescaledb.timescaledb.svc.cluster.local",
+          "Port": 5432,
+          "MaintenanceDB": "teslasync",
+          "Username": "teslasync",
+          "SSLMode": "prefer",
+          "Comment": "TimescaleDB pg17 — direct"
+        },
+        "11": {
+          "Name": "TimescaleDB — via PgBouncer",
+          "Group": "Cluster",
+          "Host": "timescaledb.timescaledb.svc.cluster.local",
+          "Port": 6432,
+          "MaintenanceDB": "teslasync",
+          "Username": "teslasync",
+          "SSLMode": "prefer",
+          "Comment": "TimescaleDB through embedded PgBouncer sidecar"
+        },
+        "20": {
+          "Name": "Postgres (legacy)",
+          "Group": "Cluster",
+          "Host": "postgres-postgresql.postgres.svc.cluster.local",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "postgres",
+          "SSLMode": "prefer",
+          "Comment": "Older Postgres instance (192.168.68.212)"
+        },
+        "30": {
+          "Name": "Postgres v17 — LAN LB (192.168.68.218)",
+          "Group": "LAN",
+          "Host": "192.168.68.218",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "cyphersadmin",
+          "SSLMode": "prefer",
+          "Comment": "MetalLB external IP for Postgres 17"
+        },
+        "31": {
+          "Name": "Postgres (legacy) — LAN LB (192.168.68.212)",
+          "Group": "LAN",
+          "Host": "192.168.68.212",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "postgres",
+          "SSLMode": "prefer",
+          "Comment": "MetalLB external IP for legacy Postgres"
+        }
+      }
+    }

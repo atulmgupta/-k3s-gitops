@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: pgadmin
 resources:
   - pvc.yaml
+  - servers-configmap.yaml
   - deployment.yaml
   - service.yaml
   - ingressroute.yaml
