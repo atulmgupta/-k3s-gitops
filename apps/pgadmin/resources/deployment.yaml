@@ -49,6 +49,12 @@ spec:
               mountPath: /pgadmin4/servers.json
               subPath: servers.json
               readOnly: true
+          startupProbe:
+            httpGet:
+              path: /misc/ping
+              port: http
+            periodSeconds: 10
+            failureThreshold: 60
           livenessProbe:
             httpGet:
               path: /misc/ping
