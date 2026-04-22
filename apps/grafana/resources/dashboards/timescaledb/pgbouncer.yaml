@@ -1,0 +1,136 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: timescaledb-pgbouncer
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: TimescaleDB
+data:
+  pgbouncer.json: |
+    {
+      "uid": "timescaledb-pgbouncer",
+      "title": "TimescaleDB - PgBouncer",
+      "tags": ["timescaledb", "pgbouncer", "pooling"],
+      "timezone": "browser",
+      "schemaVersion": 38,
+      "version": 1,
+      "refresh": "30s",
+      "time": { "from": "now-3h", "to": "now" },
+      "editable": true,
+      "graphTooltip": 1,
+      "templating": {
+        "list": [
+          {
+            "name": "datasource",
+            "type": "datasource",
+            "query": "prometheus",
+            "current": { "text": "Prometheus", "value": "Prometheus" },
+            "hide": 0
+          },
+          {
+            "name": "database",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${datasource}" },
+            "query": "label_values(pgbouncer_pools_client_active_connections{namespace=\"timescaledb\"}, database)",
+            "refresh": 2,
+            "includeAll": true,
+            "multi": true,
+            "current": { "text": "All", "value": "$__all" }
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1, "type": "stat", "title": "PgBouncer Up",
+          "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "max(pgbouncer_up{namespace=\"timescaledb\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "mappings": [{ "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } }, "type": "value" }], "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] }, "color": { "mode": "thresholds" } } }
+        },
+        {
+          "id": 2, "type": "stat", "title": "Active Clients",
+          "gridPos": { "x": 4, "y": 0, "w": 5, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "sum(pgbouncer_pools_client_active_connections{namespace=\"timescaledb\",database=~\"$database\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short" } }
+        },
+        {
+          "id": 3, "type": "stat", "title": "Waiting Clients",
+          "gridPos": { "x": 9, "y": 0, "w": 5, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "sum(pgbouncer_pools_client_waiting_connections{namespace=\"timescaledb\",database=~\"$database\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 1 }, { "color": "red", "value": 5 }] }, "color": { "mode": "thresholds" } } }
+        },
+        {
+          "id": 4, "type": "stat", "title": "Active Server Conns",
+          "gridPos": { "x": 14, "y": 0, "w": 5, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "sum(pgbouncer_pools_server_active_connections{namespace=\"timescaledb\",database=~\"$database\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short" } }
+        },
+        {
+          "id": 5, "type": "stat", "title": "Idle Server Conns",
+          "gridPos": { "x": 19, "y": 0, "w": 5, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "sum(pgbouncer_pools_server_idle_connections{namespace=\"timescaledb\",database=~\"$database\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short" } }
+        },
+        {
+          "id": 10, "type": "timeseries", "title": "Client connections (active vs waiting) — by pool",
+          "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [
+            { "expr": "sum by (database, user) (pgbouncer_pools_client_active_connections{namespace=\"timescaledb\",database=~\"$database\"})", "legendFormat": "active {{database}}/{{user}}", "refId": "A" },
+            { "expr": "sum by (database, user) (pgbouncer_pools_client_waiting_connections{namespace=\"timescaledb\",database=~\"$database\"})", "legendFormat": "waiting {{database}}/{{user}}", "refId": "B" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 15 } } }
+        },
+        {
+          "id": 11, "type": "timeseries", "title": "Server connections — by state",
+          "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [
+            { "expr": "sum by (database) (pgbouncer_pools_server_active_connections{namespace=\"timescaledb\",database=~\"$database\"})", "legendFormat": "active {{database}}", "refId": "A" },
+            { "expr": "sum by (database) (pgbouncer_pools_server_idle_connections{namespace=\"timescaledb\",database=~\"$database\"})", "legendFormat": "idle {{database}}", "refId": "B" },
+            { "expr": "sum by (database) (pgbouncer_pools_server_used_connections{namespace=\"timescaledb\",database=~\"$database\"})", "legendFormat": "used {{database}}", "refId": "C" },
+            { "expr": "sum by (database) (pgbouncer_pools_server_testing_connections{namespace=\"timescaledb\",database=~\"$database\"})", "legendFormat": "testing {{database}}", "refId": "D" },
+            { "expr": "sum by (database) (pgbouncer_pools_server_login_connections{namespace=\"timescaledb\",database=~\"$database\"})", "legendFormat": "login {{database}}", "refId": "E" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "short", "custom": { "drawStyle": "line", "fillOpacity": 10, "stacking": { "mode": "normal" } } } }
+        },
+        {
+          "id": 12, "type": "timeseries", "title": "Queries / sec — by database",
+          "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "sum by (database) (rate(pgbouncer_stats_queries_pooled_total{namespace=\"timescaledb\",database=~\"$database\"}[5m]))", "legendFormat": "{{database}}", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "qps" } }
+        },
+        {
+          "id": 13, "type": "timeseries", "title": "Avg query duration",
+          "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "rate(pgbouncer_stats_queries_duration_seconds{namespace=\"timescaledb\",database=~\"$database\"}[5m]) / clamp_min(rate(pgbouncer_stats_queries_pooled_total{namespace=\"timescaledb\",database=~\"$database\"}[5m]), 1)", "legendFormat": "{{database}}", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "s" } }
+        },
+        {
+          "id": 14, "type": "timeseries", "title": "Client wait time (s)",
+          "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [{ "expr": "rate(pgbouncer_stats_client_wait_seconds{namespace=\"timescaledb\",database=~\"$database\"}[5m])", "legendFormat": "{{database}}", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "s", "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.05 }, { "color": "red", "value": 0.5 }] } } }
+        },
+        {
+          "id": 15, "type": "timeseries", "title": "Bytes received / sent per sec",
+          "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "targets": [
+            { "expr": "sum by (database) (rate(pgbouncer_stats_received_bytes_total{namespace=\"timescaledb\",database=~\"$database\"}[5m]))", "legendFormat": "rx {{database}}", "refId": "A" },
+            { "expr": "sum by (database) (rate(pgbouncer_stats_sent_bytes_total{namespace=\"timescaledb\",database=~\"$database\"}[5m]))", "legendFormat": "tx {{database}}", "refId": "B" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "Bps" } }
+        }
+      ]
+    }

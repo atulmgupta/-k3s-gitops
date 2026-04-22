@@ -8,3 +8,4 @@ resources:
   - service.yaml
   - headless-service.yaml
   - configmap.yaml
+  - servicemonitor.yaml

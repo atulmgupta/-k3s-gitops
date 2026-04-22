@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: timescaledb
+  labels:
+    release: prometheus
+    app.kubernetes.io/name: timescaledb
+    app.kubernetes.io/instance: timescaledb
+spec:
+  namespaceSelector:
+    matchNames: [timescaledb]
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: timescaledb
+      app.kubernetes.io/instance: timescaledb
+  endpoints:
+    - port: pg-metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+    - port: pgb-metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

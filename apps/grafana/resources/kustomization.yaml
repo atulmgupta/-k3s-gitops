@@ -93,6 +93,9 @@ resources:
   - dashboards/teslasync-infra/sse-realtime.yaml
   - dashboards/teslasync-infra/telemetry-pipeline.yaml
   - dashboards/teslasync-infra/fleet-telemetry.yaml
+  # TimescaleDB
+  - dashboards/timescaledb/postgres.yaml
+  - dashboards/timescaledb/pgbouncer.yaml
 
 generators:
   - ksops-generator.yaml
