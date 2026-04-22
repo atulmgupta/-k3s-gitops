@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: redis-insight
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Redis Insight"
+    gethomepage.dev/group: "Databases"
+    gethomepage.dev/icon: "redis"
+    gethomepage.dev/description: "Redis Web UI"
+    gethomepage.dev/href: "https://redis-insight.cyphers.app"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`redis-insight.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: redis-insight
+          namespace: redis-insight
+          port: 5540
+  tls:
+    secretName: production-cyphers-app-tls

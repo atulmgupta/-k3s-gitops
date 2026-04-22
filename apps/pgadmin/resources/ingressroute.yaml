@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pgadmin
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "pgAdmin"
+    gethomepage.dev/group: "Databases"
+    gethomepage.dev/icon: "pgadmin"
+    gethomepage.dev/description: "PostgreSQL Admin"
+    gethomepage.dev/href: "https://pgadmin.cyphers.app"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`pgadmin.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: pgadmin
+          namespace: pgadmin
+          port: 80
+  tls:
+    secretName: production-cyphers-app-tls

@@ -1,0 +1,27 @@
+# =============================================================================
+# Redis Insight — Kustomize Application (ArgoCD)
+# =============================================================================
+# Official Redis web UI for browsing keys, slow log, profiling. Behind Authentik.
+# No backend pre-configuration; add Redis instances from the UI.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-insight
+  namespace: argocd
+  labels:
+    tier: tools
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/redis-insight/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: redis-insight
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

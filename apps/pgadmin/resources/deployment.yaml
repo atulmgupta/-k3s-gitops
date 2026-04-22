@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  labels:
+    app.kubernetes.io/name: pgadmin
+    app.kubernetes.io/instance: pgadmin
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pgadmin
+      app.kubernetes.io/instance: pgadmin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pgadmin
+        app.kubernetes.io/instance: pgadmin
+    spec:
+      securityContext:
+        fsGroup: 5050
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4:9
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: admin@cyphers.app
+            - name: PGADMIN_DEFAULT_PASSWORD
+              value: admin
+            - name: PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION
+              value: "False"
+            - name: PGADMIN_CONFIG_LOGIN_BANNER
+              value: '"Access gated by Authentik. Local creds: admin@cyphers.app / admin"'
+            - name: PGADMIN_LISTEN_PORT
+              value: "80"
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/pgadmin
+          livenessProbe:
+            httpGet:
+              path: /misc/ping
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /misc/ping
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pgadmin-data

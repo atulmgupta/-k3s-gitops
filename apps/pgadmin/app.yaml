@@ -1,0 +1,28 @@
+# =============================================================================
+# pgAdmin — Kustomize Application (ArgoCD)
+# =============================================================================
+# Web UI for managing Postgres / TimescaleDB instances. Behind Authentik.
+# pgAdmin still requires its own admin login; default is admin@cyphers.app /
+# admin (the real perimeter is Authentik OIDC at the Traefik layer).
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pgadmin
+  namespace: argocd
+  labels:
+    tier: tools
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/pgadmin/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: pgadmin
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
