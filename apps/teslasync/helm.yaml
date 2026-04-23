@@ -18,15 +18,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.final-enhanced-commands.83d54452"
+    targetRevision: "0.32.5"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.33.0-rc.final-enhanced-commands.83d54452"
-          pullPolicy: IfNotPresent
+          tag: "0.32.5"
 
         secrets:
           existingSecret: teslasync
@@ -92,7 +91,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.32.5"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -153,7 +152,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.32.5"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -169,7 +168,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.32.5"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -185,7 +184,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.32.5"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -201,8 +200,8 @@ spec:
           external:
             host: pgbouncer.postgres-v17.svc.cluster.local
             port: 6432
-            database: teslasync
-            username: teslasync
+            database: teslasync_v2
+            username: teslasync_v2
             sslMode: disable
 
         redis:
