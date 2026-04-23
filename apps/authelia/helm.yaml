@@ -39,6 +39,13 @@ spec:
         # -- Secret (use SOPS-managed existingSecret) --------------------------
         secret:
           existingSecret: authelia-credentials
+          additionalSecrets:
+            authelia-credentials:
+              items:
+                - key: 'oidc.jwk.RS256.pem'
+                  path: 'oidc.jwk.RS256.pem'
+                - key: 'users_database.yml'
+                  path: 'users_database.yml'
 
         # -- Main Authelia configuration ---------------------------------------
         configMap:
@@ -52,7 +59,7 @@ spec:
           authentication_backend:
             file:
               enabled: true
-              path: '/secrets/internal/users_database.yml'
+              path: '/secrets/authelia-credentials/users_database.yml'
               watch: true
               password:
                 algorithm: argon2id
@@ -86,16 +93,23 @@ spec:
           access_control:
             default_policy: two_factor
 
-          # OIDC Provider
-          identity_providers:
-            oidc:
-              enabled: true
-              jwks:
-                - key_id: 'default'
-                  algorithm: 'RS256'
-                  use: 'sig'
-                  key:
-                    path: '/secrets/internal/oidc.jwk.RS256.pem'
+          # OIDC Provider — disabled until clients are configured
+          # Uncomment and add clients when ready to migrate apps from Authentik
+          # identity_providers:
+          #   oidc:
+          #     enabled: true
+          #     jwks:
+          #       - key_id: 'default'
+          #         algorithm: 'RS256'
+          #         use: 'sig'
+          #         key:
+          #           path: '/secrets/authelia-credentials/oidc.jwk.RS256.pem'
+          #     clients:
+          #       - client_id: 'example'
+          #         client_name: 'Example App'
+          #         client_secret: '$pbkdf2-sha512$...'  # generate with: authelia crypto hash generate pbkdf2
+          #         redirect_uris: ['https://app.cyphers.app/callback']
+          #         scopes: ['openid', 'profile', 'email']
 
           # Notifications — SMTP (Gmail)
           notifier:
