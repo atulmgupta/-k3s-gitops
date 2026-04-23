@@ -19,8 +19,8 @@ spec:
       middlewares:
         - name: default-headers
           namespace: traefik
-        - name: authentik-auth
-          namespace: authentik
+        - name: authelia-auth
+          namespace: authelia
       services:
         - name: it-tools
           namespace: it-tools
