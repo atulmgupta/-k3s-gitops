@@ -18,14 +18,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.final-enhanced-commands.83d54452"
+    targetRevision: "0.33.0-rc.enhanced-commands.557aa628"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+          tag: "0.33.0-rc.enhanced-commands.557aa628"
           pullPolicy: IfNotPresent
 
         secrets:
@@ -92,7 +92,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -153,7 +153,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -169,7 +169,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -185,7 +185,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.33.0-rc.final-enhanced-commands.83d54452"
+            tag: "0.33.0-rc.enhanced-commands.557aa628"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -199,8 +199,8 @@ spec:
           maxConns: 25
           minConns: 5
           external:
-            host: postgres-v17-postgresql.postgres-v17.svc.cluster.local
-            port: 5432
+            host: pgbouncer.postgres-v17.svc.cluster.local
+            port: 6432
             database: teslasync
             username: teslasync
             sslMode: disable
