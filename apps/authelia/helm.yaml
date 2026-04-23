@@ -113,7 +113,7 @@ spec:
 
           # Access control — default two_factor for all routes
           access_control:
-            default_policy: one_factor
+            default_policy: two_factor
 
           # OIDC Provider — disabled until clients are configured
           # Uncomment and add clients when ready to migrate apps from Authentik
