@@ -69,7 +69,6 @@ spec:
             cookies:
               - domain: cyphers.app
                 subdomain: authelia
-                default_redirection_url: https://authelia.cyphers.app
             redis:
               enabled: true
               deploy: false
