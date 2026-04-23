@@ -198,8 +198,8 @@ spec:
           maxConns: 25
           minConns: 5
           external:
-            host: pgbouncer.postgres-v17.svc.cluster.local
-            port: 6432
+            host: postgres-v17-postgresql.postgres-v17.svc.cluster.local
+            port: 5432
             database: teslasync_v2
             username: teslasync_v2
             sslMode: disable
