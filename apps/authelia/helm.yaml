@@ -73,8 +73,8 @@ spec:
           # Duo Push Notifications
           duo_api:
             enabled: true
-            hostname: 'api-92cd597c.duosecurity.com'       # ← Fill from Duo Admin: API hostname
-            integration_key: 'DI3HX5N6EOLUZ0WHCRCH' # ← Fill from Duo Admin: integration key
+            hostname: 'api-92cd597c.duosecurity.com'
+            integration_key: 'DI3HX5N6EOLUZ0WHCRCH'
             enable_self_enrollment: true
 
           # Authentication — file-based backend
