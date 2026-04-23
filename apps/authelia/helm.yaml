@@ -54,6 +54,9 @@ spec:
           log:
             level: info
 
+          webauthn:
+            enable_passkey_login: true
+
           # Authentication — file-based backend
           # Users are defined in the SOPS secret key 'users_database.yml'
           authentication_backend:
