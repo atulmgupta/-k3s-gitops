@@ -1,0 +1,115 @@
+# =============================================================================
+# Authelia — Helm Application (ArgoCD)
+# =============================================================================
+# Lightweight SSO / 2FA gateway (potential Authentik replacement).
+# Secrets are mounted from a SOPS-encrypted K8s Secret via existingSecret.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authelia
+  namespace: argocd
+  labels:
+    tier: security
+spec:
+  project: default
+  source:
+    repoURL: https://charts.authelia.com
+    chart: authelia
+    targetRevision: "0.10.50"
+    helm:
+      valuesObject:
+        # -- Pod configuration ------------------------------------------------
+        pod:
+          kind: Deployment
+          replicas: 1
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+        # -- Ingress disabled (IngressRoute managed in resources/) -------------
+        ingress:
+          enabled: false
+
+        # -- Secret (use SOPS-managed existingSecret) --------------------------
+        secret:
+          existingSecret: authelia-credentials
+
+        # -- Main Authelia configuration ---------------------------------------
+        configMap:
+          theme: dark
+          default_2fa_method: ''
+          log:
+            level: info
+
+          # Authentication — file-based backend
+          # Users are defined in the SOPS secret key 'users_database.yml'
+          authentication_backend:
+            file:
+              enabled: true
+              path: '/secrets/internal/users_database.yml'
+              watch: true
+              password:
+                algorithm: argon2id
+
+          # Session — Redis (existing cluster)
+          session:
+            cookies:
+              - domain: cyphers.app
+                subdomain: authelia
+                default_redirection_url: https://authelia.cyphers.app
+            redis:
+              enabled: true
+              deploy: false
+              host: redis-master.redis.svc.cluster.local
+              port: 6379
+              database_index: 2
+
+          # Storage — PostgreSQL v17 (existing cluster)
+          # ⚠️  Pre-requisite: create DB 'authelia' and user 'authelia' on
+          #    postgres-v17-postgresql.postgres-v17.svc.cluster.local
+          storage:
+            postgres:
+              enabled: true
+              deploy: false
+              address: 'tcp://postgres-v17-postgresql.postgres-v17.svc.cluster.local:5432'
+              database: authelia
+              schema: public
+              username: authelia
+
+          # Access control — default two_factor for all routes
+          access_control:
+            default_policy: two_factor
+
+          # OIDC Provider
+          identity_providers:
+            oidc:
+              enabled: true
+              jwks:
+                - key_id: 'default'
+                  algorithm: 'RS256'
+                  use: 'sig'
+                  key:
+                    path: '/secrets/internal/oidc.jwk.RS256.pem'
+
+          # Notifications — SMTP (Gmail)
+          notifier:
+            smtp:
+              enabled: true
+              address: 'submission://smtp.gmail.com:587'
+              username: iamatulmgupta@gmail.com
+              sender: "Authelia <authelia@cyphers.app>"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: authelia
+  # ⚠️  MANUAL SYNC — review diff in ArgoCD UI before syncing
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -1,0 +1,25 @@
+# =============================================================================
+# Authelia — Resources Application (ArgoCD / Kustomize)
+# =============================================================================
+# Deploys SOPS-encrypted secrets and IngressRoute for Authelia.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authelia-resources
+  namespace: argocd
+  labels:
+    tier: security
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/authelia/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: authelia
+  # ⚠️  MANUAL SYNC — review diff in ArgoCD UI before syncing
+  syncPolicy: {}
