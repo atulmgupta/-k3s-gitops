@@ -24,6 +24,6 @@ spec:
       services:
         - name: gotify
           namespace: gotify
-          port: 80
+          port: 8080
   tls:
     secretName: production-cyphers-app-tls
