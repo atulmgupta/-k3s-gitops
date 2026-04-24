@@ -1,8 +1,5 @@
 # =============================================================================
-# VitaSync v2 — Helm Application (ArgoCD)
-# =============================================================================
-# Complete platform overhaul: auth, admin portal, design system.
-# Chart 0.4.0+ with admin ingress, SMTP, self-registration.
+# VitaSync ΓÇö Helm Application (ArgoCD)
 # =============================================================================
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -17,7 +14,7 @@ spec:
   source:
     repoURL: ghcr.io/biosync-io/charts
     chart: vitasync
-    targetRevision: "2.25.0-rc.feature-user-boundaries.2e49b8a"
+    targetRevision: "2.24.5"
     helm:
       releaseName: vitasync
       valuesObject:
@@ -69,19 +66,18 @@ spec:
           ADMIN_WORKSPACE_SLUG: default
           INTERNAL_API_URL: http://vitasync-api.vitasync.svc.cluster.local:3001
           OAUTH_REDIRECT_BASE_URL: https://vitasync.cyphers.app
-          NEXT_PUBLIC_API_URL: https://api.vitasync.cyphers.app
 
         externalPostgresql:
           host: postgres-v17-postgresql.postgres-v17.svc.cluster.local
           port: 5432
           database: vitasync
           username: vitasync
-          password: ""
+          password: MANAGED_VIA_SOPS
 
         externalRedis:
           host: redis-master.redis.svc.cluster.local
           port: 6379
-          password: ""
+          password: MANAGED_VIA_SOPS
 
         postgresql:
           enabled: false
@@ -90,18 +86,6 @@ spec:
 
         secrets:
           existingSecret: vitasync-secrets
-          ALLOW_SELF_REGISTRATION: "false"
-
-        ingress:
-          enabled: false
-          admin:
-            enabled: true
-            host: admin.vitasync.cyphers.app
-            rateLimit:
-              enabled: true
-              average: 30
-              burst: 50
-              period: "1m"
 
         ingressRoute:
           enabled: false
@@ -109,15 +93,12 @@ spec:
         migrations:
           enabled: true
 
+        ingress:
+          enabled: false
+
   destination:
     server: https://kubernetes.default.svc
     namespace: vitasync
-  ignoreDifferences:
-    - group: ""
-      kind: Secret
-      jsonPointers:
-        - /data
-        - /stringData
   syncPolicy:
     automated:
       prune: true
@@ -125,4 +106,3 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-      - RespectIgnoreDifferences=true
