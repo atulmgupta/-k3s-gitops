@@ -42,6 +42,10 @@ spec:
                     cpu: "2"
                     memory: 4Gi
 
+        controllerServiceAccount:
+          name: arc-controller-gha-rs-controller
+          namespace: arc-systems
+
         maxRunners: 3
         minRunners: 0
   destination:
