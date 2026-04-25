@@ -1,0 +1,53 @@
+# =============================================================================
+# ARC Runner — GitHub Actions self-hosted runner scale set
+# =============================================================================
+# Org-level runner for ev-dev-labs. Uses Docker-in-Docker for container builds.
+# Workflows use: runs-on: arc-runner
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: arc-runner
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/actions/actions-runner-controller-charts
+    chart: gha-runner-scale-set
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: arc-runner
+      valuesObject:
+        githubConfigUrl: https://github.com/ev-dev-labs
+        githubConfigSecret: arc-github-app
+        runnerScaleSetName: arc-runner
+
+        containerMode:
+          type: dind
+
+        template:
+          spec:
+            containers:
+              - name: runner
+                image: ghcr.io/actions/actions-runner:latest
+                command: ["/home/runner/run.sh"]
+                resources:
+                  requests:
+                    cpu: 500m
+                    memory: 1Gi
+                  limits:
+                    cpu: "2"
+                    memory: 4Gi
+
+        maxRunners: 3
+        minRunners: 0
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: arc-runners
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

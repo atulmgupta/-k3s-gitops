@@ -260,8 +260,8 @@ spec:
             - kind: Rule
               match: "Host(`teslasync.cyphers.app`)"
               middlewares:
-                - name: authentik-auth
-                  namespace: authentik
+                - name: authelia-auth
+                  namespace: authelia
                 - name: default-headers
                   namespace: traefik
               services:

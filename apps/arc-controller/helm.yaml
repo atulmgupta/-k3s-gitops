@@ -1,0 +1,29 @@
+# =============================================================================
+# ARC Controller — GitHub Actions Runner Controller
+# =============================================================================
+# Manages self-hosted GitHub Actions runner scale sets on k3s.
+# Deploy this once — it watches for RunnerScaleSet CRs cluster-wide.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: arc-controller
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/actions/actions-runner-controller-charts
+    chart: gha-runner-scale-set-controller
+    targetRevision: "0.*.*"
+    helm:
+      releaseName: arc-controller
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: arc-systems
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
