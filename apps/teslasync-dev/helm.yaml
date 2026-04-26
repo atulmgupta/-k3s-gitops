@@ -114,6 +114,7 @@ spec:
 
         fleetTelemetry:
           enabled: false  # don't deploy the server — shares vehicle, can't bind same host
+          host: "telemetry.cyphers.app"
           topicBase: "telemetry"
           batchMs: 100
           staleTimeout: "15m"
@@ -121,6 +122,9 @@ spec:
           snapshotWriteInterval: "1s"
           cleanupInterval: "2m"
           staleSessionTimeout: "5m"
+          external:
+            host: "telemetry.cyphers.app"
+            port: 4443
 
         exportWorker:
           enabled: true
