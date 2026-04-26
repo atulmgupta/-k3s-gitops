@@ -113,7 +113,14 @@ spec:
             type: ClusterIP
 
         fleetTelemetry:
-          enabled: false  # disable for dev — shares vehicle, can't bind same host
+          enabled: false  # don't deploy the server — shares vehicle, can't bind same host
+          topicBase: "telemetry"
+          batchMs: 100
+          staleTimeout: "15m"
+          fallbackPollInterval: "5m"
+          snapshotWriteInterval: "1s"
+          cleanupInterval: "2m"
+          staleSessionTimeout: "5m"
 
         exportWorker:
           enabled: true
@@ -193,6 +200,8 @@ spec:
 
         mqtt:
           enabled: false
+          clientId: "teslasync-dev"
+          prefix: "teslasync"
           external:
             host: mqtt-emqx.mqtt.svc.cluster.local
             port: 1883
