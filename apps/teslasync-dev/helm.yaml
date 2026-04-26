@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gbf100f9e"
+    targetRevision: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gd2a7bcbe"
     helm:
       releaseName: teslasync-dev
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gbf100f9e"
+          tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gd2a7bcbe"
 
         secrets:
           existingSecret: teslasync-dev
@@ -89,7 +89,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gbf100f9e"
+            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gd2a7bcbe"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -122,7 +122,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gbf100f9e"
+            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gd2a7bcbe"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -138,7 +138,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gbf100f9e"
+            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gd2a7bcbe"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -154,7 +154,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gbf100f9e"
+            tag: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.gd2a7bcbe"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
