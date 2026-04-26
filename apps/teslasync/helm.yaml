@@ -43,7 +43,7 @@ spec:
           logLevel: info
           pollInterval: 30s
           sleepPollMultiplier: 4
-          authentikURL: http://authentik-server.authentik.svc.cluster.local/application/o/wZacMmH9lDFSCE1aWLC90PV2x6DIESIshUTJ5SqM/jwks/
+          authentikURL: ""
           authentikHMACKey: ""
           googleMaps:
             apiKey: ""
