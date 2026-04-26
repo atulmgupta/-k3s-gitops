@@ -39,7 +39,7 @@ spec:
           outposts:
             container_image_base: "ghcr.io/goauthentik/%(type)s:%(version)s"
           postgresql:
-            host: postgres-postgresql.postgres.svc.cluster.local
+            host: postgres-v17-postgresql.postgres-v17.svc.cluster.local
             name: authentik
             port: 5432
             user: authentik
