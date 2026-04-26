@@ -43,7 +43,7 @@ spec:
           logLevel: info
           pollInterval: 30s
           sleepPollMultiplier: 4
-          authentikURL: ""
+          authentikURL: "http://authentik-server.authentik.svc.cluster.local/application/o/wZacMmH9lDFSCE1aWLC90PV2x6DIESIshUTJ5SqM/jwks/"
           authentikHMACKey: ""
           googleMaps:
             apiKey: ""
@@ -260,8 +260,8 @@ spec:
             - kind: Rule
               match: "Host(`teslasync-old.cyphers.app`)"
               middlewares:
-                - name: authelia-auth
-                  namespace: authelia
+                - name: authentik-auth
+                  namespace: authentik
                 - name: default-headers
                   namespace: traefik
               services:
