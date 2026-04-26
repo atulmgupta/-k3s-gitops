@@ -115,23 +115,26 @@ spec:
           access_control:
             default_policy: two_factor
 
-          # OIDC Provider — disabled until clients are configured
-          # Uncomment and add clients when ready to migrate apps from Authentik
-          # identity_providers:
-          #   oidc:
-          #     enabled: true
-          #     jwks:
-          #       - key_id: 'default'
-          #         algorithm: 'RS256'
-          #         use: 'sig'
-          #         key:
-          #           path: '/secrets/authelia-credentials/oidc.jwk.RS256.pem'
-          #     clients:
-          #       - client_id: 'example'
-          #         client_name: 'Example App'
-          #         client_secret: '$pbkdf2-sha512$...'  # generate with: authelia crypto hash generate pbkdf2
-          #         redirect_uris: ['https://app.cyphers.app/callback']
-          #         scopes: ['openid', 'profile', 'email']
+          identity_providers:
+            oidc:
+              enabled: true
+              jwks:
+                - key_id: 'default'
+                  algorithm: 'RS256'
+                  use: 'sig'
+                  key:
+                    path: '/secrets/authelia-credentials/oidc.jwk.RS256.pem'
+              clients:
+                - client_id: 'grafana'
+                  client_name: 'Grafana'
+                  client_secret: '$plaintext$iQX6cY28RsT59vhojnfKGNJedCzxA7Mr'
+                  redirect_uris:
+                    - 'https://grafana.cyphers.app/login/generic_oauth'
+                  scopes:
+                    - openid
+                    - profile
+                    - email
+                  authorization_policy: two_factor
 
           # Notifications — SMTP (Gmail)
           notifier:
