@@ -42,8 +42,7 @@ spec:
           logLevel: info
           pollInterval: 30s
           sleepPollMultiplier: 4
-          authentikURL: http://authentik-server.authentik.svc.cluster.local/application/o/wZacMmH9lDFSCE1aWLC90PV2x6DIESIshUTJ5SqM/jwks/
-          authentikHMACKey: ""
+          forwardAuthHeader: "X-Authentik-Username"
           googleMaps:
             apiKey: ""
           azureMaps:
@@ -168,6 +167,9 @@ spec:
           enabled: false
           maxConns: 25
           minConns: 5
+          connectTimeout: 5
+          statementTimeout: 30000
+          healthCheckPeriod: "5s"
           external:
             host: timescaledb.timescaledb.svc.cluster.local
             port: 5432
@@ -231,8 +233,8 @@ spec:
             - kind: Rule
               match: "Host(`teslasync.cyphers.app`)"
               middlewares:
-                - name: authelia-auth
-                  namespace: authelia
+                - name: authentik-auth
+                  namespace: authentik
                 - name: default-headers
                   namespace: traefik
               services:
