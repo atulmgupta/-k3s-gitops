@@ -38,7 +38,7 @@ spec:
 
         config:
           apiEndpoint: http://teslasync-api.teslasync.svc.cluster.local:8080
-          webEndpoint: https://teslasync.cyphers.app
+          webEndpoint: https://teslasync-old.cyphers.app
           browserApiBase: ""
           logLevel: info
           pollInterval: 30s
@@ -77,7 +77,7 @@ spec:
           apiBaseUrl: https://fleet-api.prd.na.vn.cloud.tesla.com
           authUrl: "https://auth.tesla.com"
           timeout: "30s"
-          redirectUri: https://teslasync.cyphers.app/api/v1/auth/callback
+          redirectUri: https://teslasync-old.cyphers.app/api/v1/auth/callback
 
         retention:
           signalHistoryDays: 15
@@ -241,7 +241,7 @@ spec:
             - websecure
           namespace: teslasync
           sseBypass:
-            match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/api/v1/events`)"
+            match: "Host(`teslasync-old.cyphers.app`) && PathPrefix(`/api/v1/events`)"
             middlewares:
               - name: default-headers
                 namespace: traefik
@@ -250,7 +250,7 @@ spec:
                 port: 80
           routes:
             - kind: Rule
-              match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/.well-known`)"
+              match: "Host(`teslasync-old.cyphers.app`) && PathPrefix(`/.well-known`)"
               middlewares:
                 - name: default-headers
                   namespace: traefik
@@ -258,7 +258,7 @@ spec:
                 - name: teslasync-web
                   port: 80
             - kind: Rule
-              match: "Host(`teslasync.cyphers.app`)"
+              match: "Host(`teslasync-old.cyphers.app`)"
               middlewares:
                 - name: authelia-auth
                   namespace: authelia
