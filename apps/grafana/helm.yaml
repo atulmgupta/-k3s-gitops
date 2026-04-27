@@ -24,13 +24,13 @@ spec:
         env:
           GF_SERVER_ROOT_URL: https://grafana.cyphers.app
           GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
-          GF_AUTH_GENERIC_OAUTH_NAME: Authelia
-          GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
-          GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: iQX6cY28RsT59vhojnfKGNJedCzxA7Mr
+          GF_AUTH_GENERIC_OAUTH_NAME: Authentik
+          GF_AUTH_GENERIC_OAUTH_CLIENT_ID: MHSXvhjL825izHRv3Bxdagn3yP8xOrx2u3eUB7mx
+          GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: oQ5P8Uy8uGpMtuLUvfsYlpWdG52RUOeLwkmTzxlNcftcuVtYjxecHD5esjI38gvyNfBetiiUAgaVPMRK66VMRHHaa6VpWlGQcVDhnAeT9xqrGl9FohFtFASdQiuSi0CY
           GF_AUTH_GENERIC_OAUTH_SCOPES: openid profile email
-          GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://authelia.cyphers.app/api/oidc/authorization
-          GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://authelia.authelia.svc.cluster.local/api/oidc/token
-          GF_AUTH_GENERIC_OAUTH_API_URL: http://authelia.authelia.svc.cluster.local/api/oidc/userinfo
+          GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://authentik.cyphers.app/application/o/authorize/
+          GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://authentik-server.authentik.svc.cluster.local/application/o/token/
+          GF_AUTH_GENERIC_OAUTH_API_URL: http://authentik-server.authentik.svc.cluster.local/application/o/userinfo/
           GF_AUTH_GENERIC_OAUTH_LOGIN_ATTRIBUTE_PATH: preferred_username
           GF_AUTH_GENERIC_OAUTH_NAME_ATTRIBUTE_PATH: name
           GF_AUTH_GENERIC_OAUTH_EMAIL_ATTRIBUTE_PATH: email
