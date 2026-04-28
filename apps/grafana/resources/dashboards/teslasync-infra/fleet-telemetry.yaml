@@ -70,7 +70,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 2,
@@ -103,7 +103,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 3,
@@ -135,7 +135,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 4,
@@ -167,7 +167,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 5,
@@ -201,7 +201,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 6,
@@ -235,7 +235,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 200,
@@ -280,7 +280,7 @@ data:
               "refId": "B"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 8,
@@ -312,7 +312,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 9,
@@ -349,7 +349,7 @@ data:
               "refId": "B"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 10,
@@ -381,7 +381,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 300,
@@ -426,7 +426,7 @@ data:
               "refId": "B"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 12,
@@ -458,7 +458,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 400,
@@ -508,7 +508,7 @@ data:
               "refId": "C"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 14,
@@ -540,7 +540,7 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         },
         {
           "id": 15,
@@ -572,11 +572,17 @@ data:
               "refId": "A"
             }
           ],
-          "datasource": { "type": "prometheus", "uid": "prometheus" }
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" }
         }
       ],
       "templating": {
-        "list": []
+        "list": [
+          {
+            "name": "DS_PROMETHEUS",
+            "type": "datasource",
+            "query": "prometheus",
+            "current": { "text": "Prometheus", "value": "prometheus" }
+          }
+        ]
       }
     }
-    

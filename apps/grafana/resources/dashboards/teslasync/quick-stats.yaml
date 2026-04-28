@@ -135,7 +135,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT distance AS \"Distance\" FROM fn_driving_stats(${vehicle_id}::bigint, 'today')",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -195,7 +195,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT drives AS \"Drives\" FROM fn_driving_stats(${vehicle_id}::bigint, 'today')",
+              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -255,7 +255,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT energy_kwh AS \"Energy (kWh)\" FROM fn_driving_stats(${vehicle_id}::bigint, 'today')",
+              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -316,7 +316,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT drive_min AS \"Drive Min\" FROM fn_driving_stats(${vehicle_id}::bigint, 'today')",
+              "rawSql": "SELECT COALESCE(ROUND(SUM(duration_min)::numeric, 0), 0) AS \"Drive Min\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -389,7 +389,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT distance AS \"Total Distance\" FROM fn_driving_stats(${vehicle_id}::bigint, 'all')",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Total Distance\" FROM drives WHERE vehicle_id = ${vehicle_id}",
               "refId": "A"
             }
           ],
@@ -449,7 +449,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT drives AS \"Total Drives\" FROM fn_driving_stats(${vehicle_id}::bigint, 'all')",
+              "rawSql": "SELECT COUNT(*) AS \"Total Drives\" FROM drives WHERE vehicle_id = ${vehicle_id}",
               "refId": "A"
             }
           ],
@@ -509,7 +509,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT energy_kwh AS \"Total Energy (kWh)\" FROM fn_driving_stats(${vehicle_id}::bigint, 'all')",
+              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Total Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id}",
               "refId": "A"
             }
           ],
@@ -643,7 +643,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT distance AS \"Distance\" FROM fn_driving_stats(${vehicle_id}::bigint, 'month')",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -703,7 +703,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT drives AS \"Drives\" FROM fn_driving_stats(${vehicle_id}::bigint, 'month')",
+              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -763,7 +763,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT energy_kwh AS \"Energy (kWh)\" FROM fn_driving_stats(${vehicle_id}::bigint, 'month')",
+              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -824,7 +824,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT ROUND(COALESCE(SUM(cost), 0)::numeric, 2) AS \"Cost ($)\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND start_date >= DATE_TRUNC('month', NOW())",
+              "rawSql": "SELECT ROUND(COALESCE(SUM(cost), 0)::numeric, 2) AS \"Cost ($)\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -897,7 +897,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT distance AS \"Distance\" FROM fn_driving_stats(${vehicle_id}::bigint, 'week')",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],
@@ -957,7 +957,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT drives AS \"Drives\" FROM fn_driving_stats(${vehicle_id}::bigint, 'week')",
+              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],
@@ -1017,7 +1017,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT energy_kwh AS \"Energy (kWh)\" FROM fn_driving_stats(${vehicle_id}::bigint, 'week')",
+              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],
@@ -1077,7 +1077,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COUNT(*) AS \"Charges\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND start_date >= DATE_TRUNC('week', NOW())",
+              "rawSql": "SELECT COUNT(*) AS \"Charges\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],
@@ -1128,4 +1128,3 @@ data:
       "version": 1,
       "weekStart": ""
     }
-    

@@ -16,14 +16,14 @@ data:
           {
             "builtIn": 1,
             "datasource": {
-              "type": "grafana",
+              "kind": "grafana",
               "uid": "-- Grafana --"
             },
             "enable": true,
             "hide": true,
             "iconColor": "rgba(0, 211, 255, 1)",
             "name": "Annotations & Alerts",
-            "type": "dashboard"
+            "kind": "dashboard"
           }
         ]
       },
@@ -41,7 +41,7 @@ data:
           "targetBlank": false,
           "title": "◀ Prev",
           "tooltip": "TeslaSync 🏠 Home",
-          "type": "link",
+          "kind": "link",
           "url": "/d/teslasync-home"
         },
         {
@@ -54,7 +54,7 @@ data:
           ],
           "targetBlank": false,
           "title": "⚡ TeslaSync",
-          "type": "dashboards"
+          "kind": "dashboards"
         },
         {
           "asDropdown": false,
@@ -65,13 +65,13 @@ data:
           "targetBlank": false,
           "title": "Next ▶",
           "tooltip": "TeslaSync 🔄 Charging vs Driving",
-          "type": "link",
+          "kind": "link",
           "url": "/d/teslasync-charging-driving"
         }
       ],
       "panels": [
         {
-          "type": "row",
+          "kind": "row",
           "title": "Overview",
           "gridPos": {
             "x": 0,
@@ -85,7 +85,7 @@ data:
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -129,7 +129,7 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
@@ -140,12 +140,12 @@ data:
             }
           ],
           "title": "Active Rules",
-          "type": "stat",
+          "kind": "stat",
           "transparent": false
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -189,7 +189,7 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
@@ -200,12 +200,12 @@ data:
             }
           ],
           "title": "Total Alerts",
-          "type": "stat",
+          "kind": "stat",
           "transparent": false
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -249,7 +249,7 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
@@ -260,12 +260,12 @@ data:
             }
           ],
           "title": "Unacknowledged",
-          "type": "stat",
+          "kind": "stat",
           "transparent": false
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -309,7 +309,7 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
@@ -320,11 +320,11 @@ data:
             }
           ],
           "title": "Notification Success %",
-          "type": "stat",
+          "kind": "stat",
           "transparent": false
         },
         {
-          "type": "row",
+          "kind": "row",
           "title": "Alerts Timeline",
           "gridPos": {
             "x": 0,
@@ -338,7 +338,7 @@ data:
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -388,7 +388,7 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
@@ -399,11 +399,11 @@ data:
             }
           ],
           "title": "Alerts Over Time",
-          "type": "timeseries",
+          "kind": "timeseries",
           "transparent": false
         },
         {
-          "type": "row",
+          "kind": "row",
           "title": "Alert Rules",
           "gridPos": {
             "x": 0,
@@ -417,7 +417,7 @@ data:
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -455,7 +455,7 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
@@ -466,11 +466,11 @@ data:
             }
           ],
           "title": "Alert Rules",
-          "type": "table",
+          "kind": "table",
           "transparent": false
         },
         {
-          "type": "row",
+          "kind": "row",
           "title": "Recent Alerts",
           "gridPos": {
             "x": 0,
@@ -484,7 +484,7 @@ data:
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -522,7 +522,7 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
@@ -533,11 +533,11 @@ data:
             }
           ],
           "title": "Recent Alerts",
-          "type": "table",
+          "kind": "table",
           "transparent": false
         },
         {
-          "type": "row",
+          "kind": "row",
           "title": "Notification Logs",
           "gridPos": {
             "x": 0,
@@ -551,7 +551,7 @@ data:
         },
         {
           "datasource": {
-            "type": "grafana-postgresql-datasource",
+            "kind": "grafana-postgresql-datasource",
             "uid": "DS_TESLASYNC_POSTGRESQL"
           },
           "fieldConfig": {
@@ -589,18 +589,18 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "grafana-postgresql-datasource",
+                "kind": "grafana-postgresql-datasource",
                 "uid": "DS_TESLASYNC_POSTGRESQL"
               },
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT nl.created_at AS \"Time\", nc.name AS \"Channel\", nc.type AS \"Type\", nl.status AS \"Status\", nl.error AS \"Error\" FROM notification_logs nl LEFT JOIN notification_channels nc ON nl.channel_id = nc.id WHERE $__timeFilter(nl.created_at) ORDER BY nl.created_at DESC LIMIT 50",
+              "rawSql": "SELECT nl.created_at AS \"Time\", nc.name AS \"Channel\", nc.kind AS \"Type\", nl.status AS \"Status\", nl.error AS \"Error\" FROM notification_logs nl LEFT JOIN notification_channels nc ON nl.channel_id = nc.id WHERE $__timeFilter(nl.created_at) ORDER BY nl.created_at DESC LIMIT 50",
               "refId": "A"
             }
           ],
           "title": "Notification Logs",
-          "type": "table",
+          "kind": "table",
           "transparent": false
         }
       ],
@@ -617,7 +617,7 @@ data:
               "value": "1"
             },
             "datasource": {
-              "type": "grafana-postgresql-datasource",
+              "kind": "grafana-postgresql-datasource",
               "uid": "DS_TESLASYNC_POSTGRESQL"
             },
             "definition": "SELECT id AS __value, display_name AS __text FROM vehicles ORDER BY display_name",
@@ -631,7 +631,7 @@ data:
             "regex": "",
             "skipUrlSync": false,
             "sort": 0,
-            "type": "query"
+            "kind": "query"
           }
         ]
       },
@@ -646,4 +646,3 @@ data:
       "version": 1,
       "weekStart": ""
     }
-    

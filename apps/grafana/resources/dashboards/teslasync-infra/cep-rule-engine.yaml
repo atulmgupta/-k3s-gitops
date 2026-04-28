@@ -38,7 +38,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -75,7 +75,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -113,7 +113,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -159,7 +159,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -197,7 +197,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -243,7 +243,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -280,7 +280,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -311,7 +311,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -352,7 +352,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -384,7 +384,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -415,7 +415,7 @@ data:
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "targets": [
             {
@@ -506,4 +506,3 @@ data:
         }
       ]
     }
-    

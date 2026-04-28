@@ -100,7 +100,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_telemetry_messages_received_total[5m])",
               "legendFormat": "msg/s",
@@ -111,7 +111,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -163,7 +163,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_streaming_vehicles_active",
               "legendFormat": "Vehicles",
@@ -174,7 +174,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -244,7 +244,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_mqtt_connected",
               "legendFormat": "MQTT",
@@ -255,7 +255,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -307,7 +307,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_sse_connections_active",
               "legendFormat": "SSE Connections",
@@ -318,7 +318,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -376,7 +376,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_signal_store_entries",
               "legendFormat": "Entries",
@@ -387,7 +387,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -471,7 +471,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_telemetry_messages_received_total[5m])",
               "legendFormat": "Messages Received",
@@ -482,7 +482,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -533,7 +533,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_mqtt_messages_published_total[5m])",
               "legendFormat": "MQTT Published",
@@ -544,7 +544,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -616,7 +616,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_telemetry_processing_duration_seconds_bucket[5m])))",
               "legendFormat": "P95 Latency",
@@ -627,7 +627,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -699,7 +699,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_signal_flush_duration_seconds_bucket[5m])))",
               "legendFormat": "P95 Flush Duration",
@@ -710,7 +710,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -794,7 +794,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_mqtt_reconnects_total[5m])",
               "legendFormat": "Reconnects/s",
@@ -805,7 +805,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -882,7 +882,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_streaming_vehicles_active",
               "legendFormat": "Streaming",
@@ -893,7 +893,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         }
       ],
@@ -942,4 +942,3 @@ data:
         }
       ]
     }
-    

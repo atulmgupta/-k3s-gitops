@@ -111,7 +111,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "sum by (status) (rate(teslasync_http_requests_total[5m]))",
               "legendFormat": "{{status}}",
@@ -122,7 +122,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -193,7 +193,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "histogram_quantile(0.5, sum by (le) (rate(teslasync_http_request_duration_seconds_bucket[5m])))",
               "legendFormat": "P50",
@@ -204,7 +204,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_http_request_duration_seconds_bucket[5m])))",
               "legendFormat": "P95",
@@ -215,7 +215,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "histogram_quantile(0.99, sum by (le) (rate(teslasync_http_request_duration_seconds_bucket[5m])))",
               "legendFormat": "P99",
@@ -226,7 +226,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -286,7 +286,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "sum(rate(teslasync_http_requests_total{status=~\"5..\"}[5m])) / sum(rate(teslasync_http_requests_total[5m])) * 100",
               "legendFormat": "Error Rate",
@@ -297,7 +297,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -368,7 +368,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_http_response_size_bytes_bucket[5m])))",
               "legendFormat": "P95 Response Size",
@@ -379,7 +379,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -451,7 +451,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "sum by (category) (teslasync_api_errors_total)",
               "legendFormat": "{{category}}",
@@ -462,7 +462,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -557,7 +557,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "topk(10, sum by (path) (rate(teslasync_http_requests_total[5m])))",
               "legendFormat": "{{path}}",
@@ -568,7 +568,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -639,7 +639,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "sum by (category) (rate(teslasync_api_errors_total[5m]))",
               "legendFormat": "{{category}}",
@@ -650,7 +650,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -734,7 +734,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "sum by (method) (rate(teslasync_http_requests_total[5m]))",
               "legendFormat": "{{method}}",
@@ -745,7 +745,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -817,7 +817,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_api_errors_total[5m])",
               "legendFormat": "Rate Limit Exceeded",
@@ -828,7 +828,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         }
       ],
@@ -877,4 +877,3 @@ data:
         }
       ]
     }
-    

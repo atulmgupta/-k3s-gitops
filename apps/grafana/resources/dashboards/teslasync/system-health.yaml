@@ -448,7 +448,7 @@ data:
               "editorMode": "code",
               "format": "time_series",
               "rawQuery": true,
-              "rawSql": "SELECT date_trunc('hour', created_at) AS time, COUNT(*) AS \"API Calls\" FROM api_call_logs WHERE $__timeFilter(created_at) GROUP BY date_trunc('hour', created_at) ORDER BY time",
+              "rawSql": "SELECT date_trunc('hour', ts) AS time, COUNT(*) AS \"API Calls\" FROM api_call_logs WHERE $__timeFilter(ts) GROUP BY date_trunc('hour', ts) ORDER BY time",
               "refId": "A"
             }
           ],
@@ -472,7 +472,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "fieldConfig": {
             "defaults": {
@@ -522,7 +522,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "editorMode": "code",
               "expr": "rate(http_requests_total[5m])",
@@ -536,7 +536,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           },
           "fieldConfig": {
             "defaults": {
@@ -586,7 +586,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "editorMode": "code",
               "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
@@ -656,7 +656,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT created_at AS \"Time\", action AS \"Action\", resource AS \"Resource\", details AS \"Details\", ip AS \"IP\" FROM audit_logs ORDER BY created_at DESC LIMIT 30",
+              "rawSql": "SELECT ts AS \"Time\", action AS \"Action\", entity_type AS \"Resource\", detail AS \"Details\", actor AS \"IP\" FROM audit_logs ORDER BY ts DESC LIMIT 30",
               "refId": "A"
             }
           ],
@@ -707,4 +707,3 @@ data:
       "version": 1,
       "weekStart": ""
     }
-    

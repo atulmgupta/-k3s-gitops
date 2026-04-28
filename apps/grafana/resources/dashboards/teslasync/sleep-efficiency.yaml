@@ -133,7 +133,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT * FROM fn_sleep_efficiency(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
+              "rawSql": "SELECT vd.start_date AS \"time\",\n  ROUND(vd.duration_hours::numeric, 1) AS duration_hours,\n  ROUND(vd.battery_lost::numeric, 1) AS soc_loss\nFROM vampire_drain_events vd\nWHERE vd.vehicle_id = ${vehicle_id}\n  AND vd.start_date >= $__timeFrom()::timestamptz\n  AND vd.start_date <= $__timeTo()::timestamptz\nORDER BY vd.start_date",
               "refId": "A"
             }
           ],
@@ -209,7 +209,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT * FROM fn_sleep_efficiency(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
+              "rawSql": "SELECT vd.start_date AS \"time\",\n  ROUND(vd.duration_hours::numeric, 1) AS duration_hours,\n  ROUND(vd.battery_lost::numeric, 1) AS soc_loss\nFROM vampire_drain_events vd\nWHERE vd.vehicle_id = ${vehicle_id}\n  AND vd.start_date >= $__timeFrom()::timestamptz\n  AND vd.start_date <= $__timeTo()::timestamptz\nORDER BY vd.start_date",
               "refId": "A"
             }
           ],
@@ -364,7 +364,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT * FROM fn_sleep_efficiency(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
+              "rawSql": "SELECT vd.start_date AS \"time\",\n  ROUND(vd.duration_hours::numeric, 1) AS duration_hours,\n  ROUND(vd.battery_lost::numeric, 1) AS soc_loss\nFROM vampire_drain_events vd\nWHERE vd.vehicle_id = ${vehicle_id}\n  AND vd.start_date >= $__timeFrom()::timestamptz\n  AND vd.start_date <= $__timeTo()::timestamptz\nORDER BY vd.start_date",
               "refId": "A"
             }
           ],
@@ -457,7 +457,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT * FROM fn_sleep_efficiency(${vehicle_id}::bigint, $__timeFrom()::timestamptz, $__timeTo()::timestamptz)",
+              "rawSql": "SELECT vd.start_date AS \"time\",\n  ROUND(vd.duration_hours::numeric, 1) AS duration_hours,\n  ROUND(vd.battery_lost::numeric, 1) AS soc_loss\nFROM vampire_drain_events vd\nWHERE vd.vehicle_id = ${vehicle_id}\n  AND vd.start_date >= $__timeFrom()::timestamptz\n  AND vd.start_date <= $__timeTo()::timestamptz\nORDER BY vd.start_date",
               "refId": "A"
             }
           ],
@@ -508,4 +508,3 @@ data:
       "version": 1,
       "weekStart": ""
     }
-    

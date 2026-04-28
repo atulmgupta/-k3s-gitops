@@ -92,7 +92,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_drive_sessions_active",
               "legendFormat": "Active Drives",
@@ -103,7 +103,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -155,7 +155,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_charge_sessions_active",
               "legendFormat": "Active Charges",
@@ -166,7 +166,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -218,7 +218,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_drive_sessions_completed_total",
               "legendFormat": "Drives",
@@ -229,7 +229,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -281,7 +281,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_charge_sessions_completed_total",
               "legendFormat": "Charges",
@@ -292,7 +292,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -344,7 +344,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_total_distance_km",
               "legendFormat": "Distance",
@@ -355,7 +355,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -407,7 +407,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_total_energy_kwh",
               "legendFormat": "Energy",
@@ -418,7 +418,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -503,7 +503,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_drive_sessions_completed_total[5m])",
               "legendFormat": "Drives Completed",
@@ -514,7 +514,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -586,7 +586,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_charge_sessions_completed_total[5m])",
               "legendFormat": "Charges Completed",
@@ -597,7 +597,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -662,7 +662,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_vehicles_registered",
               "legendFormat": "Vehicles",
@@ -673,7 +673,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -722,7 +722,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_streaming_vehicles_active",
               "legendFormat": "Streaming",
@@ -733,7 +733,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -804,7 +804,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "sum by (result) (rate(teslasync_geocoding_total[5m]))",
               "legendFormat": "{{result}}",
@@ -815,7 +815,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -900,7 +900,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "histogram_quantile(0.95, sum by (le) (rate(teslasync_geocoding_duration_seconds_bucket[5m])))",
               "legendFormat": "P95 Geocoding",
@@ -911,7 +911,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -970,7 +970,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "teslasync_address_backfill_completed_total / (teslasync_address_backfill_completed_total + teslasync_address_backfill_remaining) * 100",
               "legendFormat": "Backfill %",
@@ -981,7 +981,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         },
         {
@@ -1052,7 +1052,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "DS_TESLASYNC_PROMETHEUS"
               },
               "expr": "rate(teslasync_address_backfill_completed_total[5m])",
               "legendFormat": "Backfills/s",
@@ -1063,7 +1063,7 @@ data:
           ],
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "DS_TESLASYNC_PROMETHEUS"
           }
         }
       ],
@@ -1112,4 +1112,3 @@ data:
         }
       ]
     }
-    
