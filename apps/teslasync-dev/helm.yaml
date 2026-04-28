@@ -17,7 +17,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.g04b0dd1c"
+    targetRevision: "0.33.0-rc.db-refactor-timescaledb-migration-mo-jsonb-at-all.g585c1f79"
     helm:
       releaseName: teslasync-dev
       valuesObject:
