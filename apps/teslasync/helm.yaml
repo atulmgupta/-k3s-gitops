@@ -78,7 +78,7 @@ spec:
           redirectUri: https://teslasync.cyphers.app/api/v1/auth/callback
 
         retention:
-          # signalHistoryDays: 15
+          signalHistoryDays: 15
 
         gasPrice:
           enabled: true
