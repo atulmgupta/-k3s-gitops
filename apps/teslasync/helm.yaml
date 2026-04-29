@@ -1,9 +1,8 @@
 # =============================================================================
 # TeslaSync — Helm Application (ArgoCD)
 # =============================================================================
-# Real-time Tesla vehicle data platform. Chart deploys: API, Web, Command Proxy,
-# Fleet Telemetry, Export Worker, Notification Worker, Automation Worker.
-# Secrets managed via SOPS in resources.yaml using existingSecret.
+# Real-time Tesla vehicle data platform using the TimescaleDB-backed chart.
+# Secrets are managed via SOPS in resources.yaml using existingSecret.
 # =============================================================================
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -18,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.32.5"
+    targetRevision: "0.33.0-rc.db-refactor-gpt-audit.g3a4571ad"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.32.5"
+          tag: "0.33.0-rc.db-refactor-gpt-audit.g3a4571ad"
 
         secrets:
           existingSecret: teslasync
@@ -38,13 +37,12 @@ spec:
 
         config:
           apiEndpoint: http://teslasync-api.teslasync.svc.cluster.local:8080
-          webEndpoint: https://teslasync-old.cyphers.app
+          webEndpoint: https://teslasync.cyphers.app
           browserApiBase: ""
           logLevel: info
           pollInterval: 30s
           sleepPollMultiplier: 4
-          authentikURL: "http://authentik-server.authentik.svc.cluster.local/application/o/wZacMmH9lDFSCE1aWLC90PV2x6DIESIshUTJ5SqM/jwks/"
-          authentikHMACKey: ""
+          forwardAuthHeader: ""
           googleMaps:
             apiKey: ""
           azureMaps:
@@ -77,10 +75,10 @@ spec:
           apiBaseUrl: https://fleet-api.prd.na.vn.cloud.tesla.com
           authUrl: "https://auth.tesla.com"
           timeout: "30s"
-          redirectUri: https://teslasync-old.cyphers.app/api/v1/auth/callback
+          redirectUri: https://teslasync.cyphers.app/api/v1/auth/callback
 
         retention:
-          signalHistoryDays: 15
+          # signalHistoryDays: 15
 
         gasPrice:
           enabled: true
@@ -91,14 +89,15 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.32.5"
+            tag: "0.33.0-rc.db-refactor-gpt-audit.g3a4571ad"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
             limits: { cpu: 200m, memory: 128Mi }
           service:
             port: 80
-            type: ClusterIP
+            type: LoadBalancer
+            loadBalancerIP: "192.168.68.220"
 
         commandProxy:
           enabled: true
@@ -119,8 +118,8 @@ spec:
           host: telemetry.cyphers.app
           image: tesla/fleet-telemetry:latest
           batchMs: 100
-          fallbackPollInterval: 60s
-          staleTimeout: 5m
+          fallbackPollInterval: "5m"
+          staleTimeout: "15m"
           snapshotWriteInterval: "1s"
           cleanupInterval: "2m"
           staleSessionTimeout: "5m"
@@ -152,7 +151,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.32.5"
+            tag: "0.33.0-rc.db-refactor-gpt-audit.g3a4571ad"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -168,7 +167,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.32.5"
+            tag: "0.33.0-rc.db-refactor-gpt-audit.g3a4571ad"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -184,7 +183,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.32.5"
+            tag: "0.33.0-rc.db-refactor-gpt-audit.g3a4571ad"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -197,29 +196,34 @@ spec:
           enabled: false
           maxConns: 25
           minConns: 5
+          connectTimeout: 5
+          statementTimeout: 30000
+          healthCheckPeriod: "5s"
           external:
-            host: postgres-v17-postgresql.postgres-v17.svc.cluster.local
+            host: timescaledb.timescaledb.svc.cluster.local
             port: 5432
-            database: teslasync_v2
-            username: teslasync_v2
+            database: teslasync
+            username: teslasync
             sslMode: disable
 
         redis:
           enabled: false
-          db: 0
+          db: 1
           external:
             host: redis-master.redis.svc.cluster.local
             port: 6379
 
         mongodb:
           enabled: false
-          database: teslasync
+          database: teslasync_dev
           ttlDays: 7
           external:
             uri: "external"
 
         mqtt:
           enabled: false
+          clientId: "teslasync"
+          prefix: "teslasync"
           external:
             host: mqtt-emqx.mqtt.svc.cluster.local
             port: 1883
@@ -240,17 +244,9 @@ spec:
           entryPoints:
             - websecure
           namespace: teslasync
-          sseBypass:
-            match: "Host(`teslasync-old.cyphers.app`) && PathPrefix(`/api/v1/events`)"
-            middlewares:
-              - name: default-headers
-                namespace: traefik
-            services:
-              - name: teslasync-web
-                port: 80
           routes:
             - kind: Rule
-              match: "Host(`teslasync-old.cyphers.app`) && PathPrefix(`/.well-known`)"
+              match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/.well-known`)"
               middlewares:
                 - name: default-headers
                   namespace: traefik
@@ -258,7 +254,7 @@ spec:
                 - name: teslasync-web
                   port: 80
             - kind: Rule
-              match: "Host(`teslasync-old.cyphers.app`)"
+              match: "Host(`teslasync.cyphers.app`)"
               middlewares:
                 - name: authentik-auth
                   namespace: authentik
