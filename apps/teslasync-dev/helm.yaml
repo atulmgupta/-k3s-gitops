@@ -236,16 +236,16 @@ spec:
               services:
                 - name: teslasync-dev-web
                   port: 80
-            - kind: Rule
-              match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/api`)"
-              middlewares:
-                - name: authentik-auth
-                  namespace: authentik
-                - name: default-headers
-                  namespace: traefik
-              services:
-                - name: teslasync-dev-api
-                  port: 8080
+            # - kind: Rule
+            #   match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/api`)"
+            #   middlewares:
+            #     - name: authentik-auth
+            #       namespace: authentik
+            #     - name: default-headers
+            #       namespace: traefik
+            #   services:
+            #     - name: teslasync-dev-api
+            #       port: 8080
             - kind: Rule
               match: "Host(`teslasync.cyphers.app`)"
               middlewares:
