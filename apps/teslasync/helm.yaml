@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.32.8"
+    targetRevision: "0.32.9-rc.fix-automation-worker-build.g2ee6f7b0"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.32.8"
+          tag: "0.32.9-rc.fix-automation-worker-build.g2ee6f7b0"
 
         secrets:
           existingSecret: teslasync
@@ -36,7 +36,7 @@ spec:
           jwtSecret: ""
 
         # Web Push (VAPID) — Phase 40 / Prompt 52
-        # Chart 0.32.8 has no `webPush` value-block, but every deployment uses
+        # Chart 0.32.9-rc.fix-automation-worker-build.g2ee6f7b0 has no `webPush` value-block, but every deployment uses
         # `envFrom: secretRef: existingSecret`, so all 3 VAPID values are
         # delivered via the SOPS-managed Secret as env vars:
         #   TESLASYNC_VAPID_PUBLIC_KEY, TESLASYNC_VAPID_PRIVATE_KEY, TESLASYNC_VAPID_SUBJECT
@@ -112,7 +112,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.32.8"
+            tag: "0.32.9-rc.fix-automation-worker-build.g2ee6f7b0"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -175,7 +175,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.32.8"
+            tag: "0.32.9-rc.fix-automation-worker-build.g2ee6f7b0"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -191,7 +191,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.32.8"
+            tag: "0.32.9-rc.fix-automation-worker-build.g2ee6f7b0"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -207,7 +207,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.32.8"
+            tag: "0.32.9-rc.fix-automation-worker-build.g2ee6f7b0"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
