@@ -17,7 +17,7 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.32.9-rc.fix-automation-worker-build.g2ee6f7b0"
+    targetRevision: "0.32.10"
     helm:
       releaseName: teslasync
       valuesObject:
