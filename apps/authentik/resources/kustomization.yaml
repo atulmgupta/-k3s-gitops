@@ -8,6 +8,7 @@ resources:
   - rate-limit.yaml
   - ip-allowlist.yaml
   - security-headers.yaml
+  - pdb.yaml
 
 generators:
   - ksops-generator.yaml
