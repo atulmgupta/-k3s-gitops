@@ -2,7 +2,19 @@
 # PodDisruptionBudget for the Authentik Traefik ForwardAuth outpost.
 # Protects all 46 *.cyphers.app IngressRoutes from losing all auth backends
 # during voluntary disruptions (node drains, evictions, rollouts).
-# Pair with kubernetes_replicas: 2 set in the outpost config.
+#
+# IMPORTANT — Outpost MUST run with kubernetes_replicas: 1 in the Authentik
+# outpost config (Admin UI → Applications → Outposts → traefik → Edit).
+# Reason: the proxy outpost stores OAuth flow state in /dev/shm (per-pod
+# tmpfs). With multiple replicas the OAuth callback can land on a different
+# pod than the one that started the flow → "mismatched session ID" → HTTP 400.
+# A multi-replica setup would need Redis-backed sessions which the chart does
+# not currently expose.
+#
+# This PDB keeps minAvailable: 1 so that node drains explicitly fail (rather
+# than silently evicting the single outpost and breaking SSO). Use
+# `kubectl drain --disable-eviction --force` when intentionally draining the
+# node hosting the outpost.
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
