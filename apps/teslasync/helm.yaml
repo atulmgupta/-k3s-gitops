@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.32.10"
+    targetRevision: "0.32.11"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.32.10"
+          tag: "0.32.11"
 
         secrets:
           existingSecret: teslasync
@@ -36,13 +36,13 @@ spec:
           jwtSecret: ""
 
         # Web Push (VAPID) — Phase 40 / Prompt 52
-        # Chart 0.32.9-rc.fix-automation-worker-build.g2ee6f7b0 has no `webPush` value-block, but every deployment uses
-        # `envFrom: secretRef: existingSecret`, so all 3 VAPID values are
-        # delivered via the SOPS-managed Secret as env vars:
-        #   TESLASYNC_VAPID_PUBLIC_KEY, TESLASYNC_VAPID_PRIVATE_KEY, TESLASYNC_VAPID_SUBJECT
-        # When chart bumps to a version with native webPush support, switch to
-        # an inline `webPush.publicKey` block here and drop the public key from SOPS.
+        # Chart 0.32.11 wires VAPID natively:
+        #   webPush.publicKey  → ConfigMap (TESLASYNC_VAPID_PUBLIC_KEY) — non-secret, set inline
+        #   webPush.privateKey → chart Secret (skipped via existingSecret)  → SOPS
+        #   webPush.subject    → chart Secret (skipped via existingSecret)  → SOPS
         # ⚠️  Rotating these keys invalidates every existing browser subscription.
+        webPush:
+          publicKey: "BNMoSuDoR-awiKVyNXQcTGXm01z9U0T675yLyLYJ44P5FK0jXm_uFayR83-68x3n5Ub2JXd6Ta8hNFD6oPRHSrg"
 
         config:
           apiEndpoint: http://teslasync-api.teslasync.svc.cluster.local:8080
@@ -52,6 +52,10 @@ spec:
           pollInterval: 30s
           sleepPollMultiplier: 4
           forwardAuthHeader: ""
+          # Phase 46 / Prompt 57 — free-text IdP hint shown in SPA's RequiresAuth empty state.
+          authProviderHint: "Authentik"
+          # Phase 46 / Prompt 70 — single-user self-host: no GDPR banner needed.
+          requireCookieConsent: false
           googleMaps:
             apiKey: ""
           azureMaps:
@@ -107,12 +111,36 @@ spec:
           enabled: true
           pollInterval: 15d
 
+        # Phase 46 / Prompt 04 — operator override for the maintenance banner.
+        # Empty `mode` defers to the system_state DB row + admin POST API.
+        # Set mode to "ok" / "degraded" / "maintenance" to force the banner
+        # without touching the DB (useful during deploys/rollbacks).
+        system:
+          mode: ""
+          maintenanceMessage: ""
+          maintenanceUntil: ""
+
+        # Phase 46 / Prompt 08 — GitHub Issues bridge for in-app feedback.
+        # To enable: set repo to "owner/name" and add TESLASYNC_GITHUB_TOKEN
+        # (fine-grained PAT with Issues:write on `repo`) to the SOPS Secret.
+        github:
+          repo: ""
+
+        # Phase 46 / Prompt 54 — vehicle hero photos.
+        # ⚠️  Chart 0.32.11 has no `extraVolumes`/`extraVolumeMounts` hook on
+        # the API deployment, AND securityContext.readOnlyRootFilesystem=true
+        # is enabled by default. Until the chart adds a volume hook (or a
+        # built-in PVC for photos), uploads will fail with EROFS. Track this
+        # upstream before relying on the feature.
+        vehiclePhotos:
+          dir: "/var/lib/teslasync/photos"
+
         web:
           enabled: true
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.32.10"
+            tag: "0.32.11"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -175,7 +203,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.32.10"
+            tag: "0.32.11"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -191,7 +219,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.32.10"
+            tag: "0.32.11"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -207,7 +235,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.32.10"
+            tag: "0.32.11"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
