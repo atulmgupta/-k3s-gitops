@@ -17,6 +17,10 @@ spec:
         app.kubernetes.io/name: pgbouncer
         app.kubernetes.io/instance: pgbouncer
     spec:
+      # Pin to carbon — helium has chronic instability that takes Postgres+pgbouncer
+      # down together. Co-locate pgbouncer with its upstream Postgres on carbon.
+      nodeSelector:
+        kubernetes.io/hostname: carbon
       containers:
         - name: pgbouncer
           image: pgbouncer/pgbouncer:latest

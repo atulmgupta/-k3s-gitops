@@ -41,6 +41,12 @@ spec:
 
         # ── Primary instance tuning ──────────────────────────────────────────
         primary:
+          # Pin to carbon — helium has chronic instability (silent reboots take
+          # Postgres + every dependent app down). Carbon is the only stable
+          # x86 worker. Revisit when helium is fixed or boron is restored.
+          nodeSelector:
+            kubernetes.io/hostname: carbon
+
           extendedConfiguration: |
             max_connections = 200
             shared_buffers = 384MB
