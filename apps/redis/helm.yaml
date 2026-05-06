@@ -51,6 +51,11 @@ spec:
         commonConfiguration: |-
           appendonly yes
           save ""
+          # Allow Redis to load AOF files with up to 1MiB of corrupt trailing
+          # bytes (truncation from unclean shutdowns). Without this, a single
+          # power loss on the worker bricks the master into CrashLoopBackOff.
+          aof-load-truncated yes
+          aof-load-corrupt-tail-max-size 1048576
 
         networkPolicy:
           enabled: true
