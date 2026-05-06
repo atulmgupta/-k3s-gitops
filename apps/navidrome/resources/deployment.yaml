@@ -16,6 +16,8 @@ spec:
       labels:
         app.kubernetes.io/name: navidrome
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: helium
       containers:
         - name: navidrome
           image: deluan/navidrome:latest

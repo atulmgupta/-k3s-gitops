@@ -16,6 +16,8 @@ spec:
       labels:
         app.kubernetes.io/name: plex
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: helium
       containers:
         - name: plex
           image: plexinc/pms-docker:latest

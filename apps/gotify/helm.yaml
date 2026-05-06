@@ -48,6 +48,9 @@ spec:
             accessMode: ReadWriteOnce
             size: 2Gi
 
+        nodeSelector:
+          kubernetes.io/hostname: helium
+
   destination:
     server: https://kubernetes.default.svc
     namespace: gotify
