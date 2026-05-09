@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasource-tempo
+  namespace: grafana
+  labels:
+    grafana_datasource: "1"
+data:
+  tempo.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Tempo
+        type: tempo
+        uid: tempo
+        access: proxy
+        url: http://tempo.tempo.svc.cluster.local:3200
+        editable: true
+        jsonData:
+          # Link traces ↔ metrics ↔ logs in Grafana Explore.
+          tracesToMetrics:
+            datasourceUid: prometheus
+            tags:
+              - { key: service.name, value: service }
+              - { key: job }
+          tracesToLogsV2:
+            datasourceUid: prometheus
+            spanStartTimeShift: -1m
+            spanEndTimeShift: 1m
+            tags:
+              - { key: service.name, value: service }
+            filterByTraceID: true
+          serviceMap:
+            datasourceUid: prometheus
+          nodeGraph:
+            enabled: true
+          search:
+            hide: false
+          lokiSearch:
+            datasourceUid: prometheus

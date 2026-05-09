@@ -1,0 +1,99 @@
+# =============================================================================
+# Tempo — Helm Application (ArgoCD)
+# =============================================================================
+# Cluster-wide Grafana Tempo (single-binary mode) for distributed-tracing
+# storage. Apps push traces via OTLP; Grafana queries via the HTTP API and
+# is auto-wired through the sidecar.datasources ConfigMap shipped in
+# apps/grafana/resources/datasource-tempo.yaml.
+#
+# We use the community-maintained chart (the upstream grafana/helm-charts
+# tempo chart was migrated to grafana-community on 2026-01-30).
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tempo
+  namespace: argocd
+  labels:
+    tier: monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://grafana-community.github.io/helm-charts
+    chart: tempo
+    targetRevision: "2.*"
+    helm:
+      releaseName: tempo
+      valuesObject:
+        replicas: 1
+
+        tempo:
+          # Block retention enforced by the compactor. 7d matches the
+          # teslasync chart default and our typical incident-investigation
+          # window. Longhorn-backed PV is sized for ~7d at our trace volume.
+          retention: 168h
+          reportingEnabled: false
+          metricsGenerator:
+            enabled: false
+          # Trim default receivers to OTLP only — we don't accept Jaeger /
+          # OpenCensus / Zipkin protocols anywhere in the cluster, so
+          # exposing them would just be unused listen sockets.
+          receivers:
+            otlp:
+              protocols:
+                grpc:
+                  endpoint: "0.0.0.0:4317"
+                http:
+                  endpoint: "0.0.0.0:4318"
+          storage:
+            trace:
+              backend: local
+              local:
+                path: /var/tempo/traces
+              wal:
+                path: /var/tempo/wal
+          server:
+            http_listen_port: 3200
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+
+        service:
+          type: ClusterIP
+
+        serviceMonitor:
+          enabled: true
+          interval: "30s"
+
+        persistence:
+          enabled: true
+          storageClassName: longhorn
+          accessModes:
+            - ReadWriteOnce
+          size: 50Gi
+
+        # Drop the in-cluster query frontend — Grafana hits Tempo's HTTP
+        # API directly via the datasource. tempo-query is only needed when
+        # exposing the Jaeger UI, which we don't.
+        tempoQuery:
+          enabled: false
+
+        # Tempo writes as uid:gid 10001 — must match PV ownership.
+        securityContext:
+          runAsUser: 10001
+          runAsGroup: 10001
+          fsGroup: 10001
+          runAsNonRoot: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tempo
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

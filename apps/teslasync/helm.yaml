@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.32.11"
+    targetRevision: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.32.11"
+          tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
 
         secrets:
           existingSecret: teslasync
@@ -34,6 +34,21 @@ spec:
 
         auth:
           jwtSecret: ""
+
+        # Phase-42 / ADR-004 #5 + #9 — operator surface (chart >= 0.33).
+        # Powers cmd/resubscribe + cmd/unit-drift-validator. Both refuse to
+        # run with an empty token, so leaving this empty keeps them disabled.
+        # When ready to enable, generate `openssl rand -hex 32` and add
+        # TESLASYNC_OPERATOR_TOKEN to the SOPS-managed `teslasync` Secret —
+        # the existingSecret pattern means we do NOT set the value here.
+        operator:
+          token: ""
+
+        # Phase-42 / ADR-004 #9 — nightly unit-drift validator CronJob.
+        # Read-only sweep of vehicle_unit_history; emits Prometheus counters.
+        # Disabled until `operator.token` is seeded in the SOPS Secret.
+        unitDriftValidator:
+          enabled: false
 
         # Web Push (VAPID) — Phase 40 / Prompt 52
         # Chart 0.32.11 wires VAPID natively:
@@ -140,7 +155,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.32.11"
+            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -203,7 +218,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.32.11"
+            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -219,7 +234,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.32.11"
+            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -235,7 +250,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.32.11"
+            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -279,12 +294,27 @@ spec:
           external:
             host: mqtt-emqx.mqtt.svc.cluster.local
             port: 1883
+          # Phase-42 / ADR-004 #8 — TESLA_MQTT_MAX_REDELIVERIES.
+          # Read by cmd/teslasync via PipelineSubscriberConfig.
+          maxRedeliveries: 5
 
         grafana:
           enabled: false
 
         jaeger:
           enabled: false
+
+        # ─── Observability stack (chart phase-44, requires chart >= 0.33) ──────
+        # The chart ships an in-cluster OTel collector + Tempo single-binary
+        # for self-contained installs. We run a cluster-wide Tempo at
+        # apps/tempo/ instead, so both are kept disabled here. When chart
+        # >= 0.33 lands and exposes an external-Tempo endpoint, point the
+        # otelCollector exporter at tempo.tempo.svc.cluster.local:4317.
+        observability:
+          otelCollector:
+            enabled: false
+          tempo:
+            enabled: false
 
         ingress:
           enabled: false
@@ -311,6 +341,23 @@ spec:
           routes:
             - kind: Rule
               match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/.well-known`)"
+              middlewares:
+                - name: default-headers
+                  namespace: traefik
+              services:
+                - name: teslasync-web
+                  port: 80
+            # PWA shell bypass — Authentik must NOT gate the service worker,
+            # PWA manifest, or workbox runtime. When these requests hit
+            # ForwardAuth without a valid session, Authentik returns a 302 to
+            # its login page; the browser sees a non-JS / opaque-redirect
+            # response, fails the SW script update, eventually unregisters
+            # the registration, and DROPS the PushSubscription tied to it.
+            # Symptom: users have to click "Enable on this device" again
+            # after every deploy or session expiry. These files contain no
+            # per-user data and are safe to expose unauthenticated.
+            - kind: Rule
+              match: "Host(`teslasync.cyphers.app`) && (Path(`/sw.js`) || Path(`/sw.js.map`) || Path(`/manifest.webmanifest`) || Path(`/registerSW.js`) || PathRegexp(`^/workbox-[a-f0-9]+\\.js(\\.map)?$`))"
               middlewares:
                 - name: default-headers
                   namespace: traefik
