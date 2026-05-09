@@ -388,6 +388,21 @@ spec:
       jsonPointers:
         - /data
         - /stringData
+    # Pin fleet-telemetry + command-proxy to carbon (most stable worker).
+    # Chart 0.33-rc only honors top-level .Values.nodeSelector, which would
+    # pin every TeslaSync deployment. Until upstream chart adds per-component
+    # nodeSelector, we live-patch these two Deployments and ask Argo to
+    # ignore the spec.template.spec.nodeSelector field on them.
+    - group: apps
+      kind: Deployment
+      name: teslasync-fleet-telemetry
+      jsonPointers:
+        - /spec/template/spec/nodeSelector
+    - group: apps
+      kind: Deployment
+      name: teslasync-command-proxy
+      jsonPointers:
+        - /spec/template/spec/nodeSelector
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
