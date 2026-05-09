@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.refactor-alert-engine.gbb71e338"
+    targetRevision: "0.33.0-rc.refactor-alert-engine.g18cda627"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.33.0-rc.refactor-alert-engine.gbb71e338"
+          tag: "0.33.0-rc.refactor-alert-engine.g18cda627"
 
         secrets:
           existingSecret: teslasync
@@ -165,7 +165,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.33.0-rc.refactor-alert-engine.gbb71e338"
+            tag: "0.33.0-rc.refactor-alert-engine.g18cda627"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -219,7 +219,7 @@ spec:
             port: 4443
             nodePort: 30443
             externalIPs: []
-          # Pin fleet-telemetry to carbon (chart >= gbb71e338 honors this
+          # Pin fleet-telemetry to carbon (chart >= g18cda627 honors this
           # plus tolerations/affinity hooks on the Deployment).
           nodeSelector:
             kubernetes.io/hostname: carbon
@@ -246,7 +246,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.33.0-rc.refactor-alert-engine.gbb71e338"
+            tag: "0.33.0-rc.refactor-alert-engine.g18cda627"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -262,7 +262,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.33.0-rc.refactor-alert-engine.gbb71e338"
+            tag: "0.33.0-rc.refactor-alert-engine.g18cda627"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -278,7 +278,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.33.0-rc.refactor-alert-engine.gbb71e338"
+            tag: "0.33.0-rc.refactor-alert-engine.g18cda627"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
