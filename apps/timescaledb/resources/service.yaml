@@ -6,11 +6,12 @@ metadata:
     app.kubernetes.io/name: timescaledb
     app.kubernetes.io/instance: timescaledb
   annotations:
-    metallb.universe.tf/address-pool: reserved-ip-pool
-    metallb.universe.tf/loadBalancerIPs: "192.168.68.210"
+    # MetalLB v0.13+ API. Old metallb.universe.tf/* annotations and
+    # spec.loadBalancerIP are deprecated/no-ops on the current controller.
+    metallb.io/address-pool: reserved-ip-pool
+    metallb.io/loadBalancerIPs: "192.168.68.210"
 spec:
   type: LoadBalancer
-  loadBalancerIP: "192.168.68.210"
   ports:
     - name: postgresql
       port: 5432
