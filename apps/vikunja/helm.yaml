@@ -50,9 +50,6 @@ spec:
             cpu: 500m
             memory: 256Mi
 
-        nodeSelector:
-          kubernetes.io/hostname: helium
-
   destination:
     server: https://kubernetes.default.svc
     namespace: vikunja

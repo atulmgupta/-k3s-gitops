@@ -14,8 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: syncthing
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       containers:
         - name: syncthing
           image: syncthing/syncthing:latest

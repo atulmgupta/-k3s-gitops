@@ -14,8 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: n8n
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       securityContext:
         fsGroup: 1000
       initContainers:

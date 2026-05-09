@@ -19,8 +19,6 @@ spec:
         app.kubernetes.io/name: redis-insight
         app.kubernetes.io/instance: redis-insight
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       securityContext:
         fsGroup: 1000
         runAsUser: 1000

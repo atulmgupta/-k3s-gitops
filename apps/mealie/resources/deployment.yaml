@@ -14,8 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: mealie
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       containers:
         - name: mealie
           image: ghcr.io/mealie-recipes/mealie:latest

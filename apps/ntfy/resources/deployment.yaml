@@ -14,8 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: ntfy
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       containers:
         - name: ntfy
           image: binwiederhier/ntfy:latest

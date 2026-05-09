@@ -14,8 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: trilium
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       containers:
         - name: trilium
           image: zadam/trilium:latest

@@ -16,8 +16,6 @@ spec:
       labels:
         app.kubernetes.io/name: paperless-ngx
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       securityContext:
         fsGroup: 1000
       containers:

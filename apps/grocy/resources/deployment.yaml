@@ -14,8 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: grocy
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: helium
       containers:
         - name: grocy
           image: linuxserver/grocy:latest
