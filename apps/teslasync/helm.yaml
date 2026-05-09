@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
+    targetRevision: "0.33.0-rc.refactor-alert-engine.g62ffc3e6"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
+          tag: "0.33.0-rc.refactor-alert-engine.g62ffc3e6"
 
         secrets:
           existingSecret: teslasync
@@ -94,6 +94,16 @@ spec:
           requests: { cpu: 100m, memory: 128Mi }
           limits: { cpu: 500m, memory: 512Mi }
 
+        # Mirrors upstream chart 0.6.1+ default (commit d5745abd5).
+        # Pins api + workers (notification, export, automation) and
+        # command-proxy to carbon — they share state with TimescaleDB,
+        # MQTT, and Redis on that node, so colocation removes a hop and
+        # avoids the apiserver→carbon konnectivity tunnel that
+        # occasionally wedges after a NodeNotReady flap. Web + fleet-
+        # telemetry have their own per-component knobs below.
+        nodeSelector:
+          kubernetes.io/hostname: carbon
+
         metrics:
           enabled: true
           serviceMonitor:
@@ -155,7 +165,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
+            tag: "0.33.0-rc.refactor-alert-engine.g62ffc3e6"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -164,6 +174,9 @@ spec:
             port: 80
             type: LoadBalancer
             loadBalancerIP: "192.168.68.220"
+          # Colocate web with the rest of the teslasync stack on carbon.
+          nodeSelector:
+            kubernetes.io/hostname: carbon
 
         commandProxy:
           enabled: true
@@ -183,6 +196,10 @@ spec:
           enabled: true
           host: telemetry.cyphers.app
           image: tesla/fleet-telemetry:latest
+          # DEPRECATED — no-op on the per-field MQTT path (per upstream
+          # commit a3fdb1dfb). Per-field subscriber processes each
+          # {VIN, field} individually; kept for legacy values-file
+          # compat but no production code reads it.
           batchMs: 100
           fallbackPollInterval: "5m"
           staleTimeout: "15m"
@@ -194,9 +211,20 @@ spec:
           resources:
             requests: { cpu: 100m, memory: 64Mi }
             limits: { cpu: 500m, memory: 256Mi }
+          # NodePort 30443 is forwarded by the home router from WAN 8443
+          # → carbon:30443 (carbon's real MAC keeps Deco's port-forward
+          # MAC binding happy; a MetalLB virtual IP wouldn't have a MAC).
           service:
+            type: NodePort
             port: 4443
-            type: ClusterIP
+            nodePort: 30443
+            externalIPs: []
+          # Pin fleet-telemetry to carbon (chart >= g62ffc3e6 honors this
+          # plus tolerations/affinity hooks on the Deployment).
+          nodeSelector:
+            kubernetes.io/hostname: carbon
+          tolerations: []
+          affinity: {}
           tls:
             secretName: production-cyphers-app-tls
           metrics:
@@ -218,7 +246,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
+            tag: "0.33.0-rc.refactor-alert-engine.g62ffc3e6"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -234,7 +262,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
+            tag: "0.33.0-rc.refactor-alert-engine.g62ffc3e6"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -250,7 +278,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "0.33.0-rc.refactor-alert-engine.g1cf365c3"
+            tag: "0.33.0-rc.refactor-alert-engine.g62ffc3e6"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -388,21 +416,7 @@ spec:
       jsonPointers:
         - /data
         - /stringData
-    # Pin fleet-telemetry + command-proxy to carbon (most stable worker).
-    # Chart 0.33-rc only honors top-level .Values.nodeSelector, which would
-    # pin every TeslaSync deployment. Until upstream chart adds per-component
-    # nodeSelector, we live-patch these two Deployments and ask Argo to
-    # ignore the spec.template.spec.nodeSelector field on them.
-    - group: apps
-      kind: Deployment
-      name: teslasync-fleet-telemetry
-      jsonPointers:
-        - /spec/template/spec/nodeSelector
-    - group: apps
-      kind: Deployment
-      name: teslasync-command-proxy
-      jsonPointers:
-        - /spec/template/spec/nodeSelector
+
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
