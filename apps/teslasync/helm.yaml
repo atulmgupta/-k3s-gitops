@@ -75,9 +75,14 @@ spec:
             apiKey: ""
           azureMaps:
             apiKey: ""
+          # Traces ship to the cluster-wide Tempo at apps/tempo/ (single-binary,
+          # 7d retention, 50Gi Longhorn PVC). Grafana datasource is pre-wired
+          # in apps/grafana/resources/datasource-tempo.yaml — view spans via
+          # Grafana Explore → Tempo, or TraceQL queries like
+          #   { resource.service.name = "teslasync" && duration > 500ms }
           openTelemetry:
-            enabled: false
-            endpoint: jaeger:4317
+            enabled: true
+            endpoint: tempo.tempo.svc.cluster.local:4317
             insecure: true
             serviceName: teslasync
           # Inbound API call logs — Phase 38-10
