@@ -92,7 +92,15 @@ spec:
       jqPathExpressions: [.spec]
     - group: monitoring.coreos.com
       kind: Prometheus
-      jqPathExpressions: [.spec]
+      # Ignore only the fields the operator mutates at runtime so that
+      # explicit spec changes from valuesObject (e.g. enableRemoteWriteReceiver)
+      # still flow through. Previously this ignored the whole `.spec`,
+      # which silently dropped every Helm-driven prometheusSpec change.
+      jqPathExpressions:
+        - .spec.shards
+        - .spec.replicas
+        - .spec.podMetadata
+        - .spec.containers
   syncPolicy:
     automated: { prune: true, selfHeal: true }
     syncOptions:
