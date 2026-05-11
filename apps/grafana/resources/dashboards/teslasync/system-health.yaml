@@ -472,7 +472,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -522,7 +522,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "editorMode": "code",
               "expr": "rate(http_requests_total[5m])",
@@ -536,7 +536,7 @@ data:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "DS_TESLASYNC_PROMETHEUS"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -586,7 +586,7 @@ data:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "DS_TESLASYNC_PROMETHEUS"
+                "uid": "prometheus"
               },
               "editorMode": "code",
               "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
