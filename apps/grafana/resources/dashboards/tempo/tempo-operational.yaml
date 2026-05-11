@@ -1,0 +1,199 @@
+---
+# =============================================================================
+# Tempo — Operational Dashboard
+# =============================================================================
+# Cluster-wide health for the single-binary Tempo deployment in the
+# `tempo` namespace. Powered by the ServiceMonitor that the Tempo chart
+# installs (apps/tempo/helm.yaml). All panels are scoped via the
+# auto-populated `pod` template variable so this works for replica > 1
+# in the future without rework.
+# =============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-operational
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Tempo
+data:
+  tempo-operational.json: |
+    {
+      "uid": "tempo-operational",
+      "title": "Tempo - Operational",
+      "tags": ["tempo", "tracing", "infra"],
+      "timezone": "browser",
+      "schemaVersion": 38,
+      "version": 1,
+      "refresh": "30s",
+      "time": { "from": "now-6h", "to": "now" },
+      "templating": {
+        "list": [
+          {
+            "name": "pod",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
+            "query": "label_values(tempo_build_info, pod)",
+            "includeAll": true,
+            "multi": true,
+            "refresh": 2,
+            "current": { "selected": true, "text": "All", "value": "$__all" }
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1, "type": "row", "title": "Health",
+          "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+          "collapsed": false, "panels": []
+        },
+        {
+          "id": 2, "type": "stat", "title": "Tempo Pods Up",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum(up{job=~\".*tempo.*\", pod=~\"$pod\"})", "legendFormat": "up", "refId": "A" }],
+          "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "green", "value": 1 }] } } },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "graphMode": "area" },
+          "gridPos": { "x": 0, "y": 1, "w": 4, "h": 4 }
+        },
+        {
+          "id": 3, "type": "stat", "title": "Tempo Version",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "tempo_build_info{pod=~\"$pod\"}", "legendFormat": "{{version}}", "refId": "A", "instant": true }],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" }, "textMode": "name" },
+          "gridPos": { "x": 4, "y": 1, "w": 4, "h": 4 }
+        },
+        {
+          "id": 4, "type": "stat", "title": "Live Traces (in-memory)",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum(tempo_ingester_live_traces{pod=~\"$pod\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 50000 }, { "color": "red", "value": 200000 }] } } },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "gridPos": { "x": 8, "y": 1, "w": 4, "h": 4 }
+        },
+        {
+          "id": 5, "type": "stat", "title": "WAL Blocks Pending Flush",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum(tempodb_blocklist_length{pod=~\"$pod\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short" } },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "gridPos": { "x": 12, "y": 1, "w": 4, "h": 4 }
+        },
+        {
+          "id": 6, "type": "stat", "title": "Memory (RSS)",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum(process_resident_memory_bytes{job=~\".*tempo.*\", pod=~\"$pod\"})", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "bytes" } },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "gridPos": { "x": 16, "y": 1, "w": 4, "h": 4 }
+        },
+        {
+          "id": 7, "type": "stat", "title": "CPU",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum(rate(process_cpu_seconds_total{job=~\".*tempo.*\", pod=~\"$pod\"}[5m]))", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "percentunit" } },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "gridPos": { "x": 20, "y": 1, "w": 4, "h": 4 }
+        },
+        {
+          "id": 10, "type": "row", "title": "Ingestion",
+          "gridPos": { "x": 0, "y": 5, "w": 24, "h": 1 }, "collapsed": false, "panels": []
+        },
+        {
+          "id": 11, "type": "timeseries", "title": "Spans Received / sec (by service)",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum by (tenant) (rate(tempo_distributor_spans_received_total{pod=~\"$pod\"}[2m]))", "legendFormat": "{{tenant}}", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short" } },
+          "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 }
+        },
+        {
+          "id": 12, "type": "timeseries", "title": "Bytes Received / sec",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum(rate(tempo_distributor_bytes_received_total{pod=~\"$pod\"}[2m]))", "refId": "A", "legendFormat": "bytes/s" }],
+          "fieldConfig": { "defaults": { "unit": "Bps" } },
+          "gridPos": { "x": 12, "y": 6, "w": 12, "h": 8 }
+        },
+        {
+          "id": 13, "type": "timeseries", "title": "Push Errors / sec",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            { "expr": "sum by (reason) (rate(tempo_discarded_spans_total{pod=~\"$pod\"}[5m]))", "legendFormat": "discarded:{{reason}}", "refId": "A" },
+            { "expr": "sum(rate(tempo_request_duration_seconds_count{route=~\"/tempopb.Pusher/.*\", status_code!~\"2..\", pod=~\"$pod\"}[5m]))", "legendFormat": "push_errors", "refId": "B" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" } } },
+          "gridPos": { "x": 0, "y": 14, "w": 24, "h": 7 }
+        },
+        {
+          "id": 20, "type": "row", "title": "Query",
+          "gridPos": { "x": 0, "y": 21, "w": 24, "h": 1 }, "collapsed": false, "panels": []
+        },
+        {
+          "id": 21, "type": "timeseries", "title": "Query Rate by Route",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum by (route) (rate(tempo_request_duration_seconds_count{route=~\"api_.*|/tempopb.Querier/.*\", pod=~\"$pod\"}[5m]))", "legendFormat": "{{route}}", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "reqps" } },
+          "gridPos": { "x": 0, "y": 22, "w": 12, "h": 8 }
+        },
+        {
+          "id": 22, "type": "timeseries", "title": "Query Latency p50/p95/p99",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            { "expr": "histogram_quantile(0.50, sum by (le) (rate(tempo_request_duration_seconds_bucket{route=~\"api_.*\", pod=~\"$pod\"}[5m])))", "legendFormat": "p50", "refId": "A" },
+            { "expr": "histogram_quantile(0.95, sum by (le) (rate(tempo_request_duration_seconds_bucket{route=~\"api_.*\", pod=~\"$pod\"}[5m])))", "legendFormat": "p95", "refId": "B" },
+            { "expr": "histogram_quantile(0.99, sum by (le) (rate(tempo_request_duration_seconds_bucket{route=~\"api_.*\", pod=~\"$pod\"}[5m])))", "legendFormat": "p99", "refId": "C" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "s" } },
+          "gridPos": { "x": 12, "y": 22, "w": 12, "h": 8 }
+        },
+        {
+          "id": 30, "type": "row", "title": "Storage",
+          "gridPos": { "x": 0, "y": 30, "w": 24, "h": 1 }, "collapsed": false, "panels": []
+        },
+        {
+          "id": 31, "type": "timeseries", "title": "Blocks Flushed / sec",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum(rate(tempo_ingester_blocks_flushed_total{pod=~\"$pod\"}[5m]))", "refId": "A", "legendFormat": "flushed/s" }],
+          "fieldConfig": { "defaults": { "unit": "short" } },
+          "gridPos": { "x": 0, "y": 31, "w": 8, "h": 7 }
+        },
+        {
+          "id": 32, "type": "timeseries", "title": "Compaction Activity",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            { "expr": "sum(rate(tempodb_compaction_blocks_total{pod=~\"$pod\"}[5m]))", "refId": "A", "legendFormat": "blocks compacted/s" },
+            { "expr": "sum(rate(tempodb_compaction_errors_total{pod=~\"$pod\"}[5m]))", "refId": "B", "legendFormat": "errors/s" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "short" } },
+          "gridPos": { "x": 8, "y": 31, "w": 8, "h": 7 }
+        },
+        {
+          "id": 33, "type": "stat", "title": "WAL / Storage PV Used",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "1 - (kubelet_volume_stats_available_bytes{persistentvolumeclaim=~\"tempo.*\"} / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"tempo.*\"})", "refId": "A", "legendFormat": "{{persistentvolumeclaim}}" }],
+          "fieldConfig": { "defaults": { "unit": "percentunit", "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.7 }, { "color": "red", "value": 0.9 }] } } },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+          "gridPos": { "x": 16, "y": 31, "w": 8, "h": 7 }
+        },
+        {
+          "id": 40, "type": "row", "title": "Metrics Generator",
+          "gridPos": { "x": 0, "y": 38, "w": 24, "h": 1 }, "collapsed": false, "panels": []
+        },
+        {
+          "id": 41, "type": "timeseries", "title": "Spans Processed by Generator",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [{ "expr": "sum by (tenant) (rate(tempo_metrics_generator_spans_received_total{pod=~\"$pod\"}[5m]))", "legendFormat": "{{tenant}}", "refId": "A" }],
+          "fieldConfig": { "defaults": { "unit": "short" } },
+          "gridPos": { "x": 0, "y": 39, "w": 12, "h": 7 }
+        },
+        {
+          "id": 42, "type": "timeseries", "title": "Remote-Write Samples / sec",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            { "expr": "sum(rate(tempo_metrics_generator_registry_collections_total{pod=~\"$pod\"}[5m]))", "legendFormat": "collections/s", "refId": "A" },
+            { "expr": "sum(rate(tempo_metrics_generator_registry_collections_failed_total{pod=~\"$pod\"}[5m]))", "legendFormat": "failed/s", "refId": "B" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "short" } },
+          "gridPos": { "x": 12, "y": 39, "w": 12, "h": 7 }
+        }
+      ]
+    }

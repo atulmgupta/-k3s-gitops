@@ -97,6 +97,11 @@ resources:
   # TimescaleDB
   - dashboards/timescaledb/postgres.yaml
   - dashboards/timescaledb/pgbouncer.yaml
+  # Tempo
+  - dashboards/tempo/tempo-operational.yaml
+  # TeslaSync — distributed tracing (RED + service map, sourced from
+  # Tempo's metrics-generator span-metrics & service-graphs).
+  - dashboards/teslasync-tracing/teslasync-tracing.yaml
 
 generators:
   - ksops-generator.yaml

@@ -34,8 +34,22 @@ spec:
           # window. Longhorn-backed PV is sized for ~7d at our trace volume.
           retention: 168h
           reportingEnabled: false
+          # Span-metrics + service-graph generation. Tempo aggregates spans
+          # in-process and remote-writes RED metrics + service-graph edges
+          # to Prometheus. Powers the TeslaSync tracing dashboard and
+          # Grafana's "Service Map" button on the Tempo datasource.
           metricsGenerator:
-            enabled: false
+            enabled: true
+            remoteWriteUrl: "http://prometheus-kube-prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
+          # Per-tenant overrides — required to actually turn on the
+          # generator processors. Without this block metricsGenerator.enabled
+          # only wires the component, no processors run.
+          overrides:
+            defaults:
+              metrics_generator:
+                processors:
+                  - service-graphs
+                  - span-metrics
           # Trim default receivers to OTLP only — we don't accept Jaeger /
           # OpenCensus / Zipkin protocols anywhere in the cluster, so
           # exposing them would just be unused listen sockets.
@@ -57,11 +71,11 @@ spec:
             http_listen_port: 3200
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 200m
+              memory: 512Mi
             limits:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 1000m
+              memory: 2Gi
 
         service:
           type: ClusterIP

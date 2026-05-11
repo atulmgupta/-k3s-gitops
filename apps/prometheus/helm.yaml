@@ -25,6 +25,9 @@ spec:
             serviceMonitorSelectorNilUsesHelmValues: false
             podMonitorSelectorNilUsesHelmValues: false
             ruleSelectorNilUsesHelmValues: false
+            # Required for Tempo's metrics-generator to push span / service-graph
+            # metrics into Prometheus via remote_write.
+            enableRemoteWriteReceiver: true
             storageSpec:
               volumeClaimTemplate:
                 spec:
