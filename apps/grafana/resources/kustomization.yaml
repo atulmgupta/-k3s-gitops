@@ -94,6 +94,17 @@ resources:
   - dashboards/teslasync-infra/sse-realtime.yaml
   - dashboards/teslasync-infra/telemetry-pipeline.yaml
   - dashboards/teslasync-infra/fleet-telemetry.yaml
+  # Tracing-focused (use Tempo metrics-generator output: traces_spanmetrics_* / traces_service_graph_*)
+  - dashboards/teslasync-infra/service-red.yaml
+  - dashboards/teslasync-infra/service-graph.yaml
+  - dashboards/teslasync-infra/trace-explorer.yaml
+  # Operational deep-dives added in teslasync refactor/alert-engine
+  - dashboards/teslasync-infra/auth-deep-dive.yaml
+  - dashboards/teslasync-infra/critical-flows.yaml
+  - dashboards/teslasync-infra/db-tesla-breakdown.yaml
+  - dashboards/teslasync-infra/mqtt-pipeline-traces.yaml
+  - dashboards/teslasync-infra/observability-self-health.yaml
+  - dashboards/teslasync-infra/slo-burn.yaml
   # TimescaleDB
   - dashboards/timescaledb/postgres.yaml
   - dashboards/timescaledb/pgbouncer.yaml

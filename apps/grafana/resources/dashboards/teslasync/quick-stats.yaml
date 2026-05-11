@@ -135,7 +135,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM((distance_m / 1609.344)))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -195,7 +195,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
+              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -255,7 +255,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
+              "rawSql": "SELECT COALESCE(ROUND(SUM((energy_used_wh / 1000.0))::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -316,7 +316,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(SUM(duration_min)::numeric, 0), 0) AS \"Drive Min\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('day', NOW())",
+              "rawSql": "SELECT COALESCE(ROUND(SUM((duration_s / 60.0))::numeric, 0), 0) AS \"Drive Min\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('day', NOW())",
               "refId": "A"
             }
           ],
@@ -389,7 +389,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Total Distance\" FROM drives WHERE vehicle_id = ${vehicle_id}",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM((distance_m / 1609.344)))::numeric, 1), 0) AS \"Total Distance\" FROM drives WHERE vehicle_id = ${vehicle_id}",
               "refId": "A"
             }
           ],
@@ -509,7 +509,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Total Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id}",
+              "rawSql": "SELECT COALESCE(ROUND(SUM((energy_used_wh / 1000.0))::numeric, 1), 0) AS \"Total Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id}",
               "refId": "A"
             }
           ],
@@ -570,7 +570,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT ROUND(COALESCE(SUM(cost), 0)::numeric, 2) AS \"Total Cost ($)\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id}",
+              "rawSql": "SELECT ROUND(COALESCE(SUM(cost_decimal), 0)::numeric, 2) AS \"Total Cost ($)\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id}",
               "refId": "A"
             }
           ],
@@ -643,7 +643,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM((distance_m / 1609.344)))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -703,7 +703,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
+              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -763,7 +763,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
+              "rawSql": "SELECT COALESCE(ROUND(SUM((energy_used_wh / 1000.0))::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -824,7 +824,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT ROUND(COALESCE(SUM(cost), 0)::numeric, 2) AS \"Cost ($)\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('month', NOW())",
+              "rawSql": "SELECT ROUND(COALESCE(SUM(cost_decimal), 0)::numeric, 2) AS \"Cost ($)\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('month', NOW())",
               "refId": "A"
             }
           ],
@@ -897,7 +897,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM(distance_mi))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
+              "rawSql": "SELECT COALESCE(ROUND(convert_distance(SUM((distance_m / 1609.344)))::numeric, 1), 0) AS \"Distance\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],
@@ -957,7 +957,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
+              "rawSql": "SELECT COUNT(*) AS \"Drives\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],
@@ -1017,7 +1017,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COALESCE(ROUND(SUM(energy_used_kwh)::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
+              "rawSql": "SELECT COALESCE(ROUND(SUM((energy_used_wh / 1000.0))::numeric, 1), 0) AS \"Energy (kWh)\" FROM drives WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],
@@ -1077,7 +1077,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT COUNT(*) AS \"Charges\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND start_ts >= DATE_TRUNC('week', NOW())",
+              "rawSql": "SELECT COUNT(*) AS \"Charges\" FROM charging_sessions WHERE vehicle_id = ${vehicle_id} AND started_at >= DATE_TRUNC('week', NOW())",
               "refId": "A"
             }
           ],

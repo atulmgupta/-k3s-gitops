@@ -41,6 +41,40 @@ spec:
           metricsGenerator:
             enabled: true
             remoteWriteUrl: "http://prometheus-kube-prometheus-prometheus.prometheus.svc.cluster.local:9090/api/v1/write"
+            # Per-processor tuning. Mirrors the teslasync chart upstream so
+            # RED dashboards (service-red, trace-explorer, db-tesla-breakdown,
+            # mqtt-pipeline-traces, slo-burn) split traces_spanmetrics_*
+            # series by HTTP method/route/status, DB system and messaging
+            # system. Keep dimension cardinality reasonable — every value
+            # combination becomes a distinct Prometheus series.
+            processor:
+              span_metrics:
+                dimensions:
+                  - http.method
+                  - http.route
+                  - http.status_code
+                  - db.system
+                  - messaging.system
+                  - messaging.destination
+                # Latency histogram bucket edges in seconds. Mirrors the
+                # prom-default exponential ladder (0.002 → 15s) so SLO
+                # burn-rate alerts and p99 panels render correctly.
+                histogram_buckets:
+                  - 0.002
+                  - 0.004
+                  - 0.008
+                  - 0.016
+                  - 0.032
+                  - 0.064
+                  - 0.128
+                  - 0.256
+                  - 0.512
+                  - 1.024
+                  - 2.048
+                  - 4.096
+                  - 8.192
+                  - 15.0
+              service_graphs: {}
           # Per-tenant overrides — required to actually turn on the
           # generator processors. Without this block metricsGenerator.enabled
           # only wires the component, no processors run.

@@ -1473,7 +1473,7 @@ data:
           "tags": [],
           "targetBlank": false,
           "title": "◀ Prev",
-          "tooltip": "TeslaSync - CEP Rule Engine",
+          "tooltip": "TeslaSync - Rules Engine",
           "type": "link",
           "url": "/d/teslasync-infra-cep"
         },
