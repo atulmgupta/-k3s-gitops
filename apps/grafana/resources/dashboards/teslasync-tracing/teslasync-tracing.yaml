@@ -207,13 +207,13 @@ data:
         {
           "id": 41, "type": "traces", "title": "Slow Traces (> 1s)",
           "datasource": { "type": "tempo", "uid": "tempo" },
-          "targets": [{ "queryType": "traceqlSearch", "refId": "A", "limit": 30, "filters": [{ "id": "service-name", "tag": "service.name", "operator": "=~", "scope": "resource", "value": ["teslasync.*"] }, { "id": "min-duration", "tag": "duration", "operator": ">", "value": "1s" }] }],
+          "targets": [{ "queryType": "traceql", "refId": "A", "limit": 30, "tableType": "traces", "query": "{ resource.service.name =~ \"teslasync.*\" && duration > 1s }" }],
           "gridPos": { "x": 0, "y": 56, "w": 24, "h": 10 }
         },
         {
           "id": 42, "type": "traces", "title": "Error Traces",
           "datasource": { "type": "tempo", "uid": "tempo" },
-          "targets": [{ "queryType": "traceqlSearch", "refId": "A", "limit": 30, "filters": [{ "id": "service-name", "tag": "service.name", "operator": "=~", "scope": "resource", "value": ["teslasync.*"] }, { "id": "status", "tag": "status", "operator": "=", "value": "error" }] }],
+          "targets": [{ "queryType": "traceql", "refId": "A", "limit": 30, "tableType": "traces", "query": "{ resource.service.name =~ \"teslasync.*\" && status = error }" }],
           "gridPos": { "x": 0, "y": 66, "w": 24, "h": 10 }
         }
       ]
