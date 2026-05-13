@@ -39,8 +39,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
-          "tooltip": "TeslaSync 🎵 Comfort & Media",
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \ud83c\udfb5 Comfort & Media",
           "type": "link",
           "url": "/d/teslasync-comfort-media"
         },
@@ -53,7 +53,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
         },
         {
@@ -63,8 +63,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
-          "tooltip": "TeslaSync 💰 Cost Analysis",
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \ud83d\udcb0 Cost Analysis",
           "type": "link",
           "url": "/d/teslasync-cost-analysis"
         }
@@ -128,11 +128,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.distance_mi > 0\n    THEN ROUND(100.0 * (c.distance_mi - p.distance_mi) / p.distance_mi, 1)\n    ELSE NULL\n  END AS \"Distance Δ%\"\nFROM (SELECT distance_mi FROM cmp WHERE period = 'Current') c,\n     (SELECT distance_mi FROM cmp WHERE period = 'Prior') p",
+              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.distance_mi > 0\n    THEN ROUND(100.0 * (c.distance_mi - p.distance_mi) / p.distance_mi, 1)\n    ELSE NULL\n  END AS \"Distance \u0394%\"\nFROM (SELECT distance_mi FROM cmp WHERE period = 'Current') c,\n     (SELECT distance_mi FROM cmp WHERE period = 'Prior') p",
               "refId": "A"
             }
           ],
-          "title": "Distance Δ%",
+          "title": "Distance \u0394%",
           "type": "stat",
           "transparent": false
         },
@@ -194,11 +194,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.drives > 0\n    THEN ROUND(100.0 * (c.drives - p.drives)::numeric / p.drives, 1)\n    ELSE NULL\n  END AS \"Drives Δ%\"\nFROM (SELECT drives FROM cmp WHERE period = 'Current') c,\n     (SELECT drives FROM cmp WHERE period = 'Prior') p",
+              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.drives > 0\n    THEN ROUND(100.0 * (c.drives - p.drives)::numeric / p.drives, 1)\n    ELSE NULL\n  END AS \"Drives \u0394%\"\nFROM (SELECT drives FROM cmp WHERE period = 'Current') c,\n     (SELECT drives FROM cmp WHERE period = 'Prior') p",
               "refId": "A"
             }
           ],
-          "title": "Drives Δ%",
+          "title": "Drives \u0394%",
           "type": "stat",
           "transparent": false
         },
@@ -260,11 +260,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.energy > 0\n    THEN ROUND(100.0 * (c.energy - p.energy) / p.energy, 1)\n    ELSE NULL\n  END AS \"Energy Δ%\"\nFROM (SELECT energy FROM cmp WHERE period = 'Current') c,\n     (SELECT energy FROM cmp WHERE period = 'Prior') p",
+              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.energy > 0\n    THEN ROUND(100.0 * (c.energy - p.energy) / p.energy, 1)\n    ELSE NULL\n  END AS \"Energy \u0394%\"\nFROM (SELECT energy FROM cmp WHERE period = 'Current') c,\n     (SELECT energy FROM cmp WHERE period = 'Prior') p",
               "refId": "A"
             }
           ],
-          "title": "Energy Δ%",
+          "title": "Energy \u0394%",
           "type": "stat",
           "transparent": false
         },
@@ -326,11 +326,11 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.distance_mi > 0 AND c.distance_mi > 0\n    THEN ROUND(100.0 * ((c.energy / c.distance_mi) - (p.energy / p.distance_mi)) / (p.energy / p.distance_mi), 1)\n    ELSE NULL\n  END AS \"Efficiency Δ%\"\nFROM (SELECT distance_mi, energy FROM cmp WHERE period = 'Current') c,\n     (SELECT distance_mi, energy FROM cmp WHERE period = 'Prior') p",
+              "rawSql": "WITH cmp AS (\n  SELECT 'Current'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id} AND d.started_at BETWEEN $__timeFrom()::timestamptz AND $__timeTo()::timestamptz\n  UNION ALL\n  SELECT 'Prior'::text AS period,\n    COALESCE(SUM((d.distance_m / 1609.344)), 0)::numeric AS distance_mi,\n    COUNT(*)::bigint AS drives,\n    COALESCE(SUM(COALESCE(NULL, 0) - COALESCE(NULL, 0)), 0)::numeric AS energy\n  FROM drives d\n  WHERE d.vehicle_id = ${vehicle_id}\n    AND d.started_at BETWEEN ($__timeFrom()::timestamptz - ($__timeTo()::timestamptz - $__timeFrom()::timestamptz)) AND $__timeFrom()::timestamptz\n)\nSELECT\n  CASE WHEN p.distance_mi > 0 AND c.distance_mi > 0\n    THEN ROUND(100.0 * ((c.energy / c.distance_mi) - (p.energy / p.distance_mi)) / (p.energy / p.distance_mi), 1)\n    ELSE NULL\n  END AS \"Efficiency \u0394%\"\nFROM (SELECT distance_mi, energy FROM cmp WHERE period = 'Current') c,\n     (SELECT distance_mi, energy FROM cmp WHERE period = 'Prior') p",
               "refId": "A"
             }
           ],
-          "title": "Efficiency Δ%",
+          "title": "Efficiency \u0394%",
           "type": "stat",
           "transparent": false
         },
@@ -480,7 +480,7 @@ data:
               "custom": {
                 "axisBorderShow": false,
                 "axisCenteredZero": false,
-                "axisLabel": "Distance (km)",
+                "axisLabel": "Distance (${unit_length})",
                 "axisPlacement": "auto",
                 "drawStyle": "line",
                 "fillOpacity": 0,
@@ -624,6 +624,30 @@ data:
             "skipUrlSync": false,
             "sort": 0,
             "type": "query"
+          },
+          {
+            "current": {
+              "selected": false,
+              "text": "mi",
+              "value": "mi"
+            },
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "DS_TESLASYNC_POSTGRESQL"
+            },
+            "definition": "SELECT COALESCE((SELECT value_text FROM settings WHERE key = 'unit_of_length'), 'mi')",
+            "query": "SELECT COALESCE((SELECT value_text FROM settings WHERE key = 'unit_of_length'), 'mi')",
+            "hide": 2,
+            "includeAll": false,
+            "label": "",
+            "multi": false,
+            "name": "unit_length",
+            "options": [],
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": true,
+            "sort": 0,
+            "type": "query"
           }
         ]
       },
@@ -633,7 +657,7 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "TeslaSync 📊 Change Delta Stats",
+      "title": "TeslaSync \ud83d\udcca Change Delta Stats",
       "uid": "teslasync-compare",
       "version": 1,
       "weekStart": ""

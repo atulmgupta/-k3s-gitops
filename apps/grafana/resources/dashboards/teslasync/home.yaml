@@ -39,8 +39,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
-          "tooltip": "TeslaSync 📅 Weekly Digest",
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \ud83d\udcc5 Weekly Digest",
           "type": "link",
           "url": "/d/teslasync-weekly-digest"
         },
@@ -53,7 +53,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
         },
         {
@@ -63,8 +63,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
-          "tooltip": "TeslaSync 🔔 Alerts & Notifications",
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \ud83d\udd14 Alerts & Notifications",
           "type": "link",
           "url": "/d/teslasync-alerts-notifications"
         }
@@ -104,7 +104,7 @@ data:
                   }
                 ]
               },
-              "unit": "lengthkm"
+              "unit": "none"
             }
           },
           "gridPos": {
@@ -357,7 +357,7 @@ data:
                   }
                 ]
               },
-              "unit": "lengthkm"
+              "unit": "none"
             }
           },
           "gridPos": {
@@ -635,7 +635,7 @@ data:
               "editorMode": "code",
               "format": "table",
               "rawQuery": true,
-              "rawSql": "SELECT started_at AS \"Date\", COALESCE(start_place, '?') || ' → ' || COALESCE(end_place, '?') AS \"Route\", ROUND((distance_m / 1609.344)::numeric, 1) AS \"Dist (km)\", ROUND((duration_s / 60.0)::numeric, 0) AS \"Min\" FROM drives WHERE vehicle_id = ${vehicle_id} ORDER BY started_at DESC LIMIT 10",
+              "rawSql": "SELECT started_at AS \"Date\", COALESCE(start_place, '?') || ' \u2192 ' || COALESCE(end_place, '?') AS \"Route\", ROUND((distance_m / 1609.344)::numeric, 1) AS \"Dist (${unit_length})\", ROUND((duration_s / 60.0)::numeric, 0) AS \"Min\" FROM drives WHERE vehicle_id = ${vehicle_id} ORDER BY started_at DESC LIMIT 10",
               "refId": "A"
             }
           ],
@@ -871,6 +871,30 @@ data:
             "skipUrlSync": false,
             "sort": 0,
             "type": "query"
+          },
+          {
+            "current": {
+              "selected": false,
+              "text": "mi",
+              "value": "mi"
+            },
+            "datasource": {
+              "type": "grafana-postgresql-datasource",
+              "uid": "DS_TESLASYNC_POSTGRESQL"
+            },
+            "definition": "SELECT COALESCE((SELECT value_text FROM settings WHERE key = 'unit_of_length'), 'mi')",
+            "query": "SELECT COALESCE((SELECT value_text FROM settings WHERE key = 'unit_of_length'), 'mi')",
+            "hide": 2,
+            "includeAll": false,
+            "label": "",
+            "multi": false,
+            "name": "unit_length",
+            "options": [],
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": true,
+            "sort": 0,
+            "type": "query"
           }
         ]
       },
@@ -880,7 +904,7 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "TeslaSync 🏠 Home",
+      "title": "TeslaSync \ud83c\udfe0 Home",
       "uid": "teslasync-home",
       "version": 1,
       "weekStart": ""
