@@ -1,0 +1,973 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ollama-overview-dashboard
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Infrastructure
+data:
+  ollama-overview.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "hide": true,
+            "builtIn": 1,
+            "enable": true,
+            "type": "dashboard",
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "collapsed": false,
+          "type": "row",
+          "panels": [],
+          "id": 1,
+          "gridPos": {
+            "h": 1,
+            "y": 0,
+            "w": 24,
+            "x": 0
+          },
+          "title": "GPU usage (Ollama)"
+        },
+        {
+          "gridPos": {
+            "h": 4,
+            "y": 1,
+            "w": 6,
+            "x": 0
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "percent",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 2,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "reduceOptions": {
+              "values": false,
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": ""
+            },
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "textMode": "auto",
+            "colorMode": "value",
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "expr": "DCGM_FI_DEV_GPU_UTIL{exported_namespace=\"ollama\"}",
+              "refId": "A",
+              "legendFormat": "",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "stat",
+          "title": "GPU Utilization"
+        },
+        {
+          "gridPos": {
+            "h": 4,
+            "y": 1,
+            "w": 6,
+            "x": 6
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "bytes",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 3,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "reduceOptions": {
+              "values": false,
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": ""
+            },
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "textMode": "auto",
+            "colorMode": "value",
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "expr": "DCGM_FI_DEV_FB_USED{exported_namespace=\"ollama\"} * 1024 * 1024",
+              "refId": "A",
+              "legendFormat": "",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "stat",
+          "title": "VRAM Used"
+        },
+        {
+          "gridPos": {
+            "h": 4,
+            "y": 1,
+            "w": 6,
+            "x": 12
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "watt",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 4,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "reduceOptions": {
+              "values": false,
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": ""
+            },
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "textMode": "auto",
+            "colorMode": "value",
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "expr": "DCGM_FI_DEV_POWER_USAGE{Hostname=\"helium\"}",
+              "refId": "A",
+              "legendFormat": "",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "stat",
+          "title": "Power Draw"
+        },
+        {
+          "gridPos": {
+            "h": 4,
+            "y": 1,
+            "w": 6,
+            "x": 18
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "celsius",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 5,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "reduceOptions": {
+              "values": false,
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": ""
+            },
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "textMode": "auto",
+            "colorMode": "value",
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "expr": "DCGM_FI_DEV_GPU_TEMP{Hostname=\"helium\"}",
+              "refId": "A",
+              "legendFormat": "",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "stat",
+          "title": "GPU Temp"
+        },
+        {
+          "collapsed": false,
+          "type": "row",
+          "panels": [],
+          "id": 10,
+          "gridPos": {
+            "h": 1,
+            "y": 5,
+            "w": 24,
+            "x": 0
+          },
+          "title": "Ollama pod"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 6,
+            "w": 12,
+            "x": 0
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "none",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "axisCenteredZero": false,
+                "showPoints": "never",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "spanNulls": false,
+                "pointSize": 5,
+                "thresholdsStyle": {
+                  "mode": "off"
+                },
+                "axisPlacement": "auto",
+                "fillOpacity": 10,
+                "drawStyle": "line",
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "insertNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "gradientMode": "none",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "lineInterpolation": "linear"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 11,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "legend": {
+              "showLegend": true,
+              "calcs": [],
+              "placement": "bottom",
+              "displayMode": "list"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"ollama\",pod=~\"ollama-.*\",container!=\"POD\",container!=\"\"}[2m])) by (container)",
+              "refId": "A",
+              "legendFormat": "{{container}}",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "timeseries",
+          "title": "Ollama CPU (cores)"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 6,
+            "w": 12,
+            "x": 12
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "bytes",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "axisCenteredZero": false,
+                "showPoints": "never",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "spanNulls": false,
+                "pointSize": 5,
+                "thresholdsStyle": {
+                  "mode": "off"
+                },
+                "axisPlacement": "auto",
+                "fillOpacity": 10,
+                "drawStyle": "line",
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "insertNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "gradientMode": "none",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "lineInterpolation": "linear"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 12,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "legend": {
+              "showLegend": true,
+              "calcs": [],
+              "placement": "bottom",
+              "displayMode": "list"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(container_memory_working_set_bytes{namespace=\"ollama\",pod=~\"ollama-.*\",container!=\"POD\",container!=\"\"}) by (container)",
+              "refId": "A",
+              "legendFormat": "{{container}}",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "timeseries",
+          "title": "Ollama Memory (bytes)"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 14,
+            "w": 12,
+            "x": 0
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "Bps",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "axisCenteredZero": false,
+                "showPoints": "never",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "spanNulls": false,
+                "pointSize": 5,
+                "thresholdsStyle": {
+                  "mode": "off"
+                },
+                "axisPlacement": "auto",
+                "fillOpacity": 10,
+                "drawStyle": "line",
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "insertNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "gradientMode": "none",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "lineInterpolation": "linear"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 13,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "legend": {
+              "showLegend": true,
+              "calcs": [],
+              "placement": "bottom",
+              "displayMode": "list"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(container_network_receive_bytes_total{namespace=\"ollama\",pod=~\"ollama-.*\"}[2m]))",
+              "refId": "A",
+              "legendFormat": "rx",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            },
+            {
+              "expr": "sum(rate(container_network_transmit_bytes_total{namespace=\"ollama\",pod=~\"ollama-.*\"}[2m]))",
+              "refId": "B",
+              "legendFormat": "tx",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "timeseries",
+          "title": "Ollama Network (B/s)"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 14,
+            "w": 12,
+            "x": 12
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "none",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 14,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "reduceOptions": {
+              "values": false,
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": ""
+            },
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "textMode": "auto",
+            "colorMode": "value",
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "expr": "sum(kube_pod_container_status_restarts_total{namespace=\"ollama\",pod=~\"ollama-.*\"})",
+              "refId": "A",
+              "legendFormat": "",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "stat",
+          "title": "Ollama Pod Restarts"
+        },
+        {
+          "collapsed": false,
+          "type": "row",
+          "panels": [],
+          "id": 20,
+          "gridPos": {
+            "h": 1,
+            "y": 22,
+            "w": 24,
+            "x": 0
+          },
+          "title": "Open WebUI pod"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 23,
+            "w": 12,
+            "x": 0
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "none",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "axisCenteredZero": false,
+                "showPoints": "never",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "spanNulls": false,
+                "pointSize": 5,
+                "thresholdsStyle": {
+                  "mode": "off"
+                },
+                "axisPlacement": "auto",
+                "fillOpacity": 10,
+                "drawStyle": "line",
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "insertNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "gradientMode": "none",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "lineInterpolation": "linear"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 21,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "legend": {
+              "showLegend": true,
+              "calcs": [],
+              "placement": "bottom",
+              "displayMode": "list"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"ollama\",pod=~\"open-webui-.*\",container!=\"POD\",container!=\"\"}[2m])) by (container)",
+              "refId": "A",
+              "legendFormat": "{{container}}",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "timeseries",
+          "title": "WebUI CPU (cores)"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 23,
+            "w": 12,
+            "x": 12
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "bytes",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "axisCenteredZero": false,
+                "showPoints": "never",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "spanNulls": false,
+                "pointSize": 5,
+                "thresholdsStyle": {
+                  "mode": "off"
+                },
+                "axisPlacement": "auto",
+                "fillOpacity": 10,
+                "drawStyle": "line",
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "insertNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "gradientMode": "none",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "lineInterpolation": "linear"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 22,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "legend": {
+              "showLegend": true,
+              "calcs": [],
+              "placement": "bottom",
+              "displayMode": "list"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(container_memory_working_set_bytes{namespace=\"ollama\",pod=~\"open-webui-.*\",container!=\"POD\",container!=\"\"}) by (container)",
+              "refId": "A",
+              "legendFormat": "{{container}}",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "timeseries",
+          "title": "WebUI Memory (bytes)"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 31,
+            "w": 12,
+            "x": 0
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "Bps",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "axisCenteredZero": false,
+                "showPoints": "never",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "spanNulls": false,
+                "pointSize": 5,
+                "thresholdsStyle": {
+                  "mode": "off"
+                },
+                "axisPlacement": "auto",
+                "fillOpacity": 10,
+                "drawStyle": "line",
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "insertNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "gradientMode": "none",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "lineInterpolation": "linear"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 23,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "legend": {
+              "showLegend": true,
+              "calcs": [],
+              "placement": "bottom",
+              "displayMode": "list"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(container_network_receive_bytes_total{namespace=\"ollama\",pod=~\"open-webui-.*\"}[2m]))",
+              "refId": "A",
+              "legendFormat": "rx",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            },
+            {
+              "expr": "sum(rate(container_network_transmit_bytes_total{namespace=\"ollama\",pod=~\"open-webui-.*\"}[2m]))",
+              "refId": "B",
+              "legendFormat": "tx",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "timeseries",
+          "title": "WebUI Network (B/s)"
+        },
+        {
+          "gridPos": {
+            "h": 8,
+            "y": 31,
+            "w": 12,
+            "x": 12
+          },
+          "fieldConfig": {
+            "overrides": [],
+            "defaults": {
+              "unit": "none",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "id": 24,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "options": {
+            "reduceOptions": {
+              "values": false,
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": ""
+            },
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "textMode": "auto",
+            "colorMode": "value",
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "expr": "sum(kube_pod_container_status_restarts_total{namespace=\"ollama\",pod=~\"open-webui-.*\"})",
+              "refId": "A",
+              "legendFormat": "",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              }
+            }
+          ],
+          "type": "stat",
+          "title": "WebUI Pod Restarts"
+        }
+      ],
+      "refresh": "30s",
+      "schemaVersion": 39,
+      "tags": [
+        "ollama",
+        "gpu",
+        "llm"
+      ],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "to": "now",
+        "from": "now-1h"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "Ollama Overview",
+      "uid": "ollama-overview",
+      "version": 1,
+      "weekStart": ""
+    }
+    

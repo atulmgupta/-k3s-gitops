@@ -115,6 +115,8 @@ resources:
   - dashboards/teslasync-tracing/teslasync-tracing.yaml
   # DCGM (GPU on helium)
   - dashboards/dcgm/dcgm-gpu.yaml
+  # Ollama (LLM + WebUI overview)
+  - dashboards/ollama/ollama-overview.yaml
 
 generators:
   - ksops-generator.yaml
