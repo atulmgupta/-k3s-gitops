@@ -113,6 +113,8 @@ resources:
   # TeslaSync — distributed tracing (RED + service map, sourced from
   # Tempo's metrics-generator span-metrics & service-graphs).
   - dashboards/teslasync-tracing/teslasync-tracing.yaml
+  # DCGM (GPU on helium)
+  - dashboards/dcgm/dcgm-gpu.yaml
 
 generators:
   - ksops-generator.yaml

@@ -1,0 +1,74 @@
+# =============================================================================
+# NVIDIA DCGM Exporter — Prometheus metrics for the GPU on helium
+# =============================================================================
+# Runs ONLY on `helium` (the sole GPU node).
+#
+# Exposes /metrics on :9400 with DCGM_FI_* series:
+#   - DCGM_FI_DEV_GPU_UTIL        (%)
+#   - DCGM_FI_DEV_FB_USED / FB_FREE (MiB framebuffer / VRAM)
+#   - DCGM_FI_DEV_GPU_TEMP        (deg C)
+#   - DCGM_FI_DEV_POWER_USAGE     (W)
+#   - DCGM_FI_DEV_SM_CLOCK / MEM_CLOCK
+#   - DCGM_FI_PROF_PIPE_TENSOR_ACTIVE (tensor core util)
+#   - PCIe TX/RX, ECC counters, XID errors, throttling reasons, ...
+#
+# The chart creates a ServiceMonitor (monitoring.coreos.com/v1) that the
+# cluster Prometheus (`prometheus/prometheus-kube-prometheus-prometheus`)
+# auto-scrapes — its serviceMonitorSelector + serviceMonitorNamespaceSelector
+# are both empty, i.e. match-everything.
+#
+# Companion: apps/grafana/resources/dashboards/dcgm/dcgm-gpu.yaml
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dcgm-exporter
+  namespace: argocd
+  labels:
+    tier: infra
+spec:
+  project: default
+  source:
+    repoURL: https://nvidia.github.io/dcgm-exporter/helm-charts
+    chart: dcgm-exporter
+    targetRevision: "4.8.*"
+    helm:
+      releaseName: dcgm-exporter
+      valuesObject:
+        # The exporter needs libdcgm.so + libnvidia-ml.so from the host driver.
+        # On k3s the nvidia runtime is registered as a NAMED runtime, not the
+        # default — so we have to opt in explicitly (same gotcha as the
+        # device-plugin pod itself).
+        runtimeClassName: nvidia
+
+        # Pin DaemonSet to helium only (sole GPU node).
+        nodeSelector:
+          kubernetes.io/hostname: helium
+
+        # Helium is a worker node, not control-plane. Clear the chart's default
+        # control-plane toleration so we don't accidentally widen scheduling.
+        tolerations: []
+
+        # ServiceMonitor is on by default; explicit for clarity.
+        serviceMonitor:
+          enabled: true
+          interval: 30s
+          scrapeTimeout: 10s
+
+        # Surface pod labels on metrics — lets the dashboard show *which*
+        # pod is consuming the GPU (will show "ollama" for our use case).
+        # Requires the chart to create a ClusterRole that can list pods.
+        kubernetes:
+          enablePodLabels: true
+          enablePodUID: true
+          rbac:
+            create: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dcgm-exporter
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
