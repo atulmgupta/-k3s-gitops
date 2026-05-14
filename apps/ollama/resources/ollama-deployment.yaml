@@ -24,7 +24,7 @@ spec:
       runtimeClassName: nvidia
       containers:
         - name: ollama
-          image: ollama/ollama:0.4.7
+          image: ollama/ollama:0.23.4
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
