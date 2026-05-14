@@ -32,6 +32,12 @@ spec:
     helm:
       releaseName: nvidia-device-plugin
       valuesObject:
+        # The device plugin pod itself needs the nvidia runtime to mount the
+        # host's NVML libraries (libnvidia-ml.so) — otherwise it fails with
+        # `Failed to initialize NVML: ERROR_LIBRARY_NOT_FOUND`. On k3s the
+        # nvidia runtime is auto-registered as a NAMED (non-default) runtime,
+        # so this opt-in is required even on the plugin itself.
+        runtimeClassName: nvidia
         # Pin DaemonSet to helium only (sole GPU node). Override the chart's
         # default NFD-based affinity since we don't run NFD.
         affinity:
