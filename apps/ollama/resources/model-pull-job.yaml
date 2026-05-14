@@ -1,0 +1,65 @@
+# =============================================================================
+# Model pre-pull Job — runs as an ArgoCD PostSync hook after each sync.
+# =============================================================================
+# `ollama pull` is idempotent — if the model is already present, it exits in ~1s
+# without re-downloading. Safe to re-run on every sync.
+#
+# Add/remove models by editing the `models` line below.
+# =============================================================================
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ollama-model-pull
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 3600
+  backoffLimit: 3
+  # Hard upper bound — first pull of a 5GB model can take 20+ min on slow
+  # links. 2 hours is generous; bump if you preload very large models.
+  activeDeadlineSeconds: 7200
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ollama-model-pull
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: pull
+          image: curlimages/curl:8.10.1
+          env:
+            - name: OLLAMA_URL
+              value: "http://ollama:11434"
+            - name: MODELS
+              value: "llama3.1:8b"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              echo "Waiting for Ollama API at $OLLAMA_URL ..."
+              for i in $(seq 1 120); do
+                if curl -fsS --connect-timeout 5 --max-time 10 "$OLLAMA_URL/api/version" >/dev/null 2>&1; then
+                  echo "Ollama is up."
+                  break
+                fi
+                sleep 5
+              done
+              for m in $MODELS; do
+                echo "Pulling $m (idempotent) ..."
+                curl -fsS --connect-timeout 10 --max-time 7200 \
+                  -X POST "$OLLAMA_URL/api/pull" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"name\":\"$m\",\"stream\":false}" \
+                  || { echo "Pull failed for $m"; exit 1; }
+                echo "Done: $m"
+              done
+              echo "All models present."
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

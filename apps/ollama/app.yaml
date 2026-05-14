@@ -1,0 +1,34 @@
+# =============================================================================
+# Ollama + Open WebUI — Kustomize Application (ArgoCD)
+# =============================================================================
+# Self-hosted LLM inference using the cluster's GPU.
+#
+#  - Ollama runs ONLY on `helium` (sole GPU node, RTX 3050 OEM 8GB)
+#    via runtimeClassName: nvidia + nvidia.com/gpu request.
+#  - Open WebUI is the ChatGPT-style frontend, runs anywhere.
+#
+# Prereqs: the `nvidia-device-plugin` app must be deployed and the node
+# must advertise `nvidia.com/gpu` (see apps/nvidia-device-plugin/README.md).
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ollama
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/ollama/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ollama
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

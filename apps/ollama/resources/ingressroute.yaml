@@ -1,0 +1,56 @@
+# Ollama raw API — useful for IDE plugins (Continue, Cursor, etc.) and curl.
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ollama
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`ollama.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: ollama
+          namespace: ollama
+          port: 11434
+  tls:
+    secretName: production-cyphers-app-tls
+---
+# Open WebUI — the chat frontend.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: open-webui
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "Open WebUI"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "ollama"
+    gethomepage.dev/description: "Local LLM chat (Ollama)"
+    gethomepage.dev/href: "https://chat.cyphers.app"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`chat.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: open-webui
+          namespace: ollama
+          port: 8080
+  tls:
+    secretName: production-cyphers-app-tls
