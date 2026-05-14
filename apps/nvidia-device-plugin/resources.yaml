@@ -1,0 +1,32 @@
+# =============================================================================
+# NVIDIA Device Plugin — Resources Application (RuntimeClass)
+# =============================================================================
+# Creates the cluster-scoped `nvidia` RuntimeClass that GPU consumer pods
+# (e.g. ollama) reference via `runtimeClassName: nvidia` to be launched
+# under the nvidia-container-runtime instead of plain runc.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nvidia-device-plugin-resources
+  namespace: argocd
+  labels:
+    tier: infra
+  annotations:
+    # Create RuntimeClass before the plugin / GPU consumers reference it.
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/nvidia-device-plugin/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nvidia-device-plugin
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

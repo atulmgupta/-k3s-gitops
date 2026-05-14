@@ -1,0 +1,12 @@
+# Cluster-scoped RuntimeClass that maps to the `nvidia` containerd runtime
+# k3s already auto-registered the runtime when nvidia-container-toolkit was
+# installed and the agent was restarted. This object lets pods opt in via:
+#
+#   spec:
+#     runtimeClassName: nvidia
+---
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: nvidia
+handler: nvidia

@@ -1,0 +1,61 @@
+# =============================================================================
+# NVIDIA Device Plugin — exposes nvidia.com/gpu as a schedulable resource
+# =============================================================================
+# Runs ONLY on `helium` (the cluster's only GPU node — RTX 3050 OEM, 8 GB).
+# Pods that request `nvidia.com/gpu` will be scheduled here automatically.
+#
+# Prereqs on `helium` (one-time, manual):
+#   1. NVIDIA driver installed         (nvidia-driver-595-server-open)
+#   2. nvidia-container-toolkit installed
+#   3. k3s-agent restarted so containerd auto-registers the `nvidia` runtime
+#      (verify: grep nvidia /var/lib/rancher/k3s/agent/etc/containerd/config.toml)
+#
+# Pair with: resources.yaml (creates the `nvidia` RuntimeClass that GPU pods use)
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nvidia-device-plugin
+  namespace: argocd
+  labels:
+    tier: infra
+  annotations:
+    # Sync after the RuntimeClass exists (resources app is wave -10).
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://nvidia.github.io/k8s-device-plugin
+    chart: nvidia-device-plugin
+    targetRevision: "0.19.*"
+    helm:
+      releaseName: nvidia-device-plugin
+      valuesObject:
+        # Pin DaemonSet to helium only (sole GPU node). Override the chart's
+        # default NFD-based affinity since we don't run NFD.
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values: ["helium"]
+        tolerations:
+          - key: CriticalAddonsOnly
+            operator: Exists
+          - key: nvidia.com/gpu
+            operator: Exists
+            effect: NoSchedule
+        # GPU Feature Discovery + NFD are off — we don't need their labels for
+        # a single-GPU homelab. Re-enable later if we add more GPU nodes.
+        gfd:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nvidia-device-plugin
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
