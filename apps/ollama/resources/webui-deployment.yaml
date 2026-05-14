@@ -28,6 +28,9 @@ spec:
           env:
             - name: OLLAMA_BASE_URL
               value: "http://ollama:11434"
+            # Preselect qwen2.5:7b in the chat dropdown.
+            - name: DEFAULT_MODELS
+              value: "qwen2.5:7b"
             # Authentik handles auth at the ingress — disable WebUI's own login
             # so anyone who passes authentik gets straight to the chat.
             - name: WEBUI_AUTH
