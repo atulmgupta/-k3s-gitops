@@ -46,7 +46,7 @@ spec:
           name: arc-controller-gha-rs-controller
           namespace: arc-systems
 
-        maxRunners: 3
+        maxRunners: 10
         minRunners: 0
   destination:
     server: https://kubernetes.default.svc
