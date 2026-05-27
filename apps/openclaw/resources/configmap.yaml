@@ -5,15 +5,17 @@ metadata:
   labels:
     app: openclaw
 data:
-  # Gateway config. Bind 0.0.0.0 so the in-cluster Service can reach the pod
-  # (upstream defaults to "loopback" which only works with `kubectl port-forward`).
+  # Gateway config. Bind 'custom' with customBindHost 0.0.0.0 so the in-cluster
+  # Service can reach the pod (upstream defaults to "loopback" which only works
+  # with `kubectl port-forward`; 'lan' requires a discoverable private LAN IP).
   # Token auth stays enabled — Control UI requires the OPENCLAW_GATEWAY_TOKEN.
   # Defense-in-depth: Traefik IngressRoute also sits behind authentik forward-auth.
   openclaw.json: |
     {
       "gateway": {
         "mode": "local",
-        "bind": "0.0.0.0",
+        "bind": "custom",
+        "customBindHost": "0.0.0.0",
         "port": 18789,
         "auth": {
           "mode": "token"
