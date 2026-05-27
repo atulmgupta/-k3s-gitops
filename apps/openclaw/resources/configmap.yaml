@@ -21,7 +21,10 @@ data:
           "mode": "token"
         },
         "controlUi": {
-          "enabled": true
+          "enabled": true,
+          "allowedOrigins": [
+            "https://openclaw.cyphers.app"
+          ]
         }
       },
       "agents": {
