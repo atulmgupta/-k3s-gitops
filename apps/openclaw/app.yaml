@@ -1,0 +1,37 @@
+# =============================================================================
+# OpenClaw — Kustomize Application (ArgoCD)
+# =============================================================================
+# OpenClaw AI agent gateway (https://openclaw.ai). No upstream Helm chart, so
+# deployed as raw manifests via Kustomize (same pattern as code-server / 2fauth).
+#
+# Single pod with PVC for agent state. SOPS-encrypted secret holds the gateway
+# token and any provider API keys. GitHub Copilot is auth'd via one-time
+# device-login flow:
+#
+#   kubectl exec -it -n openclaw deploy/openclaw -- \
+#     node /app/dist/index.js models auth login-github-copilot
+#
+# Auth token persists on the PVC across pod restarts.
+# =============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openclaw
+  namespace: argocd
+  labels:
+    tier: apps
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/atulmgupta/-k3s-gitops.git
+    targetRevision: main
+    path: apps/openclaw/resources
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openclaw
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

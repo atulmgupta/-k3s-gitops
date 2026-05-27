@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: openclaw
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: "OpenClaw"
+    gethomepage.dev/group: "Applications"
+    gethomepage.dev/icon: "mdi-robot-outline"
+    gethomepage.dev/description: "AI agent gateway"
+    gethomepage.dev/href: "https://openclaw.cyphers.app"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`openclaw.cyphers.app`)
+      middlewares:
+        - name: default-headers
+          namespace: traefik
+        - name: authentik-auth
+          namespace: authentik
+      services:
+        - name: openclaw
+          namespace: openclaw
+          port: 18789
+  tls:
+    secretName: production-cyphers-app-tls
