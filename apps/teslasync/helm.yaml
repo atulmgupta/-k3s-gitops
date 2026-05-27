@@ -95,6 +95,17 @@ spec:
           #   batchSize: 100           # API_LOG_BATCH_SIZE
           #   flushInterval: "1s"      # API_LOG_FLUSH_INTERVAL
 
+          # Dead-letter queue inspector — Phase-44 / observability-batch / F4
+          # Subscribes to {fleetTelemetry.topicBase}/dlq/# and keeps the last
+          # ringCapacity entries in memory for the admin /system/dlq* feed.
+          # replayEnabled gates POST /system/dlq/{id}/replay. Replay is ALSO
+          # sudo-token-gated AND writes a dlq_replay_audit row on every code
+          # path (success / failure / disabled / unparseable / missing), so
+          # "who replayed what when" has a single authoritative answer.
+          dlq:
+            replayEnabled: true   # DLQ_REPLAY_ENABLED — POST /system/dlq/{id}/replay
+            ringCapacity: 200     # DLQ_RING_CAPACITY — in-memory ring buffer (~4KB/entry)
+
         resources:
           requests: { cpu: 100m, memory: 128Mi }
           limits: { cpu: 500m, memory: 512Mi }
