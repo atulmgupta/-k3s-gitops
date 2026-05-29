@@ -119,6 +119,15 @@ spec:
           enabled: true
           cronjob:
             schedule: "@daily"
+            # Default chart command keeps every dump forever, which filled the
+            # 16Gi PVC. Override to prune dumps older than 7 days before each run.
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -eo pipefail
+                find "${PGDUMP_DIR}" -maxdepth 1 -name 'pg_dumpall-*.pgdump' -type f -mtime +6 -delete || true
+                PGPASSWORD="${PGPASSWORD:-$(< "$PGPASSWORD_FILE")}" pg_dumpall --clean --if-exists --load-via-partition-root --quote-all-identifiers --no-password --file="${PGDUMP_DIR}/pg_dumpall-$(date '+%Y-%m-%d-%H-%M').pgdump"
             storage:
               enabled: true
               existingClaim: postgresql-v17-backup
