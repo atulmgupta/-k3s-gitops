@@ -24,7 +24,11 @@ spec:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.1.0-rc.tracing.g89b430c7"
+          # Hotfix off tracing baseline (g89b430c7) + geocoding provider fallback
+          # (commit 9387edef). Chart templates unchanged, so targetRevision stays
+          # on the tracing chart; only the API image is bumped. Fixes reverse
+          # geocoding (Google REQUEST_DENIED) leaving drives without place names.
+          tag: "2.1.0-rc.fix-geocoding-provider-fallback.g9387edef"
 
         secrets:
           existingSecret: teslasync
