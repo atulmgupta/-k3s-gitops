@@ -17,18 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.1.0-rc.tracing.g89b430c7"
+    targetRevision: "2.1.0-rc.chore-repo-reorganization.g248e7c34"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          # Hotfix off tracing baseline (g89b430c7) + geocoding provider fallback
-          # (commit 9387edef). Chart templates unchanged, so targetRevision stays
-          # on the tracing chart; only the API image is bumped. Fixes reverse
-          # geocoding (Google REQUEST_DENIED) leaving drives without place names.
-          tag: "2.1.0-rc.fix-geocoding-provider-fallback.g9387edef"
+          tag: "2.1.0-rc.chore-repo-reorganization.g248e7c34"
 
         secrets:
           existingSecret: teslasync
@@ -185,7 +181,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.1.0-rc.tracing.g89b430c7"
+            tag: "2.1.0-rc.chore-repo-reorganization.g248e7c34"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -266,7 +262,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.1.0-rc.tracing.g89b430c7"
+            tag: "2.1.0-rc.chore-repo-reorganization.g248e7c34"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -282,7 +278,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.1.0-rc.tracing.g89b430c7"
+            tag: "2.1.0-rc.chore-repo-reorganization.g248e7c34"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -298,7 +294,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.1.0-rc.tracing.g89b430c7"
+            tag: "2.1.0-rc.chore-repo-reorganization.g248e7c34"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
