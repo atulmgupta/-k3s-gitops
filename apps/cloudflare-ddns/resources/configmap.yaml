@@ -67,11 +67,50 @@ data:
         fail("could not discover public IPv4 address; " + "; ".join(errors))
 
 
+    def parse_bool(value):
+        if isinstance(value, bool):
+            return value
+        return str(value).strip().lower() in ("1", "true", "yes", "on")
+
+
     def bool_env(name, default):
         value = os.getenv(name)
         if value is None:
             return default
-        return value.strip().lower() in ("1", "true", "yes", "on")
+        return parse_bool(value)
+
+
+    def parse_record_specs():
+        default_ttl = int(os.environ.get("CLOUDFLARE_TTL", "300"))
+        default_proxied = bool_env("CLOUDFLARE_PROXIED", False)
+        raw_records = os.environ.get("CLOUDFLARE_RECORDS", "").strip()
+        if not raw_records:
+            fail("CLOUDFLARE_RECORDS must contain at least one DNS record")
+
+        if raw_records.startswith("["):
+            try:
+                records = json.loads(raw_records)
+            except json.JSONDecodeError as exc:
+                fail(f"CLOUDFLARE_RECORDS contains invalid JSON: {exc}")
+            specs = []
+            for record in records:
+                name = str(record.get("name", "")).strip().rstrip(".")
+                if not name:
+                    fail("each CLOUDFLARE_RECORDS JSON entry must include a name")
+                specs.append(
+                    {
+                        "name": name,
+                        "ttl": int(record.get("ttl", default_ttl)),
+                        "proxied": parse_bool(record.get("proxied", default_proxied)),
+                    }
+                )
+            return specs
+
+        return [
+            {"name": value.strip().rstrip("."), "ttl": default_ttl, "proxied": default_proxied}
+            for value in raw_records.split(",")
+            if value.strip()
+        ]
 
 
     def main():
@@ -80,16 +119,7 @@ data:
             fail("CLOUDFLARE_API_TOKEN is not set")
 
         zone_name = os.environ.get("CLOUDFLARE_ZONE", "cyphers.app").strip().rstrip(".")
-        record_names = [
-            value.strip().rstrip(".")
-            for value in os.environ.get("CLOUDFLARE_RECORDS", "").split(",")
-            if value.strip()
-        ]
-        if not record_names:
-            fail("CLOUDFLARE_RECORDS must contain at least one DNS record")
-
-        ttl = int(os.environ.get("CLOUDFLARE_TTL", "300"))
-        proxied = bool_env("CLOUDFLARE_PROXIED", False)
+        record_specs = parse_record_specs()
         public_ip = current_public_ip()
 
         zones = request("GET", f"/zones?name={quote(zone_name)}&status=active", token)
@@ -98,30 +128,31 @@ data:
         zone_id = zones[0]["id"]
 
         print(f"Detected public IPv4: {public_ip}")
-        for record_name in record_names:
+        for spec in record_specs:
+            record_name = spec["name"]
             query = f"/zones/{zone_id}/dns_records?type=A&name={quote(record_name)}"
             records = request("GET", query, token)
             desired = {
                 "type": "A",
                 "name": record_name,
                 "content": public_ip,
-                "ttl": ttl,
-                "proxied": proxied,
+                "ttl": spec["ttl"],
+                "proxied": spec["proxied"],
             }
 
             if not records:
                 request("POST", f"/zones/{zone_id}/dns_records", token, desired)
-                print(f"Created {record_name} -> {public_ip}")
+                print(f"Created {record_name} -> {public_ip} proxied={spec['proxied']} ttl={spec['ttl']}")
                 continue
 
             for record in records:
                 needs_update = (
                     record.get("content") != public_ip
-                    or bool(record.get("proxied")) != proxied
-                    or int(record.get("ttl", ttl)) != ttl
+                    or bool(record.get("proxied")) != spec["proxied"]
+                    or int(record.get("ttl", spec["ttl"])) != spec["ttl"]
                 )
                 if not needs_update:
-                    print(f"Up-to-date: {record_name} -> {public_ip}")
+                    print(f"Up-to-date: {record_name} -> {public_ip} proxied={spec['proxied']} ttl={spec['ttl']}")
                     continue
                 request(
                     "PATCH",
@@ -129,7 +160,7 @@ data:
                     token,
                     desired,
                 )
-                print(f"Updated {record_name}: {record.get('content')} -> {public_ip}")
+                print(f"Updated {record_name}: {record.get('content')} -> {public_ip} proxied={spec['proxied']} ttl={spec['ttl']}")
 
 
     if __name__ == "__main__":

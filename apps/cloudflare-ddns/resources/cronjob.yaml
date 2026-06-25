@@ -39,11 +39,11 @@ spec:
                 - name: CLOUDFLARE_ZONE
                   value: cyphers.app
                 - name: CLOUDFLARE_RECORDS
-                  value: telemetry.cyphers.app
-                - name: CLOUDFLARE_TTL
-                  value: "300"
-                - name: CLOUDFLARE_PROXIED
-                  value: "false"
+                  value: |
+                    [
+                      {"name": "telemetry.cyphers.app", "ttl": 300, "proxied": false},
+                      {"name": "cyphers.app", "ttl": 1, "proxied": true}
+                    ]
               volumeMounts:
                 - name: script
                   mountPath: /scripts
