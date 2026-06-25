@@ -1,0 +1,67 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cloudflare-ddns
+  labels:
+    app.kubernetes.io/name: cloudflare-ddns
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 120
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: cloudflare-ddns
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: updater
+              image: python:3.13-alpine
+              imagePullPolicy: IfNotPresent
+              command: ["python", "/scripts/cloudflare-ddns.py"]
+              env:
+                - name: CLOUDFLARE_API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: cloudflare-token-secret
+                      key: cloudflare-token
+                - name: CLOUDFLARE_ZONE
+                  value: cyphers.app
+                - name: CLOUDFLARE_RECORDS
+                  value: telemetry.cyphers.app
+                - name: CLOUDFLARE_TTL
+                  value: "300"
+                - name: CLOUDFLARE_PROXIED
+                  value: "false"
+              volumeMounts:
+                - name: script
+                  mountPath: /scripts
+                  readOnly: true
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64Mi
+                limits:
+                  cpu: 100m
+                  memory: 128Mi
+          volumes:
+            - name: script
+              configMap:
+                name: cloudflare-ddns
+                defaultMode: 0555
