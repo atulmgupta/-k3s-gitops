@@ -47,6 +47,8 @@ spec:
             - wal_buffers=16MB
             - -c
             - random_page_cost=1.1
+            - -c
+            - shared_preload_libraries=timescaledb,pg_textsearch,pg_stat_statements
           ports:
             - name: postgresql
               containerPort: 5432
