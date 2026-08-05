@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.1.0-rc.bugfixes.ga9abb3140"
+    targetRevision: "2.1.0-rc.bugfixes.g0ace50277"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.1.0-rc.bugfixes.ga9abb3140"
+          tag: "2.1.0-rc.bugfixes.g0ace50277"
 
         secrets:
           existingSecret: teslasync
@@ -181,7 +181,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.1.0-rc.bugfixes.ga9abb3140"
+            tag: "2.1.0-rc.bugfixes.g0ace50277"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -262,7 +262,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.1.0-rc.bugfixes.ga9abb3140"
+            tag: "2.1.0-rc.bugfixes.g0ace50277"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -278,7 +278,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.1.0-rc.bugfixes.ga9abb3140"
+            tag: "2.1.0-rc.bugfixes.g0ace50277"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -294,7 +294,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.1.0-rc.bugfixes.ga9abb3140"
+            tag: "2.1.0-rc.bugfixes.g0ace50277"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
