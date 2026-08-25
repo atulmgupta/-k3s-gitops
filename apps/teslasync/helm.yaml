@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.1.0-rc.revamped-ui.gcc3df8538"
+    targetRevision: "2.1.0-rc.revamped-ui.g6bdf43e6f"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.1.0-rc.revamped-ui.gcc3df8538"
+          tag: "2.1.0-rc.revamped-ui.g6bdf43e6f"
 
         secrets:
           existingSecret: teslasync
@@ -181,7 +181,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.1.0-rc.revamped-ui.gcc3df8538"
+            tag: "2.1.0-rc.revamped-ui.g6bdf43e6f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -262,7 +262,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.1.0-rc.revamped-ui.gcc3df8538"
+            tag: "2.1.0-rc.revamped-ui.g6bdf43e6f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -278,7 +278,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.1.0-rc.revamped-ui.gcc3df8538"
+            tag: "2.1.0-rc.revamped-ui.g6bdf43e6f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -294,7 +294,7 @@ spec:
           dbMinConns: 2
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.1.0-rc.revamped-ui.gcc3df8538"
+            tag: "2.1.0-rc.revamped-ui.g6bdf43e6f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
