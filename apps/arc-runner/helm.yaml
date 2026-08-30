@@ -46,7 +46,8 @@ spec:
           name: arc-controller-gha-rs-controller
           namespace: arc-systems
 
-        maxRunners: 10
+        # Keep concurrent Docker builds bounded on the homelab workers.
+        maxRunners: 2
         minRunners: 0
   destination:
     server: https://kubernetes.default.svc
