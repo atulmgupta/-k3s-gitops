@@ -27,6 +27,12 @@ spec:
           EMQX_CLUSTER__DISCOVERY_STRATEGY: dns
           EMQX_DASHBOARD__DEFAULT_USERNAME: admin
           EMQX_DASHBOARD__DEFAULT_PASSWORD: public
+          # Bounded in-memory backlog for a seven-day TeslaSync consumer outage.
+          # The queue remains non-durable and is lost if its EMQX pod restarts.
+          mqtt.max_mqueue_len: "500000"
+          mqtt.session_expiry_interval: "8d"
+          mqtt.message_expiry_interval: "8d"
+          mqtt.mqueue_store_qos0: "true"
 
         service:
           type: LoadBalancer
@@ -42,10 +48,10 @@ spec:
         resources:
           requests:
             cpu: 500m
-            memory: 512Mi
+            memory: 1Gi
           limits:
             cpu: 500m
-            memory: 512Mi
+            memory: 2Gi
 
         metrics:
           enabled: true
