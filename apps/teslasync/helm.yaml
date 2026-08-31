@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.1.0-rc.revamped-ui.g504ea83dc"
+    targetRevision: "2.0.17-rc.optimization.ge437bb51f"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.1.0-rc.revamped-ui.g504ea83dc"
+          tag: "2.0.17-rc.optimization.ge437bb51f"
 
         secrets:
           existingSecret: teslasync
@@ -188,7 +188,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.1.0-rc.revamped-ui.g504ea83dc"
+            tag: "2.0.17-rc.optimization.ge437bb51f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 64Mi }
@@ -218,16 +218,18 @@ spec:
         fleetTelemetry:
           enabled: true
           host: telemetry.cyphers.app
-          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.1.0-rc.revamped-ui.g504ea83dc
+          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.0.17-rc.optimization.ge437bb51f
           imagePullPolicy: IfNotPresent
-          # DEPRECATED — no-op on the per-field MQTT path (per upstream
-          # commit a3fdb1dfb). Per-field subscriber processes each
-          # {VIN, field} individually; kept for legacy values-file
-          # compat but no production code reads it.
+          # Bound and coalesce per-vehicle telemetry persistence so a burst
+          # cannot exhaust the shared database pool.
           batchMs: 100
+          batchMaxMessages: 256
+          persistenceConcurrency: 2
+          persistenceQueueCapacity: 64
+          persistenceTimeout: "30s"
           fallbackPollInterval: "5m"
           staleTimeout: "15m"
-          snapshotWriteInterval: "1s"
+          snapshotWriteInterval: "10s"
           cleanupInterval: "2m"
           staleSessionTimeout: "5m"
           liveSignalStoreMode: hybrid
@@ -266,11 +268,11 @@ spec:
         exportWorker:
           enabled: true
           replicaCount: 1
-          dbMaxConns: 5
-          dbMinConns: 2
+          dbMaxConns: 2
+          dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.1.0-rc.revamped-ui.g504ea83dc"
+            tag: "2.0.17-rc.optimization.ge437bb51f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -282,11 +284,11 @@ spec:
         notificationWorker:
           enabled: true
           replicaCount: 1
-          dbMaxConns: 5
-          dbMinConns: 2
+          dbMaxConns: 2
+          dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.1.0-rc.revamped-ui.g504ea83dc"
+            tag: "2.0.17-rc.optimization.ge437bb51f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -298,11 +300,11 @@ spec:
         automationWorker:
           enabled: true
           replicaCount: 1
-          dbMaxConns: 5
-          dbMinConns: 2
+          dbMaxConns: 2
+          dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.1.0-rc.revamped-ui.g504ea83dc"
+            tag: "2.0.17-rc.optimization.ge437bb51f"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -313,11 +315,11 @@ spec:
 
         postgresql:
           enabled: false
-          maxConns: 25
-          minConns: 5
+          maxConns: 12
+          minConns: 2
           connectTimeout: 5
           statementTimeout: 30000
-          healthCheckPeriod: "5s"
+          healthCheckPeriod: "30s"
           external:
             host: timescaledb.timescaledb.svc.cluster.local
             port: 5432
