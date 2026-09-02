@@ -114,8 +114,8 @@ spec:
             ringCapacity: 200     # DLQ_RING_CAPACITY — in-memory ring buffer (~4KB/entry)
 
         resources:
-          requests: { cpu: 100m, memory: 128Mi }
-          limits: { cpu: 500m, memory: 512Mi }
+          requests: { cpu: 100m, memory: 256Mi }
+          limits: { cpu: 500m, memory: 1Gi }
 
         # Mirrors upstream chart 0.6.1+ default (commit d5745abd5).
         # Pins api + workers (notification, export, automation) and
@@ -442,7 +442,7 @@ spec:
 
   syncPolicy:
     automated:
-      enabled: true
+      enabled: false
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
