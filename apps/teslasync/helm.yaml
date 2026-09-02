@@ -442,7 +442,7 @@ spec:
 
   syncPolicy:
     automated:
-      enabled: true
+      enabled: false
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
