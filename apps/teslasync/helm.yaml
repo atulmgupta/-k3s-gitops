@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.1.0-rc.fixes-charging.g2b7a9d385"
+    targetRevision: "2.1.0-rc.fixes-charging.gda1e97d41"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.1.0-rc.fixes-charging.g2b7a9d385"
+          tag: "2.1.0-rc.fixes-charging.gda1e97d41"
 
         secrets:
           existingSecret: teslasync
@@ -114,8 +114,8 @@ spec:
             ringCapacity: 200     # DLQ_RING_CAPACITY — in-memory ring buffer (~4KB/entry)
 
         resources:
-          requests: { cpu: 100m, memory: 256Mi }
-          limits: { cpu: 500m, memory: 1Gi }
+          requests: { cpu: "1", memory: 1Gi }
+          limits: { cpu: "2", memory: 2Gi }
 
         # Mirrors upstream chart 0.6.1+ default (commit d5745abd5).
         # Pins api + workers (notification, export, automation) and
@@ -188,11 +188,11 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.1.0-rc.fixes-charging.g2b7a9d385"
+            tag: "2.1.0-rc.fixes-charging.gda1e97d41"
             pullPolicy: IfNotPresent
           resources:
-            requests: { cpu: 50m, memory: 64Mi }
-            limits: { cpu: 200m, memory: 128Mi }
+            requests: { cpu: "1", memory: 1Gi }
+            limits: { cpu: "2", memory: 2Gi }
           service:
             port: 80
             type: LoadBalancer
@@ -218,7 +218,7 @@ spec:
         fleetTelemetry:
           enabled: true
           host: telemetry.cyphers.app
-          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.1.0-rc.fixes-charging.g2b7a9d385
+          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.1.0-rc.fixes-charging.gda1e97d41
           imagePullPolicy: IfNotPresent
           # Bound and coalesce per-vehicle telemetry persistence so a burst
           # cannot exhaust the shared database pool.
@@ -272,7 +272,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.1.0-rc.fixes-charging.g2b7a9d385"
+            tag: "2.1.0-rc.fixes-charging.gda1e97d41"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -288,7 +288,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.1.0-rc.fixes-charging.g2b7a9d385"
+            tag: "2.1.0-rc.fixes-charging.gda1e97d41"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -304,7 +304,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.1.0-rc.fixes-charging.g2b7a9d385"
+            tag: "2.1.0-rc.fixes-charging.gda1e97d41"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
