@@ -36,6 +36,28 @@ The SQLite database (`grafana.db`) stores all dashboards, datasources, users, an
 - **Authentik** (`authentik` namespace) — SSO/OAuth provider
 - **Longhorn** — persistent volume backend
 
+## TeslaSync Dashboards
+
+The 77 dashboards from TeslaSync's `grafana/dashboards/` are provisioned by
+`grafana-resources` as labeled ConfigMaps:
+
+| Source directory | GitOps directory under `resources/dashboards/` | Grafana folder | Count |
+|------------------|-----------------------------------------------|----------------|-------|
+| `system` | `teslasync` | TeslaSync | 59 |
+| `infra` | `teslasync-infra` | TeslaSync Infra | 17 |
+| `science` | `teslasync-science` | TeslaSync Science | 1 |
+
+When updating, preserve dashboard UIDs and wrap each source JSON in a ConfigMap
+with the `grafana_dashboard: "1"` label and the corresponding `grafana_folder`
+annotation. Map source datasource UIDs `DS_TESLASYNC_PROMETHEUS` and
+`DS_TESLASYNC_TEMPO` to this cluster's `prometheus` and `tempo`; retain
+`DS_TESLASYNC_POSTGRESQL`. Register every ConfigMap in
+`resources/kustomization.yaml`. Keep Helm-provisioned dashboards and the separate
+`teslasync-tracing` dashboard out of this import to avoid duplicate UIDs.
+
+Push changes to `main` to deploy through the automated `grafana-resources` ArgoCD
+sync. The Grafana sidecar loads the ConfigMaps without a Grafana restart.
+
 ## Secrets Required
 | Secret Name | Namespace | Keys | Purpose |
 |-------------|-----------|------|---------|

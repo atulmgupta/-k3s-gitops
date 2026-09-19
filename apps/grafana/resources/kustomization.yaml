@@ -118,5 +118,23 @@ resources:
   # Ollama (LLM + WebUI overview)
   - dashboards/ollama/ollama-overview.yaml
 
+  # Additional TeslaSync System, Infra, and Science dashboards
+  - dashboards/teslasync/black-box-90s.yaml
+  - dashboards/teslasync/cabin-thermal.yaml
+  - dashboards/teslasync/charge-honesty.yaml
+  - dashboards/teslasync/charging-thermal.yaml
+  - dashboards/teslasync/day-log.yaml
+  - dashboards/teslasync/firmware-epochs.yaml
+  - dashboards/teslasync/fleet-ops.yaml
+  - dashboards/teslasync/outage-autobiography.yaml
+  - dashboards/teslasync/pack-capacity-proxy.yaml
+  - dashboards/teslasync/physics-cockpit.yaml
+  - dashboards/teslasync/physics-ledger.yaml
+  - dashboards/teslasync/range-disagreement.yaml
+  - dashboards/teslasync/site-energy.yaml
+  - dashboards/teslasync/vampire-watts.yaml
+  - dashboards/teslasync-infra/phase42-pipeline.yaml
+  - dashboards/teslasync-science/lab-inputs.yaml
+
 generators:
   - ksops-generator.yaml
