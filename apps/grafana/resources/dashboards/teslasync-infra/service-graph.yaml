@@ -812,10 +812,10 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
-          "tooltip": "TeslaSync - Observability Self-Health (OTel Collector + Tempo)",
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync - Phase-42 Pipeline",
           "type": "link",
-          "url": "/d/teslasync-infra-otel-self-health"
+          "url": "/d/teslasync-infra-phase42"
         },
         {
           "asDropdown": true,
@@ -826,7 +826,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
         },
         {
@@ -836,7 +836,7 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
+          "title": "Next \u25b6",
           "tooltip": "TeslaSync - Service RED (Tempo span-metrics)",
           "type": "link",
           "url": "/d/teslasync-infra-service-red"

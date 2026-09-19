@@ -64,9 +64,9 @@ data:
           "tags": [],
           "targetBlank": false,
           "title": "Next \u25b6",
-          "tooltip": "TeslaSync \ud83d\udd0d Anomaly Detection",
+          "tooltip": "TeslaSync \u23fa Black Box 90s",
           "type": "link",
-          "url": "/d/teslasync-anomaly-detection"
+          "url": "/d/teslasync-black-box-90s"
         }
       ],
       "panels": [

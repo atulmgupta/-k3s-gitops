@@ -39,8 +39,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
-          "tooltip": "TeslaSync 💰 Cost Analysis",
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \ud83d\udcb0 Cost Analysis",
           "type": "link",
           "url": "/d/teslasync-cost-analysis"
         },
@@ -53,19 +53,8 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
-        },
-        {
-          "asDropdown": false,
-          "icon": "arrow-left",
-          "includeVars": false,
-          "keepTime": true,
-          "tags": [],
-          "targetBlank": false,
-          "title": "⬅️ Back to Drive History",
-          "type": "link",
-          "url": "/d/teslasync-drives?var-vehicle_id=${vehicle_id}"
         },
         {
           "asDropdown": false,
@@ -74,10 +63,21 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
-          "tooltip": "TeslaSync ⭐ Drive Scores",
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \u2b50 Drive Scores",
           "type": "link",
           "url": "/d/teslasync-drive-score"
+        },
+        {
+          "asDropdown": false,
+          "icon": "arrow-left",
+          "includeVars": false,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "\u2b05\ufe0f Back to Drive History",
+          "type": "link",
+          "url": "/d/teslasync-drives?var-vehicle_id=${vehicle_id}"
         }
       ],
       "panels": [

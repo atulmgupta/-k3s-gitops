@@ -256,7 +256,7 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
+          "title": "\u25c0 Prev",
           "tooltip": "TeslaSync - MQTT Pipeline Trace View (Tempo)",
           "type": "link",
           "url": "/d/teslasync-infra-mqtt-pipeline-traces"
@@ -270,7 +270,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
         },
         {
@@ -280,10 +280,10 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
-          "tooltip": "TeslaSync - Service Graph & Dependencies (Tempo)",
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync - Phase-42 Pipeline",
           "type": "link",
-          "url": "/d/teslasync-infra-service-graph"
+          "url": "/d/teslasync-infra-phase42"
         }
       ]
     }

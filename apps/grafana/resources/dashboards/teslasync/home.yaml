@@ -40,9 +40,9 @@ data:
           "tags": [],
           "targetBlank": false,
           "title": "\u25c0 Prev",
-          "tooltip": "TeslaSync \ud83d\udcc5 Weekly Digest",
+          "tooltip": "TeslaSync \ud83d\udd2c Science Lab Inputs",
           "type": "link",
-          "url": "/d/teslasync-weekly-digest"
+          "url": "/d/teslasync-science-lab"
         },
         {
           "asDropdown": true,

@@ -55,6 +55,12 @@ annotation. Map source datasource UIDs `DS_TESLASYNC_PROMETHEUS` and
 `resources/kustomization.yaml`. Keep Helm-provisioned dashboards and the separate
 `teslasync-tracing` dashboard out of this import to avoid duplicate UIDs.
 
+Preserve the GitOps Previous/Next links and TeslaSync dashboard dropdown when
+refreshing source JSON. System dashboards and Science Lab Inputs form one
+circular sequence; Infra dashboards form a separate sequence. New dashboards
+must be linked in both directions from their neighbors, keeping the selected
+time range and variables. Retain any additional "Open in app" links.
+
 Push changes to `main` to deploy through the automated `grafana-resources` ArgoCD
 sync. The Grafana sidecar loads the ConfigMaps without a Grafana restart.
 

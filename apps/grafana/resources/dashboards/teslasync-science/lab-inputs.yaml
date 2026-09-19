@@ -29,6 +29,42 @@ data:
       "links": [
         {
           "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \ud83e\udddb Vampire Watts",
+          "type": "link",
+          "url": "/d/teslasync-vampire-watts"
+        },
+        {
+          "asDropdown": true,
+          "icon": "external link",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [
+            "teslasync"
+          ],
+          "targetBlank": false,
+          "title": "\u26a1 TeslaSync",
+          "type": "dashboards"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \ud83c\udfe0 Home",
+          "type": "link",
+          "url": "/d/teslasync-home"
+        },
+        {
+          "asDropdown": false,
           "icon": "external link",
           "includeVars": true,
           "keepTime": true,

@@ -39,8 +39,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
-          "tooltip": "TeslaSync 🔋 Battery Health",
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \ud83d\udd0b Battery Health",
           "type": "link",
           "url": "/d/teslasync-battery-health"
         },
@@ -53,19 +53,8 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
-        },
-        {
-          "asDropdown": false,
-          "icon": "arrow-left",
-          "includeVars": false,
-          "keepTime": true,
-          "tags": [],
-          "targetBlank": false,
-          "title": "⬅️ Back to Charging Sessions",
-          "type": "link",
-          "url": "/d/teslasync-charging-sessions?var-vehicle_id=${vehicle_id}"
         },
         {
           "asDropdown": false,
@@ -74,10 +63,21 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
-          "tooltip": "TeslaSync ⚡ Charging Heatmap",
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \u26a1 Charging Heatmap",
           "type": "link",
           "url": "/d/teslasync-charging-heatmap"
+        },
+        {
+          "asDropdown": false,
+          "icon": "arrow-left",
+          "includeVars": false,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "\u2b05\ufe0f Back to Charging Sessions",
+          "type": "link",
+          "url": "/d/teslasync-charging-sessions?var-vehicle_id=${vehicle_id}"
         }
       ],
       "panels": [

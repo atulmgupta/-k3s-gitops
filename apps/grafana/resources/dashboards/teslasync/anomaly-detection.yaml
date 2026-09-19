@@ -40,10 +40,10 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
-          "tooltip": "TeslaSync 📅 Weekly Digest",
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \ud83d\udda5\ufe0f System Health",
           "type": "link",
-          "url": "/d/teslasync-weekly-digest"
+          "url": "/d/teslasync-system-health"
         },
         {
           "asDropdown": true,
@@ -54,7 +54,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
         },
         {
@@ -64,8 +64,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
-          "tooltip": "TeslaSync 🔋 Battery Cells",
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \ud83d\udd0b Battery Cells",
           "type": "link",
           "url": "/d/teslasync-battery-cells"
         }

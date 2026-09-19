@@ -28,6 +28,42 @@ data:
       "links": [
         {
           "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \ud83c\udfe0 Site Energy",
+          "type": "link",
+          "url": "/d/teslasync-site-energy"
+        },
+        {
+          "asDropdown": true,
+          "icon": "external link",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [
+            "teslasync"
+          ],
+          "targetBlank": false,
+          "title": "\u26a1 TeslaSync",
+          "type": "dashboards"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \ud83d\udd2c Science Lab Inputs",
+          "type": "link",
+          "url": "/d/teslasync-science-lab"
+        },
+        {
+          "asDropdown": false,
           "icon": "external link",
           "includeVars": true,
           "keepTime": true,

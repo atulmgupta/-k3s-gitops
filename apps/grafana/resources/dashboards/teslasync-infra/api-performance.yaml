@@ -846,7 +846,7 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
+          "title": "\u25c0 Prev",
           "tooltip": "TeslaSync - Trace Explorer (Tempo TraceQL)",
           "type": "link",
           "url": "/d/teslasync-infra-trace-explorer"
@@ -860,7 +860,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
         },
         {
@@ -870,8 +870,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
-          "tooltip": "TeslaSync - Auth Login Deep-Dive (always-sampled)",
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync - OAuth Initiation Deep-Dive (always-sampled)",
           "type": "link",
           "url": "/d/teslasync-infra-auth-deep-dive"
         }

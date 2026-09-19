@@ -28,6 +28,42 @@ data:
       "links": [
         {
           "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync \u23fa Black Box 90s",
+          "type": "link",
+          "url": "/d/teslasync-black-box-90s"
+        },
+        {
+          "asDropdown": true,
+          "icon": "external link",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [
+            "teslasync"
+          ],
+          "targetBlank": false,
+          "title": "\u26a1 TeslaSync",
+          "type": "dashboards"
+        },
+        {
+          "asDropdown": false,
+          "icon": "bolt",
+          "includeVars": true,
+          "keepTime": true,
+          "tags": [],
+          "targetBlank": false,
+          "title": "Next \u25b6",
+          "tooltip": "TeslaSync \ud83d\udd0c Charge Honesty",
+          "type": "link",
+          "url": "/d/teslasync-charge-honesty"
+        },
+        {
+          "asDropdown": false,
           "icon": "external link",
           "includeVars": true,
           "keepTime": true,

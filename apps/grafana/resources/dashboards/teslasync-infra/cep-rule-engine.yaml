@@ -475,8 +475,8 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "◀ Prev",
-          "tooltip": "TeslaSync - Auth Login Deep-Dive (always-sampled)",
+          "title": "\u25c0 Prev",
+          "tooltip": "TeslaSync - OAuth Initiation Deep-Dive (always-sampled)",
           "type": "link",
           "url": "/d/teslasync-infra-auth-deep-dive"
         },
@@ -489,7 +489,7 @@ data:
             "teslasync"
           ],
           "targetBlank": false,
-          "title": "⚡ TeslaSync",
+          "title": "\u26a1 TeslaSync",
           "type": "dashboards"
         },
         {
@@ -499,7 +499,7 @@ data:
           "keepTime": true,
           "tags": [],
           "targetBlank": false,
-          "title": "Next ▶",
+          "title": "Next \u25b6",
           "tooltip": "TeslaSync - Critical Flow Latency (Phase-44 instrumented)",
           "type": "link",
           "url": "/d/teslasync-infra-critical-flows"
