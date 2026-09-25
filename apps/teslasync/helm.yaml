@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.8.0"
+    targetRevision: "2.10.2"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.8.0"
+          tag: "2.10.2"
 
         secrets:
           existingSecret: teslasync
@@ -188,7 +188,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.8.0"
+            tag: "2.10.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: "1", memory: 1Gi }
@@ -208,6 +208,9 @@ spec:
             tag: latest
             pullPolicy: IfNotPresent
           secretName: tesla-command-proxy
+          # Use the reflected wildcard TLS Secret; keep the Tesla signing key separate.
+          tlsSecretName: production-cyphers-app-tls
+          tlsServerName: command.cyphers.app
           resources:
             requests: { cpu: 50m, memory: 32Mi }
             limits: { cpu: 200m, memory: 128Mi }
@@ -218,7 +221,7 @@ spec:
         fleetTelemetry:
           enabled: true
           host: telemetry.cyphers.app
-          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.8.0
+          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.10.2
           imagePullPolicy: IfNotPresent
           # Bound and coalesce per-vehicle telemetry persistence so a burst
           # cannot exhaust the shared database pool.
@@ -272,7 +275,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.8.0"
+            tag: "2.10.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -288,7 +291,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.8.0"
+            tag: "2.10.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -304,7 +307,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.8.0"
+            tag: "2.10.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
