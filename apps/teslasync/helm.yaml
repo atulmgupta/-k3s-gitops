@@ -17,7 +17,10 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.10.3-rc.fix-charging-navigation-filters-command-ui.gd3c5bd2f1"
+    # The RC chart version renders helm.sh/chart as a 63-character value ending
+    # in ".", which Kubernetes rejects. Keep the compatible chart package while
+    # deploying the RC images configured below.
+    targetRevision: "2.10.2"
     helm:
       releaseName: teslasync
       valuesObject:
