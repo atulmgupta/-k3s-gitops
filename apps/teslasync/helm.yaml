@@ -15,12 +15,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: ghcr.io/ev-dev-labs/charts
-    chart: teslasync
-    # The RC chart version renders helm.sh/chart as a 63-character value ending
-    # in ".", which Kubernetes rejects. Keep the compatible chart package while
-    # deploying the RC images configured below.
-    targetRevision: "2.10.2"
+    # The published RC chart truncates helm.sh/chart to a value ending in ".",
+    # which Kubernetes rejects. This immutable source commit contains the exact
+    # RC chart metadata plus the upstream label-sanitization fix.
+    repoURL: https://github.com/ev-dev-labs/teslasync.git
+    targetRevision: e470a67e6a824186bc147fbc114f683bcacc7622
+    path: helm/teslasync
     helm:
       releaseName: teslasync
       valuesObject:
