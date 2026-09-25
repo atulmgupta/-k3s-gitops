@@ -15,19 +15,16 @@ metadata:
 spec:
   project: default
   source:
-    # The published RC chart truncates helm.sh/chart to a value ending in ".",
-    # which Kubernetes rejects. This immutable source commit contains the exact
-    # RC chart metadata plus the upstream label-sanitization fix.
-    repoURL: https://github.com/ev-dev-labs/teslasync.git
-    targetRevision: e470a67e6a824186bc147fbc114f683bcacc7622
-    path: helm/teslasync
+    repoURL: ghcr.io/ev-dev-labs/charts
+    chart: teslasync
+    targetRevision: "2.10.3"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.10.3-rc.fix-charging-navigation-filters-command-ui.gd3c5bd2f1"
+          tag: "2.10.3"
 
         secrets:
           existingSecret: teslasync
@@ -191,7 +188,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.10.3-rc.fix-charging-navigation-filters-command-ui.gd3c5bd2f1"
+            tag: "2.10.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: "1", memory: 1Gi }
@@ -224,7 +221,7 @@ spec:
         fleetTelemetry:
           enabled: true
           host: telemetry.cyphers.app
-          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.10.3-rc.fix-charging-navigation-filters-command-ui.gd3c5bd2f1
+          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.10.3
           imagePullPolicy: IfNotPresent
           # Bound and coalesce per-vehicle telemetry persistence so a burst
           # cannot exhaust the shared database pool.
@@ -278,7 +275,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.10.3-rc.fix-charging-navigation-filters-command-ui.gd3c5bd2f1"
+            tag: "2.10.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -294,7 +291,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.10.3-rc.fix-charging-navigation-filters-command-ui.gd3c5bd2f1"
+            tag: "2.10.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -310,7 +307,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.10.3-rc.fix-charging-navigation-filters-command-ui.gd3c5bd2f1"
+            tag: "2.10.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
