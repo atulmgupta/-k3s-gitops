@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "2.15.0"
+    targetRevision: "2.15.3"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "2.15.0"
+          tag: "2.15.3"
 
         secrets:
           existingSecret: teslasync
@@ -191,7 +191,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "2.15.0"
+            tag: "2.15.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: "1", memory: 1Gi }
@@ -224,7 +224,7 @@ spec:
         fleetTelemetry:
           enabled: true
           host: telemetry.cyphers.app
-          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.15.0
+          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:2.15.3
           imagePullPolicy: IfNotPresent
           # Bound and coalesce per-vehicle telemetry persistence so a burst
           # cannot exhaust the shared database pool.
@@ -278,7 +278,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "2.15.0"
+            tag: "2.15.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -294,7 +294,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "2.15.0"
+            tag: "2.15.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -310,7 +310,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "2.15.0"
+            tag: "2.15.3"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -386,6 +386,10 @@ spec:
           nativeAppAuth:
             enabled: true
             host: teslasync.cyphers.app
+            # The native-api app adds higher-priority routes for the same
+            # native requests, directly to teslasync-api instead of Nginx.
+            # Keep this enabled for its identity-strip middleware and as a
+            # fallback while the native-api app is not synced.
             identityHeaders:
               - X-authentik-groups
               - X-authentik-email
