@@ -16,6 +16,8 @@ spec:
           namespace: traefik
         - name: teslasync-native-app-identity-strip
           namespace: teslasync
+        - name: teslasync-native-api-marker
+          namespace: teslasync
       services:
         - name: teslasync-api
           port: 8080
@@ -26,6 +28,8 @@ spec:
         - name: default-headers
           namespace: traefik
         - name: teslasync-native-app-identity-strip
+          namespace: teslasync
+        - name: teslasync-native-api-marker
           namespace: teslasync
       services:
         - name: teslasync-api

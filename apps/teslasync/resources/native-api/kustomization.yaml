@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: teslasync
 resources:
   - ingressroute.yaml
+  - middleware-marker.yaml
