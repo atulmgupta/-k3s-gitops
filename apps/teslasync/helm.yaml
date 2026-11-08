@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "3.3.1"
+    targetRevision: "3.3.2"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "3.3.1"
+          tag: "3.3.2"
 
         secrets:
           existingSecret: teslasync
@@ -39,8 +39,10 @@ spec:
         encryption:
           key: ""
 
-        auth:
-          jwtSecret: ""
+        # Signing material stays in existingSecret, never browser authentication.
+        # Its legacy AUTH_JWT_SECRET remains a certificate-only migration input.
+        certificates:
+          signingKey: ""
 
         # Phase-42 / ADR-004 #5 + #9 — operator surface (chart >= 0.33).
         # Powers cmd/resubscribe + cmd/unit-drift-validator. Both refuse to
@@ -108,9 +110,9 @@ spec:
           # Dead-letter queue inspector — Phase-44 / observability-batch / F4
           # Subscribes to {fleetTelemetry.topicBase}/dlq/# and keeps the last
           # ringCapacity entries in memory for the admin /system/dlq* feed.
-          # replayEnabled gates POST /system/dlq/{id}/replay. Replay is ALSO
-          # sudo-token-gated AND writes a dlq_replay_audit row on every code
-          # path (success / failure / disabled / unparseable / missing), so
+          # replayEnabled gates POST /system/dlq/{id}/replay. Browser replay
+          # requires typed intent behind the provider. Every code path writes
+          # a dlq_replay_audit row (success / failure / disabled / unparseable / missing), so
           # "who replayed what when" has a single authoritative answer.
           dlq:
             replayEnabled: true   # DLQ_REPLAY_ENABLED — POST /system/dlq/{id}/replay
@@ -191,15 +193,15 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "3.3.1"
+            tag: "3.3.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: "1", memory: 1Gi }
             limits: { cpu: "2", memory: 2Gi }
           service:
             port: 80
-            type: LoadBalancer
-            loadBalancerIP: "192.168.68.220"
+            # Browser access must pass through the Authentik-protected ingress.
+            type: ClusterIP
           # Colocate web with the rest of the teslasync stack on carbon.
           nodeSelector:
             kubernetes.io/hostname: carbon
@@ -224,7 +226,7 @@ spec:
         fleetTelemetry:
           enabled: true
           host: telemetry.cyphers.app
-          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:3.3.1
+          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:3.3.2
           imagePullPolicy: IfNotPresent
           # Bound and coalesce per-vehicle telemetry persistence so a burst
           # cannot exhaust the shared database pool.
@@ -278,7 +280,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "3.3.1"
+            tag: "3.3.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -294,7 +296,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "3.3.1"
+            tag: "3.3.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -310,7 +312,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "3.3.1"
+            tag: "3.3.2"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -404,18 +406,8 @@ spec:
             middlewares:
               - name: default-headers
                 namespace: traefik
-          # SSE bypass route — auto-added before catch-all when ForwardAuth is used.
-          # Bypasses Authentik for /api/v1/events so the Go backend validates JWT
-          # directly (Authentik middleware can break long-lived SSE connections).
-          # Uncomment if SSE clients get disconnected/401'd by Authentik.
-          # sseBypass:
-          #   match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/api/v1/events`)"
-          #   middlewares:
-          #     - name: default-headers
-          #       namespace: traefik
-          #   services:
-          #     - name: teslasync-web
-          #       port: 80
+          # Browser API, SSE and browser-login handoff stay behind ForwardAuth.
+          # Only scoped native Bearer/preflight traffic uses the bypass above.
           routes:
             - kind: Rule
               match: "Host(`teslasync.cyphers.app`) && PathPrefix(`/.well-known`)"
