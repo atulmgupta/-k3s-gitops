@@ -17,14 +17,14 @@ spec:
   source:
     repoURL: ghcr.io/ev-dev-labs/charts
     chart: teslasync
-    targetRevision: "3.5.0-rc.feature-app-design-themes.g737cd60375"
+    targetRevision: "3.5.0-rc.feature-app-design-themes.g93048181e8"
     helm:
       releaseName: teslasync
       valuesObject:
         replicaCount: 1
         image:
           repository: ghcr.io/ev-dev-labs/teslasync-api
-          tag: "3.5.0-rc.feature-app-design-themes.g737cd60375"
+          tag: "3.5.0-rc.feature-app-design-themes.g93048181e8"
 
         secrets:
           existingSecret: teslasync
@@ -193,7 +193,7 @@ spec:
           replicaCount: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-web
-            tag: "3.5.0-rc.feature-app-design-themes.g737cd60375"
+            tag: "3.5.0-rc.feature-app-design-themes.g93048181e8"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: "1", memory: 1Gi }
@@ -226,7 +226,7 @@ spec:
         fleetTelemetry:
           enabled: true
           host: telemetry.cyphers.app
-          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:3.5.0-rc.feature-app-design-themes.g737cd60375
+          image: ghcr.io/ev-dev-labs/teslasync-fleet-telemetry:3.5.0-rc.feature-app-design-themes.g93048181e8
           imagePullPolicy: IfNotPresent
           # Bound and coalesce per-vehicle telemetry persistence so a burst
           # cannot exhaust the shared database pool.
@@ -280,7 +280,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-export-worker
-            tag: "3.5.0-rc.feature-app-design-themes.g737cd60375"
+            tag: "3.5.0-rc.feature-app-design-themes.g93048181e8"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
@@ -296,7 +296,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-notification-worker
-            tag: "3.5.0-rc.feature-app-design-themes.g737cd60375"
+            tag: "3.5.0-rc.feature-app-design-themes.g93048181e8"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 50m, memory: 32Mi }
@@ -312,7 +312,7 @@ spec:
           dbMinConns: 1
           image:
             repository: ghcr.io/ev-dev-labs/teslasync-automation-worker
-            tag: "3.5.0-rc.feature-app-design-themes.g737cd60375"
+            tag: "3.5.0-rc.feature-app-design-themes.g93048181e8"
             pullPolicy: IfNotPresent
           resources:
             requests: { cpu: 100m, memory: 64Mi }
